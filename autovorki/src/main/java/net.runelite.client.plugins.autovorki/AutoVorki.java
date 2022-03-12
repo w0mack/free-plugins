@@ -684,6 +684,7 @@ public class AutoVorki extends Plugin {
                 case ATTACK_VORKATH:
                     attack = false;
                     actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
+                    timeout = 1;
                     break;
             }
         }
@@ -896,8 +897,12 @@ public class AutoVorki extends Plugin {
                     if (!specced && config.useBGS())
                         return AutoVorkiState.SPECIAL_ATTACK;
                     else {
-                        return AutoVorkiState.EQUIP_WEAPONS;
+                        if (attack) {
+                            return AutoVorkiState.ATTACK_VORKATH;
+                        } else
+                            return AutoVorkiState.EQUIP_WEAPONS;
                     }
+
                 }
 
                 // if vorkath is napping
@@ -912,12 +917,6 @@ public class AutoVorki extends Plugin {
                         }
                     }
                 }
-
-                if (attack) {
-                    return AutoVorkiState.ATTACK_VORKATH;
-                }
-
-
                 /* end of in fight logic */
             }
         }
