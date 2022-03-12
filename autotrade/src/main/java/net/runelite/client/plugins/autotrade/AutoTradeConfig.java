@@ -48,7 +48,7 @@ public interface AutoTradeConfig extends Config
 			description = "Player to trade",
 			position = 1
 	)
-	default String playerName() { return "Chas"; }
+	default String playerName() { return "Zezima"; }
 
 	@ConfigItem(
 			keyName = "itemID",
