@@ -933,11 +933,11 @@ public class AutoVorki extends Plugin {
                 if (!inv.containsItem(config.houseTele().getId())) {
                     return AutoVorkiState.WITHDRAW_HOUSE_TELE;
                 }
+                if (!inv.containsItem(ItemID.FREMENNIK_SEA_BOOTS_4) && config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.FREMENNIK_BOOTS_4)
+                    return AutoVorkiState.WITHDRAW_FREM_SEA_BOOTS;
                 if (!inv.isFull()) {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
                 }
-                if (!inv.containsItem(ItemID.FREMENNIK_SEA_BOOTS_4) && config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.FREMENNIK_BOOTS_4)
-                    return AutoVorkiState.WITHDRAW_FREM_SEA_BOOTS;
                 return AutoVorkiState.FINISHED_WITHDRAWING;
             } else if (deposited && withdrawn && inv.getItemCount(config.food().getId(), false) >= 4) {
                 return config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.TALK_TO_BANKER ? AutoVorkiState.TALK_TO_BANKER : AutoVorkiState.TELE_SEA_BOOTS;
