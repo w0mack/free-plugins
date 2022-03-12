@@ -71,67 +71,73 @@ public interface AutoVorkiConfig extends Config {
         return Food.ANGLERFISH;
     }
 
+    @Range(min = 1, max = 14)
+    @ConfigItem(keyName = "minFood", name = "Minimum food", description = "Minimum amount of food per kill", position = 8)
+    default int minFood() {
+        return 4;
+    }
+
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "eatAt", name = "Eat at", description = "Eat food when under this HP", position = 8)
+    @ConfigItem(keyName = "eatAt", name = "Eat at", description = "Eat food when under this HP", position = 9)
     default int eatAt() {
         return 35;
     }
 
-    @ConfigItem(keyName = "prayerID", name = "Prayer restore", description = "The name of your prayer restore", position = 9)
+    @ConfigItem(keyName = "prayerID", name = "Prayer restore", description = "The name of your prayer restore", position = 10)
     default Prayer prayer() {
         return Prayer.PRAYER_POTION;
     }
 
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 10)
+    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 11)
     default int restoreAt() {
         return 20;
     }
 
-    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 11)
+    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 12)
     default Antifire antifire() {
         return Antifire.EXT_SUPER_ANTIFIRE;
     }
 
-    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 12)
+    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 13)
     default boolean drinkAntifire() {
         return true;
     }
 
-    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 13)
+    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 14)
     default Antivenom antivenom() {
         return Antivenom.ANTI_VENOM_PLUS;
     }
 
-    @ConfigItem(keyName = "drinkAntivenom", name = "Drink antivenom", description = "Automatically drink antivenom<br>Ignore if using serpentine helm", position = 14)
+    @ConfigItem(keyName = "drinkAntivenom", name = "Drink antivenom", description = "Automatically drink antivenom<br>Ignore if using serpentine helm", position = 15)
     default boolean drinkAntivenom() {
         return true;
     }
 
-    @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 15)
+    @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 16)
     default HouseTele houseTele() {
         return HouseTele.CONSTRUCTION_CAPE_T;
     }
 
-    @ConfigItem(keyName = "moonClanTele", name = "MoonClan", description = "The name of your moonclan teleport", position = 16)
+    @ConfigItem(keyName = "moonClanTele", name = "MoonClan", description = "The name of your moonclan teleport", position = 17)
     default MoonClanTele moonClanTele() {
         return MoonClanTele.PORTAL_NEXUS;
     }
 
-    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 17)
+    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 18)
     default int cMoonClanTele() {
         return 0;
     }
 
-    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 18)
+    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 19)
     default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
 
-    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 20)
+    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 21)
     default SuperCombat superCombat() {
         return SuperCombat.DIVINE_SUPER_COMBAT;
     }
 
-    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 20)
+    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 22)
     default int boostLevel() {
         return 10;
     }

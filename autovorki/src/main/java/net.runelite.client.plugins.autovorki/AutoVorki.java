@@ -567,10 +567,6 @@ public class AutoVorki extends Plugin {
                         bounds = widget.getBounds();
                     }
 
-                    if (!config.useBGS())
-                        break;
-                    if (specced)
-                        break;
                     if (!equip.isEquipped(ItemID.BANDOS_GODSWORD) && !inv.isFull())
                         actionItem(ItemID.BANDOS_GODSWORD, MenuAction.ITEM_SECOND_OPTION);
                     else {
@@ -580,8 +576,7 @@ public class AutoVorki extends Plugin {
                                 utils.doInvokeMsTime(targetMenu, 0);
                             else
                                 utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
-                        } else {
-                            actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
+                            attack = true;
                             timeout = 3;
                         }
                     }
@@ -665,26 +660,30 @@ public class AutoVorki extends Plugin {
                 case EAT_FOOD:
                     eatFood();
                     break;
-                case DRINK_PRAYER:
+                case RESTORE_PRAYER:
                     drinkPrayer();
-                    attack = true;
                     break;
                 case DRINK_ANTIFIRE:
                     drinkAntifire();
-                    attack = true;
                     break;
                 case DRINK_ANTIVENOM:
                     drinkAntivenom();
-                    attack = true;
                     break;
                 case DRINK_SUPER_COMBAT:
                     drinkSuperCombat();
-                    attack = true;
                     break;
                 case ENABLE_PRAYER:
                     LegacyMenuEntry entry = new LegacyMenuEntry("Activate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
                     int sleep = calc.getRandomIntBetweenRange(25, 200);
                     utils.doInvokeMsTime(entry, sleep);
+                    break;
+                case EQUIP_WEAPONS:
+                    equipWeapons();
+                    attack = true;
+                    break;
+                case ATTACK_VORKATH:
+                    attack = false;
+                    actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
                     break;
             }
         }
@@ -840,11 +839,11 @@ public class AutoVorki extends Plugin {
                 if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && !toLoot.isEmpty() && inv.isFull() && config.eatLoot())
                     return AutoVorkiState.EAT_FOOD;
                 if (obtainedPet) {
-                    if (config.houseTele().getId() == ItemID.CONSTRUCT_CAPET || config.houseTele().getId() == ItemID.CONSTRUCT_CAPE)
-                        actionItem(ItemID.CONSTRUCT_CAPET, MenuAction.ITEM_FOURTH_OPTION);
-                    else if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
-                        actionItem(ItemID.TELEPORT_TO_HOUSE, MenuAction.ITEM_FIRST_OPTION);
+                    actionItem(config.houseTele().getId(),
+                            config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE ?
+                                    MenuAction.ITEM_FIRST_OPTION : MenuAction.ITEM_FOURTH_OPTION);
                     shutDown();
+                    return null;
                 }
 
                 if (dodgeBomb)
@@ -853,44 +852,73 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.KILL_SPAWN;
                 if (steps > 0)
                     return AutoVorkiState.ACID_WALK;
+
                 if (client.getVar(Varbits.QUICK_PRAYER) == 0)
                     return AutoVorkiState.ENABLE_PRAYER;
 
+                /* in fight logic */
+
+                // need to heal?
                 if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt()) {
                     if (inv.containsItem(config.food().getId())) {
-                        eatFood();
                         attack = true;
+                        return AutoVorkiState.EAT_FOOD;
                     } else
                         return AutoVorkiState.TELE_TO_POH;
                 }
-                if (client.getBoostedSkillLevel(Skill.PRAYER) <= config.restoreAt())
-                    return AutoVorkiState.DRINK_PRAYER;
-                if (config.drinkAntifire() && needsAntifire())
-                    return AutoVorkiState.DRINK_ANTIFIRE;
-                if (config.drinkAntivenom() && needsAntivenom())
-                    return AutoVorkiState.DRINK_ANTIVENOM;
-                if (needsRepot())
-                    return AutoVorkiState.DRINK_SUPER_COMBAT;
 
-                if (vorkath.getId() == NpcID.VORKATH_8059 && looted
-                        && inv.containsItemAmount(config.food().getId(), 4, false, false))
-                    return AutoVorkiState.POKE_VORKATH;
-                if (vorkath.getId() == NpcID.VORKATH_8059 && looted
-                        && inv.getItemCount(config.food().getId(), false) < 4)
-                    return AutoVorkiState.TELE_TO_POH;
+                // need to restore prayer?
+                if (client.getBoostedSkillLevel(Skill.PRAYER) <= config.restoreAt()) {
+                    attack = true;
+                    return AutoVorkiState.RESTORE_PRAYER;
+                }
+
+                // need to drink antifire?
+                if (config.drinkAntifire() && needsAntifire()) {
+                    attack = true;
+                    return AutoVorkiState.DRINK_ANTIFIRE;
+                }
+
+                // need to drink antivenom?
+                if (config.drinkAntivenom() && needsAntivenom()) {
+                    attack = true;
+                    return AutoVorkiState.DRINK_ANTIVENOM;
+                }
+
+                // need to reboost stats?
+                if (needsRepot()) {
+                    attack = true;
+                    return AutoVorkiState.DRINK_SUPER_COMBAT;
+                }
+
+                // if vorkath is *woke* state
                 if (vorkath.getId() == NpcID.VORKATH_8061) {
-                    if (client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500 && !specced && config.useBGS()) {
-                        if (!equip.isEquipped(ItemID.BANDOS_GODSWORD) && inv.isFull())
-                            actionItem(config.food().getId(), MenuAction.ITEM_FIRST_OPTION);
-                        if (client.getVar(VarPlayer.SPECIAL_ATTACK_ENABLED) == 0)
-                            return AutoVorkiState.SPECIAL_ATTACK;
-                    } else {
-                        equipWeapons();
+                    if (!specced && config.useBGS())
+                        return AutoVorkiState.SPECIAL_ATTACK;
+                    else {
+                        return AutoVorkiState.EQUIP_WEAPONS;
                     }
                 }
-                if (attack) {
-                    equipWeapons();
+
+                // if vorkath is napping
+                if (vorkath.getId() == NpcID.VORKATH_8059) {
+                    if (looted) { // this will always be true, but why not triple check
+                        if (inv.containsItemAmount(
+                                config.food().getId(), config.minFood(),
+                                false, false)) {
+                            return AutoVorkiState.POKE_VORKATH;
+                        } else {
+                            return AutoVorkiState.TELE_TO_POH;
+                        }
+                    }
                 }
+
+                if (attack) {
+                    return AutoVorkiState.ATTACK_VORKATH;
+                }
+
+
+                /* end of in fight logic */
             }
         }
         return AutoVorkiState.TIMEOUT;
@@ -957,15 +985,9 @@ public class AutoVorki extends Plugin {
     void equipWeapons() {
         if (!equip.isEquipped(config.mainhandID()) && timeout <= 1) {
             actionItem(config.mainhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
-            return;
         }
         if (!equip.isEquipped(config.offhandID()) && timeout <= 1) {
             actionItem(config.offhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
-            return;
-        }
-        if (attack) {
-            actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
-            attack = false;
         }
     }
 
