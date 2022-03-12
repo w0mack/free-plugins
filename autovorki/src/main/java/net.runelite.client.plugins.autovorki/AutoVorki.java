@@ -682,9 +682,11 @@ public class AutoVorki extends Plugin {
                     attack = true;
                     break;
                 case ATTACK_VORKATH:
-                    attack = false;
-                    actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
-                    timeout = 1;
+                    if (steps == 0) {
+                        attack = false;
+                        actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
+                        timeout = 1;
+                    }
                     break;
             }
         }
@@ -897,7 +899,7 @@ public class AutoVorki extends Plugin {
                     if (!specced && config.useBGS())
                         return AutoVorkiState.SPECIAL_ATTACK;
                     else {
-                        if (attack) {
+                        if (attack && steps == 0) {
                             return AutoVorkiState.ATTACK_VORKATH;
                         } else
                             return AutoVorkiState.EQUIP_WEAPONS;
@@ -1225,6 +1227,6 @@ public class AutoVorki extends Plugin {
     }
 
     private boolean actionNPC(int id, MenuAction action) {
-        return actionNPC(id, action, calc.getRandomIntBetweenRange(25, 200));
+        return actionNPC(id, action, 0);
     }
 }
