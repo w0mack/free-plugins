@@ -551,6 +551,7 @@ public class AutoVorki extends Plugin {
                     actionNPC(NpcID.VORKATH_8059, MenuAction.NPC_FIRST_OPTION); // 8061
                     acidX = startLoc.getSceneX();
                     acidY = startLoc.getSceneY();
+                    steps = 0;
                     timeout = 2;
                     specced = false;
                     attack = true;
@@ -579,8 +580,8 @@ public class AutoVorki extends Plugin {
                                 utils.doInvokeMsTime(targetMenu, 0);
                             else
                                 utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
-                        }
-                        actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
+                        } else
+                            actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
                     }
                     break;
                 case ACID_WALK:
