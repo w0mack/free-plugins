@@ -560,7 +560,7 @@ public class AutoVorki extends Plugin {
                         lootItem(toLoot);
                     break;
                 case SPECIAL_ATTACK:
-                    Widget widget = client.getWidget(38862884);
+                    Widget widget = client.getWidget(WidgetInfo.MINIMAP_SPEC_CLICKBOX);
 
                     if (widget != null) {
                         bounds = widget.getBounds();
@@ -573,11 +573,13 @@ public class AutoVorki extends Plugin {
                     if (!equip.isEquipped(ItemID.BANDOS_GODSWORD) && !inv.isFull())
                         actionItem(ItemID.BANDOS_GODSWORD, MenuAction.ITEM_SECOND_OPTION);
                     else {
-                        targetMenu = new LegacyMenuEntry("<col=ff9040>Special Attack</col>", "", 1, MenuAction.CC_OP.getId(), -1, WidgetInfo.MINIMAP_SPEC_ORB.getId(), false);
-                        if (config.invokes())
-                            utils.doInvokeMsTime(targetMenu, 0);
-                        else
-                            utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
+                        if (client.getVar(VarPlayer.SPECIAL_ATTACK_ENABLED) == 0) {
+                            targetMenu = new LegacyMenuEntry("<col=ff9040>Special Attack</col>", "", 1, MenuAction.CC_OP.getId(), -1, WidgetInfo.MINIMAP_SPEC_CLICKBOX.getId(), false);
+                            if (config.invokes())
+                                utils.doInvokeMsTime(targetMenu, 0);
+                            else
+                                utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
+                        }
                         actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
                     }
                     break;
