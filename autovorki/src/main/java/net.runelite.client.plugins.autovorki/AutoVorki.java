@@ -130,7 +130,7 @@ public class AutoVorki extends Plugin {
     public AutoVorki() {
         moonclanTele = new WorldArea(new WorldPoint(2106, 3912, 0), new WorldPoint(2115, 3919, 0));
         moonclanBankTile = new WorldPoint(2099, 3919, 0);
-        kickedOffIsland = new WorldArea(new WorldPoint(2628, 3675, 0), new WorldPoint(2635, 3680, 0));
+        kickedOffIsland = new WorldArea(new WorldPoint(2626, 3666, 0), new WorldPoint(2643, 3683, 0));
         afterBoat = new WorldArea(new WorldPoint(2277, 4034, 0), new WorldPoint(2279, 4036, 0));
         beforeObstacle = new WorldPoint(2272, 4052, 0);
         regions = Arrays.asList(7513, 7514, 7769, 7770, 8025, 8026);
@@ -480,14 +480,11 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.offhandID());
                     break;
                 case WITHDRAW_PRAYER_RESTORE:
-                    withdrawItem(config.prayer().getDose4(), 2);
+                    withdrawItem(config.prayer().getDose4(), 4);
                     timeout = 1;
                     break;
                 case WITHDRAW_RUNE_POUCH:
                     withdrawItem(ItemID.RUNE_POUCH);
-                    break;
-                case WITHDRAW_SINGLE_FOOD:
-                    withdrawItem(config.food().getId());
                     break;
                 case WITHDRAW_HOUSE_TELE:
                     if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
@@ -504,6 +501,13 @@ public class AutoVorki extends Plugin {
                 case FINISHED_WITHDRAWING:
                     if (inv.isFull())
                         withdrawn = true;
+                    break;
+                case WITHDRAW_FREM_SEA_BOOTS:
+                    withdrawItem(ItemID.FREMENNIK_SEA_BOOTS_4);
+                    break;
+                case TELE_SEA_BOOTS:
+                    actionItem(ItemID.FREMENNIK_SEA_BOOTS_4, MenuAction.ITEM_SECOND_OPTION);
+                    timeout = calc.getRandomIntBetweenRange(3, 6);
                     break;
                 case TALK_TO_BANKER:
                     actionNPC(badBanker, MenuAction.NPC_FIRST_OPTION);
@@ -556,11 +560,7 @@ public class AutoVorki extends Plugin {
                         lootItem(toLoot);
                     break;
                 case SPECIAL_ATTACK:
-                    //Widget widget = client.getWidget(38862884);
-                    boolean cookingWidgetLoaded;
-
-                    Widget widget = client.getWidget(270, 13);
-                    cookingWidgetLoaded = (widget != null && !widget.isHidden());
+                    Widget widget = client.getWidget(38862884);
 
                     if (widget != null) {
                         bounds = widget.getBounds();
@@ -927,20 +927,17 @@ public class AutoVorki extends Plugin {
                 if (config.useStaff() && !inv.containsItem(config.staffID()) && !equip.isEquipped(config.staffID())) {
                     return AutoVorkiState.WITHDRAW_MAGIC_STAFF;
                 }
-                if (!config.useStaff() && inv.getItemCount(config.food().getId(), false) == 0)
-                    return AutoVorkiState.WITHDRAW_SINGLE_FOOD;
-                if (inv.getItemCount(config.prayer().getDose4(), false) == 2) {
-                    return AutoVorkiState.WITHDRAW_PRAYER_RESTORE;
-                }
                 if (!inv.containsItem(config.houseTele().getId())) {
                     return AutoVorkiState.WITHDRAW_HOUSE_TELE;
                 }
                 if (!inv.isFull()) {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
                 }
+                if (!inv.containsItem(ItemID.FREMENNIK_SEA_BOOTS_4) && config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.FREMENNIK_BOOTS_4)
+                    return AutoVorkiState.WITHDRAW_FREM_SEA_BOOTS;
                 return AutoVorkiState.FINISHED_WITHDRAWING;
             } else if (deposited && withdrawn && inv.getItemCount(config.food().getId(), false) >= 4) {
-                return AutoVorkiState.TALK_TO_BANKER;
+                return config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.TALK_TO_BANKER ? AutoVorkiState.TALK_TO_BANKER : AutoVorkiState.TELE_SEA_BOOTS;
             } else {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
             }
@@ -953,10 +950,14 @@ public class AutoVorki extends Plugin {
     }
 
     void equipWeapons() {
-        if (!equip.isEquipped(config.mainhandID()) && timeout <= 1)
+        if (!equip.isEquipped(config.mainhandID()) && timeout <= 1) {
             actionItem(config.mainhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
-        if (!equip.isEquipped(config.offhandID()) && timeout <= 1)
+            return;
+        }
+        if (!equip.isEquipped(config.offhandID()) && timeout <= 1) {
             actionItem(config.offhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+            return;
+        }
         if (attack) {
             actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
             attack = false;
@@ -1070,9 +1071,14 @@ public class AutoVorki extends Plugin {
     }
 
     private void withdrawItem(int id, int qty) {
-        if (qty <= 0)
-            qty = 1;
-        bank.withdrawItemAmount(id, qty);
+        Widget item = bank.getBankItemWidget(id);
+        if (item != null) {
+            if (qty <= 0)
+                qty = 1;
+            bank.withdrawItemAmount(id, qty);
+        } else {
+            utils.sendGameMessage("Unable to find item: " + id);
+        }
     }
 
     private void withdrawItem(int id) {
@@ -1080,7 +1086,12 @@ public class AutoVorki extends Plugin {
     }
 
     private void withdrawAllItem(int id) {
-        bank.withdrawAllItem(id);
+        Widget item = bank.getBankItemWidget(id);
+        if (item != null) {
+            bank.withdrawAllItem(id);
+        } else {
+            utils.sendGameMessage("Unable to find item: " + id);
+        }
     }
 
     private boolean isInVorkath() {

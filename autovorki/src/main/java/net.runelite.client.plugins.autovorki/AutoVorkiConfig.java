@@ -123,37 +123,40 @@ public interface AutoVorkiConfig extends Config {
         return 0;
     }
 
-    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 18)
+    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 18)
+    default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
+
+    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 20)
     default SuperCombat superCombat() {
         return SuperCombat.DIVINE_SUPER_COMBAT;
     }
 
-    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 19)
+    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 20)
     default int boostLevel() {
         return 10;
     }
 
-    @ConfigItem(keyName = "lootBones", name = "Loot Superior dragon bones", description = "", position = 994)
+    @ConfigItem(keyName = "lootBones", name = "Loot Superior dragon bones", description = "", position = 993)
     default boolean lootBones() {
         return true;
     }
 
-    @ConfigItem(keyName = "eatLoot", name = "Eat food to loot", description = "", position = 995)
+    @ConfigItem(keyName = "eatLoot", name = "Eat food to loot", description = "", position = 994)
     default boolean eatLoot() {
         return true;
     }
 
-    @ConfigItem(keyName = "lootValue", name = "Item value to loot", description = "Loot items over this value", position = 996)
+    @ConfigItem(keyName = "lootValue", name = "Item value to loot", description = "Loot items over this value", position = 995)
     default int lootValue() {
         return 25000;
     }
 
-    @ConfigItem(keyName = "includedItems", name = "Included items", description = "Full or partial names of items to loot regardless of value<br>Seperate with a comma", position = 997)
+    @ConfigItem(keyName = "includedItems", name = "Included items", description = "Full or partial names of items to loot regardless of value<br>Seperate with a comma", position = 996)
     default String includedItems() {
         return "rune longsword";
     }
 
-    @ConfigItem(keyName = "excludedItems", name = "Excluded items", description = "Full or partial names of items to NOT loot<br>Seperate with a comma", position = 998)
+    @ConfigItem(keyName = "excludedItems", name = "Excluded items", description = "Full or partial names of items to NOT loot<br>Seperate with a comma", position = 997)
     default String excludedItems() {
         return "ruby bolt,diamond bolt,emerald bolt,dragonstone bolt";
     }
@@ -171,6 +174,13 @@ public interface AutoVorkiConfig extends Config {
     @ConfigItem(keyName = "debug", name = "Debug Messages", description = "", position = 1000)
     default boolean debug() {
         return false;
+    }
+
+    enum RellekkaTele {
+        TALK_TO_BANKER(0),
+        FREMENNIK_BOOTS_4(1);
+        @Getter private final int option;
+        RellekkaTele(int option) { this.option = option; }
     }
 
     enum Food {
