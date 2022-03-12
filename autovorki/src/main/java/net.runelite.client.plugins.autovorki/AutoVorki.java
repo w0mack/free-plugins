@@ -573,7 +573,7 @@ public class AutoVorki extends Plugin {
                     if (!equip.isEquipped(ItemID.BANDOS_GODSWORD) && !inv.isFull())
                         actionItem(ItemID.BANDOS_GODSWORD, MenuAction.ITEM_SECOND_OPTION);
                     else {
-                        targetMenu = new LegacyMenuEntry("<col=ff9040>Special Attack</col>", "", 1, MenuAction.CC_OP.getId(), -1, 38862884, false);
+                        targetMenu = new LegacyMenuEntry("<col=ff9040>Special Attack</col>", "", 1, MenuAction.CC_OP.getId(), -1, WidgetInfo.MINIMAP_SPEC_ORB.getId(), false);
                         if (config.invokes())
                             utils.doInvokeMsTime(targetMenu, 0);
                         else
@@ -906,6 +906,9 @@ public class AutoVorki extends Plugin {
                 if (!inv.containsItem(config.mainhandID()) && !equip.isEquipped(config.mainhandID())) {
                     return AutoVorkiState.WITHDRAW_MAINHAND;
                 }
+                if (!inv.containsItem(config.offhandID()) && !equip.isEquipped(config.offhandID())) {
+                    return AutoVorkiState.WITHDRAW_OFFHAND;
+                }
                 if (!inv.containsItem(config.superCombat().getDose4())) {
                     return AutoVorkiState.WITHDRAW_SUPER_COMBAT;
                 }
@@ -914,9 +917,6 @@ public class AutoVorki extends Plugin {
                 }
                 if (!inv.containsItem(config.antivenom().getDose4()) && config.antivenom().getDose4() != ItemID.SERPENTINE_HELM) {
                     return AutoVorkiState.WITHDRAW_ANTIVENOM;
-                }
-                if (!inv.containsItem(config.offhandID()) && !equip.isEquipped(config.offhandID())) {
-                    return AutoVorkiState.WITHDRAW_OFFHAND;
                 }
                 if (inv.getItemCount(config.prayer().getDose4(), false) == 0) {
                     return AutoVorkiState.WITHDRAW_PRAYER_RESTORE;
