@@ -1178,10 +1178,7 @@ public class AutoVorki extends Plugin {
         if (inv.containsItem(id)) {
             WidgetItem item = inv.getWidgetItem(id);
             targetMenu = new LegacyMenuEntry("", "", item.getId(), action, item.getIndex(), WidgetInfo.INVENTORY.getId(), false);
-            if (!config.invokes())
-                utils.doActionMsTime(targetMenu, item.getCanvasBounds(), delay);
-            else
-                utils.doInvokeMsTime(targetMenu, 0);
+            utils.doInvokeMsTime(targetMenu, 0);
             return true;
         }
         return false;
