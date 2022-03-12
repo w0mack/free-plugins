@@ -208,7 +208,7 @@ public class AutoBasalt extends Plugin
 			return PluginState.TIMEOUT;
 		if (inRegion(client, mineRegion)) {
 			if (player.getWorldLocation().equals(new WorldPoint(2845, 10351, 0))) {
-				walk.sceneWalk(new WorldPoint(player.getWorldLocation().getX(), player.getWorldLocation().getY() - 10, 0), 5, 0);
+				walk.sceneWalk(new WorldPoint(player.getWorldLocation().getX(), player.getWorldLocation().getY() - 5, 0), 4, 0);
 				return PluginState.TIMEOUT;
 			}
 			if (config.mine() == PluginConfig.Mine.BASALT) {
