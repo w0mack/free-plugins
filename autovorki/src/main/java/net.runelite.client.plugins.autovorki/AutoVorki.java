@@ -679,7 +679,6 @@ public class AutoVorki extends Plugin {
                     break;
                 case EQUIP_WEAPONS:
                     equipWeapons();
-                    attack = true;
                     break;
                 case ATTACK_VORKATH:
                     if (steps == 0) {
@@ -901,8 +900,12 @@ public class AutoVorki extends Plugin {
                     else {
                         if (attack && steps == 0) {
                             return AutoVorkiState.ATTACK_VORKATH;
-                        } else
-                            return AutoVorkiState.EQUIP_WEAPONS;
+                        } else {
+                            if (!equip.isEquipped(config.mainhandID()) || !equip.isEquipped(config.offhandID())) {
+                                return AutoVorkiState.EQUIP_WEAPONS;
+                            } else
+                                return AutoVorkiState.TIMEOUT;
+                        }
                     }
 
                 }
@@ -986,9 +989,11 @@ public class AutoVorki extends Plugin {
     void equipWeapons() {
         if (!equip.isEquipped(config.mainhandID()) && timeout <= 1) {
             actionItem(config.mainhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+            attack = true;
         }
         if (!equip.isEquipped(config.offhandID()) && timeout <= 1) {
             actionItem(config.offhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+            attack = true;
         }
     }
 
