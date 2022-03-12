@@ -130,7 +130,7 @@ public class AutoVorki extends Plugin {
     public AutoVorki() {
         moonclanTele = new WorldArea(new WorldPoint(2106, 3912, 0), new WorldPoint(2115, 3919, 0));
         moonclanBankTile = new WorldPoint(2099, 3919, 0);
-        kickedOffIsland = new WorldArea(new WorldPoint(2626, 3666, 0), new WorldPoint(2643, 3683, 0));
+        kickedOffIsland = new WorldArea(new WorldPoint(2626, 3666, 0), new WorldPoint(2649, 3687, 0));
         afterBoat = new WorldArea(new WorldPoint(2277, 4034, 0), new WorldPoint(2279, 4036, 0));
         beforeObstacle = new WorldPoint(2272, 4052, 0);
         regions = Arrays.asList(7513, 7514, 7769, 7770, 8025, 8026);
@@ -1168,9 +1168,9 @@ public class AutoVorki extends Plugin {
         if (obj != null) {
             targetMenu = new LegacyMenuEntry("", "", obj.getId(), action, obj.getSceneMinLocation().getX(), obj.getSceneMinLocation().getY(), false);
             if (!config.invokes())
-                utils.doGameObjectActionMsTime(obj, action.getId(), calc.getRandomIntBetweenRange(25, 300));
+                utils.doGameObjectActionMsTime(obj, action.getId(), calc.getRandomIntBetweenRange(25, 200));
             else
-                utils.doInvokeMsTime(targetMenu, 0);
+                utils.doInvokeMsTime(targetMenu, calc.getRandomIntBetweenRange(25, 200));
             return true;
         }
         return false;
@@ -1180,14 +1180,14 @@ public class AutoVorki extends Plugin {
         if (inv.containsItem(id)) {
             WidgetItem item = inv.getWidgetItem(id);
             targetMenu = new LegacyMenuEntry("", "", item.getId(), action, item.getIndex(), WidgetInfo.INVENTORY.getId(), false);
-            utils.doInvokeMsTime(targetMenu, 0);
+            utils.doInvokeMsTime(targetMenu, delay);
             return true;
         }
         return false;
     }
 
     private boolean actionItem(int id, MenuAction action) {
-        return actionItem(id, action, 0);
+        return actionItem(id, action, calc.getRandomIntBetweenRange(25, 200));
     }
 
     private boolean actionNPC(int id, MenuAction action, int delay) {
@@ -1197,13 +1197,13 @@ public class AutoVorki extends Plugin {
             if (!config.invokes())
                 utils.doNpcActionMsTime(target, action.getId(), delay);
             else
-                utils.doInvokeMsTime(targetMenu, 0);
+                utils.doInvokeMsTime(targetMenu, delay);
             return true;
         }
         return false;
     }
 
     private boolean actionNPC(int id, MenuAction action) {
-        return actionNPC(id, action, 0);
+        return actionNPC(id, action, calc.getRandomIntBetweenRange(25, 200));
     }
 }
