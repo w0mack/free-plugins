@@ -580,8 +580,10 @@ public class AutoVorki extends Plugin {
                                 utils.doInvokeMsTime(targetMenu, 0);
                             else
                                 utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
-                        } else
+                        } else {
                             actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
+                            timeout = 3;
+                        }
                     }
                     break;
                 case ACID_WALK:
