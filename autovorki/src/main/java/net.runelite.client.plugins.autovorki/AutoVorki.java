@@ -606,14 +606,7 @@ public class AutoVorki extends Plugin {
                             } else { // move back here
                                 if (safeX == -1) {
                                     utils.sendGameMessage("Unable to find suitable walk path");
-                                    if (config.houseTele().getId() == ItemID.CONSTRUCT_CAPET || config.houseTele().getId() == ItemID.CONSTRUCT_CAPE)
-                                        actionItem(ItemID.CONSTRUCT_CAPET, MenuAction.ITEM_FOURTH_OPTION);
-                                    else if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
-                                        actionItem(ItemID.TELEPORT_TO_HOUSE, MenuAction.ITEM_FIRST_OPTION);
-                                    timeout = calc.getRandomIntBetweenRange(6, 8);
-                                    withdrawn = false;
-                                    deposited = false;
-                                    steps = 0;
+                                    teleToPoH();
                                     break;
                                 }
                                 if (config.invokes()) {
@@ -864,7 +857,9 @@ public class AutoVorki extends Plugin {
                 if (player.getWorldArea().intersectsWith(moonclanTele)) {
                     return AutoVorkiState.TRAVEL_BANK;
                 }
-                if (inv.containsItem(config.houseTele().getId())) {
+                if (inv.containsItem(config.houseTele().getId())
+                        || ((inv.containsItem(ItemID.RUNE_POUCH) || inv.containsItem(ItemID.RUNE_POUCH_L))
+                        && config.houseTele().getId() == 1)) {
                     return AutoVorkiState.TELE_TO_POH;
                 }
                 return AutoVorkiState.TIMEOUT;
@@ -887,9 +882,7 @@ public class AutoVorki extends Plugin {
                 if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && !toLoot.isEmpty() && inv.isFull() && config.eatLoot())
                     return AutoVorkiState.EAT_FOOD;
                 if (obtainedPet) {
-                    actionItem(config.houseTele().getId(),
-                            config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE ?
-                                    MenuAction.ITEM_FIRST_OPTION : MenuAction.ITEM_FOURTH_OPTION);
+                    teleToPoH();
                     shutDown();
                     return null;
                 }
@@ -1012,13 +1005,13 @@ public class AutoVorki extends Plugin {
                 if (inv.getItemCount(config.prayer().getDose4(), false) == 0) {
                     return AutoVorkiState.WITHDRAW_PRAYER_RESTORE;
                 }
-                if (!inv.containsItem(ItemID.RUNE_POUCH)) {
+                if (!inv.containsItem(ItemID.RUNE_POUCH) && !inv.containsItem(ItemID.RUNE_POUCH_L)) {
                     return AutoVorkiState.WITHDRAW_RUNE_POUCH;
                 }
                 if (config.useStaff() && !inv.containsItem(config.staffID()) && !equip.isEquipped(config.staffID())) {
                     return AutoVorkiState.WITHDRAW_MAGIC_STAFF;
                 }
-                if (!inv.containsItem(config.houseTele().getId())) {
+                if (!inv.containsItem(config.houseTele().getId()) && config.houseTele().getId() != 1) {
                     return AutoVorkiState.WITHDRAW_HOUSE_TELE;
                 }
                 if (!inv.containsItem(ItemID.FREMENNIK_SEA_BOOTS_4) && config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.FREMENNIK_BOOTS_4)
@@ -1207,9 +1200,17 @@ public class AutoVorki extends Plugin {
             actionItem(ItemID.CONSTRUCT_CAPET, MenuAction.ITEM_FOURTH_OPTION);
         else if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
             actionItem(ItemID.TELEPORT_TO_HOUSE, MenuAction.ITEM_FIRST_OPTION);
+        else if (config.houseTele().getId() == 1) {
+            Widget widget = client.getWidget(218, 29);
+            if (widget != null) {
+                targetMenu = new LegacyMenuEntry("Cast", "<col=00ff00>Teleport to House</col>", 1 , MenuAction.CC_OP, -1, widget.getId(), false);
+                utils.doActionMsTime(targetMenu, widget.getBounds(), calc.getRandomIntBetweenRange(25, 200));
+            }
+        }
         timeout = calc.getRandomIntBetweenRange(6, 8);
         withdrawn = false;
         deposited = false;
+        steps = 0;
         toLoot.clear();
     }
 

@@ -258,7 +258,8 @@ public interface AutoVorkiConfig extends Config {
     enum HouseTele {
         CONSTRUCTION_CAPE_T(ItemID.CONSTRUCT_CAPET),
         CONSTRUCTION_CAPE(ItemID.CONSTRUCT_CAPE),
-        HOUSE_TABLET(ItemID.TELEPORT_TO_HOUSE);
+        HOUSE_TABLET(ItemID.TELEPORT_TO_HOUSE),
+        HOUSE_TELEPORT(1);
 
         @Getter
         private final int id;
