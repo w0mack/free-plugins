@@ -389,11 +389,12 @@ public class AutoVorki extends Plugin {
                 walkToStand = false;
                 inInstance = false;
                 dodgeBomb = false;
-                diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
-                rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
                 if (!config.useDragonBolts() && config.mainhand().getRange() > 5) {
-                    rubyBolts.remove(ItemID.RUBY_DRAGON_BOLTS_E);
-                    diamondBolts.remove(ItemID.DIAMOND_DRAGON_BOLTS_E);
+                    diamondBolts = Set.of(ItemID.DIAMOND_BOLTS_E);
+                    rubyBolts = Set.of(ItemID.RUBY_BOLTS_E);
+                } else {
+                    diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
+                    rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
                 }
                 kills = 0;
                 excluded = config.excludedItems().toLowerCase().split("\\s*,\\s*");
@@ -1249,8 +1250,8 @@ public class AutoVorki extends Plugin {
     }
 
     private boolean needsRepot() {
-        int real = client.getRealSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : Skill.DEFENCE));
-        int boost = client.getBoostedSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : Skill.DEFENCE));
+        int real = client.getRealSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_BASTION ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.BASTION ? Skill.RANGED : Skill.DEFENCE))));
+        int boost = client.getBoostedSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_BASTION ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.BASTION ? Skill.RANGED : Skill.DEFENCE))));
         int repot = config.boostLevel();
         return boost <= (real + repot);
     }
