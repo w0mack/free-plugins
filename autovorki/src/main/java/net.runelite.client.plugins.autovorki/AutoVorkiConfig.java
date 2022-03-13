@@ -51,9 +51,9 @@ public interface AutoVorkiConfig extends Config {
         return ItemID.AVERNIC_DEFENDER;
     }
 
-    @ConfigItem(keyName = "useBGS", name = "Use BGS spec", description = "", position = 4)
-    default boolean useBGS() {
-        return true;
+    @ConfigItem(keyName = "useSpec", name = "Spec", description = "Which special attack do you want to use", position = 4)
+    default Spec useSpec() {
+        return Spec.BANDOS_GODSWORD;
     }
 
     @ConfigItem(keyName = "useStaff", name = "Equip staff", description = "Equip a staff for crumble undead<br>Useful if your magic attack is too low", position = 5)
@@ -94,51 +94,56 @@ public interface AutoVorkiConfig extends Config {
         return 4;
     }
 
+    @Range(min = 1, max = 8)
+    @ConfigItem(keyName = "minPray", name = "Minimum pray", description = "Minimum amount of prayer DOSES for new kill", position = 12)
+    default int minPray() {
+        return 4;
+    }
+
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 12)
+    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 13)
     default int restoreAt() {
         return 20;
     }
 
-    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 13)
+
+    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 14)
     default Antifire antifire() {
         return Antifire.EXT_SUPER_ANTIFIRE;
     }
 
-    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 14)
+    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 15)
     default boolean drinkAntifire() {
         return true;
     }
 
-    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 15)
+    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 16)
     default Antivenom antivenom() {
         return Antivenom.ANTI_VENOM_PLUS;
     }
 
-    @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 16)
-    default HouseTele houseTele() {
-        return HouseTele.CONSTRUCTION_CAPE_T;
-    }
+    @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 17)
+    default HouseTele houseTele() { return HouseTele.CONSTRUCTION_CAPE_T; }
 
-    @ConfigItem(keyName = "moonClanTele", name = "MoonClan", description = "The name of your moonclan teleport", position = 17)
+    @ConfigItem(keyName = "moonClanTele", name = "MoonClan", description = "The name of your moonclan teleport", position = 18)
     default MoonClanTele moonClanTele() {
         return MoonClanTele.PORTAL_NEXUS;
     }
 
-    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 18)
+    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 19)
     default int cMoonClanTele() {
         return 0;
     }
 
-    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 19)
+    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 20)
     default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
 
-    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 21)
+    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 22)
     default SuperCombat superCombat() {
         return SuperCombat.DIVINE_SUPER_COMBAT;
     }
 
-    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 22)
+    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 23)
     default int boostLevel() {
         return 10;
     }
@@ -188,6 +193,17 @@ public interface AutoVorkiConfig extends Config {
         FREMENNIK_BOOTS_4(1);
         @Getter private final int option;
         RellekkaTele(int option) { this.option = option; }
+    }
+
+    enum Spec {
+        NONE(-1, 0),
+        BANDOS_GODSWORD(ItemID.BANDOS_GODSWORD, 50),
+        DRAGON_WARHAMMER(ItemID.DRAGON_WARHAMMER, 50);
+        @Getter private final int itemId, specAmt;
+        Spec(int itemId, int specAmt) {
+            this.itemId = itemId;
+            this.specAmt = specAmt;
+        }
     }
 
     enum Food {

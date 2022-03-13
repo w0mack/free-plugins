@@ -267,7 +267,8 @@ public class AutoVorki extends Plugin {
         final Actor actor = event.getActor();
 
         if (actor == player) {
-            if (actor.getAnimation() == 7642) {
+            if (actor.getAnimation() == 7642 || actor.getAnimation() == 1378) {
+                // bgs spec / dwh spec
                 specced = true;
                 attack = true;
             }
@@ -429,10 +430,10 @@ public class AutoVorki extends Plugin {
                         timeout = 8;
                     }
                     break;
-                case EQUIP_BGS:
+                case EQUIP_SPEC_WEAPON:
                     targetMenu = new LegacyMenuEntry("Wield", "", 9, MenuAction.CC_OP_LOW_PRIORITY, 0, WidgetInfo.BANK_INVENTORY_ITEMS_CONTAINER.getId(), false);
                     if (!config.invokes())
-                        utils.doActionMsTime(targetMenu, inv.getWidgetItem(ItemID.BANDOS_GODSWORD).getCanvasBounds(), 0);
+                        utils.doActionMsTime(targetMenu, inv.getWidgetItem(config.useSpec().getItemId()).getCanvasBounds(), 0);
                     else
                         utils.doInvokeMsTime(targetMenu, 0);
                     timeout = 2;
@@ -480,8 +481,8 @@ public class AutoVorki extends Plugin {
                 case WITHDRAW_FOOD_FILL:
                     withdrawAllItem(config.food().getId());
                     break;
-                case WITHDRAW_BGS:
-                    withdrawItem(ItemID.BANDOS_GODSWORD);
+                case WITHDRAW_SPEC_WEAPON:
+                    withdrawItem(config.useSpec().getItemId());
                     break;
                 case FINISHED_WITHDRAWING:
                     if (inv.isFull())
@@ -573,7 +574,7 @@ public class AutoVorki extends Plugin {
                     }
 
                     // !specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT
-                    if (equip.isEquipped(ItemID.BANDOS_GODSWORD)) {
+                    if (equip.isEquipped(config.useSpec().getItemId())) {
                         if (client.getVar(VarPlayer.SPECIAL_ATTACK_ENABLED) == 0) {
                             targetMenu = new LegacyMenuEntry("<col=ff9040>Special Attack</col>", "", 1, MenuAction.CC_OP.getId(), -1, WidgetInfo.MINIMAP_SPEC_CLICKBOX.getId(), false);
                             if (config.invokes())
@@ -588,7 +589,7 @@ public class AutoVorki extends Plugin {
                         if (inv.isFull()) {
                             eatFood();
                         } else {
-                            actionItem(ItemID.BANDOS_GODSWORD, MenuAction.ITEM_SECOND_OPTION);
+                            actionItem(config.useSpec().getItemId(), MenuAction.ITEM_SECOND_OPTION);
                         }
                     }
                     break;
@@ -770,11 +771,6 @@ public class AutoVorki extends Plugin {
         String killComplete = "Your Vorkath";
         String petDrop = "You have a funny feeling like you're being followed.";
 
-        /*if (event.getMessage().equals(prayerMessage) && client.getVar(Varbits.QUICK_PRAYER) == 0 ) {
-            LegacyMenuEntry entry = new LegacyMenuEntry("Activate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
-            int sleep = calc.getRandomIntBetweenRange(25, 200);
-            utils.doInvokeMsTime(entry, sleep);
-        } else */
         if (event.getMessage().equals(spawnExplode) || (event.getMessage().equals(unfrozenMessage))) {
             killSpawn = false;
             zombSpawn = null;
@@ -795,7 +791,7 @@ public class AutoVorki extends Plugin {
         } else if (event.getMessage().equals(deathMessage)) {
             timeout = 2;
             utils.sendGameMessage("AutoVorki: Stopping because we died.");
-            utils.sendGameMessage("AutoVorki: Last state:" + lastState.toString() + ".");
+            utils.sendGameMessage("AutoVorki: Last state: " + lastState.toString() + ".");
             SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
             utils.sendGameMessage("Died at: " + format.format(date));
@@ -941,9 +937,9 @@ public class AutoVorki extends Plugin {
                         return AutoVorkiState.ENABLE_PRAYER;
                     if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getAnimation() == 7949)
                         return AutoVorkiState.DISABLE_PRAYER;
-                    if (specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
+                    if (specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
                         specced = false;
-                    if (!specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500)
+                    if (!specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500)
                         return AutoVorkiState.SPECIAL_ATTACK;
                     if (attack) {
                         if (!equip.isEquipped(config.mainhandID())
@@ -962,7 +958,7 @@ public class AutoVorki extends Plugin {
                     if (looted) { // this will always be true, but why not triple check
                         if (inv.containsItemAmount(
                                 config.food().getId(), config.minFood(),
-                                false, false)) {
+                                false, false) && getPrayRestoreDoses() >= config.minPray()) {
                             return AutoVorkiState.POKE_VORKATH;
                         } else {
                             return AutoVorkiState.TELE_TO_POH;
@@ -975,17 +971,32 @@ public class AutoVorki extends Plugin {
         return AutoVorkiState.TIMEOUT;
     }
 
+    int getPrayRestoreDoses() {
+        int count = 0;
+        count += (inv.getItemCount(config.prayer().getDose1(), false));
+        count += (inv.getItemCount(config.prayer().getDose2(), false) * 2);
+        count += (inv.getItemCount(config.prayer().getDose3(), false) * 3);
+        count += (inv.getItemCount(config.prayer().getDose4(), false) * 4);
+        if (config.debug())
+            utils.sendGameMessage("current dose count: " + count);
+        return count;
+    }
+
     AutoVorkiState getBankState() {
         if (bank.isOpen()) {
             if (!deposited && !withdrawn) {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
             }
             if (deposited && !withdrawn) {
-                if (config.useBGS() && inv.containsItem(ItemID.BANDOS_GODSWORD) && !equip.isEquipped(ItemID.BANDOS_GODSWORD) && !inv.isFull()) {
-                    return AutoVorkiState.EQUIP_BGS;
+                if (config.useSpec() != AutoVorkiConfig.Spec.NONE
+                        && inv.containsItem(config.useSpec().getItemId())
+                        && !equip.isEquipped(config.useSpec().getItemId()) && !inv.isFull()) {
+                    return AutoVorkiState.EQUIP_SPEC_WEAPON;
                 }
-                if (config.useBGS() && !inv.containsItem(ItemID.BANDOS_GODSWORD) && !equip.isEquipped(ItemID.BANDOS_GODSWORD)) {
-                    return AutoVorkiState.WITHDRAW_BGS;
+                if (config.useSpec() != AutoVorkiConfig.Spec.NONE
+                        && !inv.containsItem(config.useSpec().getItemId())
+                        && !equip.isEquipped(config.useSpec().getItemId())) {
+                    return AutoVorkiState.WITHDRAW_SPEC_WEAPON;
                 }
                 if (!inv.containsItem(config.mainhandID()) && !equip.isEquipped(config.mainhandID())) {
                     return AutoVorkiState.WITHDRAW_MAINHAND;
@@ -1007,6 +1018,26 @@ public class AutoVorki extends Plugin {
                 }
                 if (!inv.containsItem(ItemID.RUNE_POUCH) && !inv.containsItem(ItemID.RUNE_POUCH_L)) {
                     return AutoVorkiState.WITHDRAW_RUNE_POUCH;
+                }
+                if (config.houseTele() == AutoVorkiConfig.HouseTele.HOUSE_TELEPORT) {
+                    if (!inv.runePouchContains(ItemID.LAW_RUNE)
+                            || !inv.runePouchContains(ItemID.DUST_RUNE)
+                            || !inv.runePouchContains(ItemID.CHAOS_RUNE)) {
+                        utils.sendGameMessage("You do not have either: law, dust and/or chaos runes in your pouch.");
+                        shutDown();
+                        return AutoVorkiState.TIMEOUT;
+                    }
+                } else {
+                    if (!inv.runePouchContains(ItemID.CHAOS_RUNE)) {
+                        if (!inv.runePouchContains(ItemID.DUST_RUNE)) {
+                            if (!inv.runePouchContains(ItemID.AIR_RUNE) && !inv.runePouchContains(ItemID.EARTH_RUNE)) {
+                                utils.sendGameMessage("You do not have either: dust and/or chaos runes in your pouch.");
+                                shutDown();
+                                return AutoVorkiState.TIMEOUT;
+                            }
+                        }
+
+                    }
                 }
                 if (config.useStaff() && !inv.containsItem(config.staffID()) && !equip.isEquipped(config.staffID())) {
                     return AutoVorkiState.WITHDRAW_MAGIC_STAFF;
@@ -1158,6 +1189,7 @@ public class AutoVorki extends Plugin {
             bank.withdrawItemAmount(id, qty);
         } else {
             utils.sendGameMessage("Unable to find item: " + id);
+            shutDown();
         }
     }
 
@@ -1171,6 +1203,7 @@ public class AutoVorki extends Plugin {
             bank.withdrawAllItem(id);
         } else {
             utils.sendGameMessage("Unable to find item: " + id);
+            shutDown();
         }
     }
 
