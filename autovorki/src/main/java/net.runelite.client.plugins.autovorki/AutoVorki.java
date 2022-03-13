@@ -267,8 +267,10 @@ public class AutoVorki extends Plugin {
         final Actor actor = event.getActor();
 
         if (actor == player) {
-            if (actor.getAnimation() == 7642)
+            if (actor.getAnimation() == 7642) {
                 specced = true;
+                attack = true;
+            }
         }
 
         if (vorkath != null) {
@@ -389,6 +391,7 @@ public class AutoVorki extends Plugin {
 
         int pot = -1;
         int sleep = 0;
+        Widget widget = null;
         player = client.getLocalPlayer();
 
         if (player != null && client != null) {
@@ -466,7 +469,7 @@ public class AutoVorki extends Plugin {
                     timeout = 2;
                     break;
                 case WITHDRAW_RUNE_POUCH:
-                    withdrawItem(ItemID.RUNE_POUCH);
+                    withdrawItem(bank.getBankItemWidget(ItemID.RUNE_POUCH) != null ? ItemID.RUNE_POUCH : ItemID.RUNE_POUCH_L);
                     break;
                 case WITHDRAW_HOUSE_TELE:
                     if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
@@ -495,6 +498,19 @@ public class AutoVorki extends Plugin {
                     actionNPC(badBanker, MenuAction.NPC_FIRST_OPTION);
                     break;
                 case DRINK_POOL:
+                    if (client.getVar(Varbits.QUICK_PRAYER) == 1) {
+                        widget = client.getWidget(10485775);
+                        if (widget != null) {
+                            prayBounds = widget.getBounds();
+                        }
+                        targetMenu = new LegacyMenuEntry("Deactivate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, widget.getId(), false);
+                        sleep = calc.getRandomIntBetweenRange(25, 200);
+                        if (config.invokes())
+                            utils.doInvokeMsTime(targetMenu, sleep);
+                        else
+                            utils.doActionMsTime(targetMenu, widget.getBounds(), sleep);
+                        break;
+                    }
                     actionObject(pool, MenuAction.GAME_OBJECT_FIRST_OPTION);
                     timeout = 5;
                     break;
@@ -522,8 +538,15 @@ public class AutoVorki extends Plugin {
                     if (!inInstance)
                         looted = true;
                     timeout = inInstance ? 0 : (calc.getRandomIntBetweenRange(6, 8));
+                    toLoot.clear();
                     break;
                 case POKE_VORKATH:
+                    widget = client.getWidget(WidgetInfo.MINIMAP_SPEC_CLICKBOX);
+
+                    if (widget != null) {
+                        bounds = widget.getBounds();
+                    }
+
                     startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128));
                     if (!player.getLocalLocation().equals(startLoc)) {
                         walkToStart();
@@ -539,19 +562,18 @@ public class AutoVorki extends Plugin {
                     attack = true;
                     break;
                 case LOOT_VORKATH:
-                    if (toLoot != null)
+                    if (!toLoot.isEmpty())
                         lootItem(toLoot);
                     break;
                 case SPECIAL_ATTACK:
-                    Widget widget = client.getWidget(WidgetInfo.MINIMAP_SPEC_CLICKBOX);
+                    widget = client.getWidget(WidgetInfo.MINIMAP_SPEC_CLICKBOX);
 
                     if (widget != null) {
                         bounds = widget.getBounds();
                     }
 
-                    if (!equip.isEquipped(ItemID.BANDOS_GODSWORD) && !inv.isFull())
-                        actionItem(ItemID.BANDOS_GODSWORD, MenuAction.ITEM_SECOND_OPTION);
-                    else {
+                    // !specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT
+                    if (equip.isEquipped(ItemID.BANDOS_GODSWORD)) {
                         if (client.getVar(VarPlayer.SPECIAL_ATTACK_ENABLED) == 0) {
                             targetMenu = new LegacyMenuEntry("<col=ff9040>Special Attack</col>", "", 1, MenuAction.CC_OP.getId(), -1, WidgetInfo.MINIMAP_SPEC_CLICKBOX.getId(), false);
                             if (config.invokes())
@@ -560,7 +582,13 @@ public class AutoVorki extends Plugin {
                                 utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
                             timeout = 1;
                         } else {
-                            attack = true;
+                            attack();
+                        }
+                    } else {
+                        if (inv.isFull()) {
+                            eatFood();
+                        } else {
+                            actionItem(ItemID.BANDOS_GODSWORD, MenuAction.ITEM_SECOND_OPTION);
                         }
                     }
                     break;
@@ -683,12 +711,24 @@ public class AutoVorki extends Plugin {
                     equipWeapons();
                     break;
                 case ATTACK_VORKATH:
-                    if (steps == 0) {
-                        attack = false;
-                        actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
-                        timeout = 1;
-                    }
+                    attack();
                     break;
+            }
+        }
+    }
+
+    void attack() {
+        if (steps == 0) {
+            if (!equip.isEquipped(config.mainhandID()) && timeout <= 1 && specced) {
+                actionItem(config.mainhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+                attack = true;
+            } else if (!equip.isEquipped(config.offhandID()) && timeout <= 1 && specced) {
+                actionItem(config.offhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+                attack = true;
+            } else {
+                attack = false;
+                actionNPC(NpcID.VORKATH_8061, MenuAction.NPC_SECOND_OPTION); // 8061
+                timeout = 1;
             }
         }
     }
@@ -896,13 +936,13 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.DRINK_SUPER_COMBAT;
                 }
 
-                // if vorkath is waking
+                // if vorkath is WAKING
                 if (vorkath.getId() == NpcID.VORKATH_8058) {
                     if (client.getVar(Varbits.QUICK_PRAYER) == 0)
                         return AutoVorkiState.ENABLE_PRAYER;
                 }
 
-                // if vorkath is *woke* state
+                // if vorkath is AWAKE
                 if (vorkath.getId() == NpcID.VORKATH_8061) {
                     if (client.getVar(Varbits.QUICK_PRAYER) == 0 && vorkath.getAnimation() != 7949)
                         return AutoVorkiState.ENABLE_PRAYER;
@@ -910,26 +950,19 @@ public class AutoVorki extends Plugin {
                         return AutoVorkiState.DISABLE_PRAYER;
                     if (specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
                         specced = false;
-                    if (!specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500) {
-                        if (inv.isFull() && !equip.isEquipped(ItemID.BANDOS_GODSWORD))
-                            return AutoVorkiState.EAT_FOOD;
-                        if (attack)
-                            return AutoVorkiState.ATTACK_VORKATH;
+                    if (!specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500)
                         return AutoVorkiState.SPECIAL_ATTACK;
-                    } else {
-                        if (attack && steps == 0) {
-                            return AutoVorkiState.ATTACK_VORKATH;
-                        } else {
-                            if (!equip.isEquipped(config.mainhandID()) || !equip.isEquipped(config.offhandID())) {
-                                return AutoVorkiState.EQUIP_WEAPONS;
-                            } else
-                                return AutoVorkiState.TIMEOUT;
-                        }
-                    }
+                    if (attack) {
+                        if (!equip.isEquipped(config.mainhandID())
+                                || !equip.isEquipped(config.offhandID()))
+                            return AutoVorkiState.EQUIP_WEAPONS;
+                        return AutoVorkiState.ATTACK_VORKATH;
+                    } else
+                        return AutoVorkiState.TIMEOUT;
 
                 }
 
-                // if vorkath is napping
+                // if vorkath is SLEEPING
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
                     if (client.getVar(Varbits.QUICK_PRAYER) == 1)
                         return AutoVorkiState.DISABLE_PRAYER;
@@ -994,7 +1027,7 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
                 }
                 return AutoVorkiState.FINISHED_WITHDRAWING;
-            } else if (deposited && withdrawn && inv.getItemCount(config.food().getId(), false) >= 4) {
+            } else if (deposited && inv.getItemCount(config.food().getId(), false) >= 4) {
                 return config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.TALK_TO_BANKER ? AutoVorkiState.TALK_TO_BANKER : AutoVorkiState.TELE_SEA_BOOTS;
             } else {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
@@ -1177,6 +1210,7 @@ public class AutoVorki extends Plugin {
         timeout = calc.getRandomIntBetweenRange(6, 8);
         withdrawn = false;
         deposited = false;
+        toLoot.clear();
     }
 
     boolean isLootableItem(TileItem item) {
