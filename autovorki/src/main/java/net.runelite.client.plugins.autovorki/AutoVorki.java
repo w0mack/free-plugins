@@ -52,6 +52,7 @@ public class AutoVorki extends Plugin {
     boolean startVorki;
     boolean attack;
     boolean obtainedPet;
+    boolean walkToStand;
     LegacyMenuEntry targetMenu;
     AutoVorkiState state;
     AutoVorkiState lastState;
@@ -74,6 +75,7 @@ public class AutoVorki extends Plugin {
     NPC vorkath;
     NPC zombSpawn;
     LocalPoint startLoc;
+    LocalPoint standLoc;
     String[] excluded;
     List<String> excludedItems = new ArrayList<>();
     String[] included;
@@ -127,6 +129,9 @@ public class AutoVorki extends Plugin {
     int steps;
     int safeX;
 
+    Set<Integer> diamondBolts;
+    Set<Integer> rubyBolts;
+
     public AutoVorki() {
         moonclanTele = new WorldArea(new WorldPoint(2106, 3912, 0), new WorldPoint(2115, 3919, 0));
         moonclanBankTile = new WorldPoint(2099, 3919, 0);
@@ -150,12 +155,15 @@ public class AutoVorki extends Plugin {
         dodgeBomb = false;
         killSpawn = false;
         obtainedPet = false;
+        walkToStand = false;
         kills = 0;
         lootValue = 0;
         toLoot.clear();
         botTimer = null;
         steps = 0;
         safeX = -1;
+        diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
+        rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
     }
 
     public static boolean isInPOH(Client client) {
@@ -180,6 +188,7 @@ public class AutoVorki extends Plugin {
         message = null;
         vorkath = null;
         zombSpawn = null;
+        walkToStand = false;
         kills = 0;
         lootValue = 0;
         state = AutoVorkiState.TIMEOUT;
@@ -241,12 +250,6 @@ public class AutoVorki extends Plugin {
 
         if (npc.getName().equals("Vorkath")) {
             vorkath = null;
-
-            /*if (client.getVar(Varbits.QUICK_PRAYER) == 1) {
-                LegacyMenuEntry entry = new LegacyMenuEntry("Deactivate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
-                int sleep = calc.getRandomIntBetweenRange(25, 200);
-                utils.doInvokeMsTime(entry, sleep);
-            }*/
         }
 
         if (npc.getName().equals("Zombified Spawn")) {
@@ -267,19 +270,34 @@ public class AutoVorki extends Plugin {
         final Actor actor = event.getActor();
 
         if (actor == player) {
-            if (actor.getAnimation() == 7642 || actor.getAnimation() == 1378) {
-                // bgs spec / dwh spec
+            if (actor.getAnimation() == 7642 || actor.getAnimation() == 1378 || actor.getAnimation() == 7514)  {
+                // bgs spec / dwh spec / claws
                 specced = true;
                 attack = true;
+            }
+            if (actor.getAnimation() == 827) { // waking vorkath
+                walkToStand = true;
             }
         }
 
         if (vorkath != null) {
             if (actor.getAnimation() == 7957 && actor.getName().contains("Vorkath")) { // acid walk
                 steps = 30;
-                startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128));
-                if (!player.getLocalLocation().equals(startLoc)) {
-                    walkToStart();
+                standLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128) - ((config.mainhand().getRange() - 1) * 128));
+                if (!player.getLocalLocation().equals(getStandLoc())) {
+                    walkToStart(config.mainhand().getRange());
+                }
+                if (config.mainhand().getRange() > 1) {
+                    if (playerUtils.isRunEnabled()) {
+                        Widget widget = client.getWidget(160, 25);
+                        if (widget != null) {
+                            bounds = widget.getBounds();
+                        }
+
+                        targetMenu = new LegacyMenuEntry("Toggle Run", "", 1, 57, -1,
+                                10485783, false);
+                        utils.doInvokeMsTime(targetMenu, calc.getRandomIntBetweenRange(100, 250));
+                    }
                 }
                 timeout = 0;
             }
@@ -304,11 +322,11 @@ public class AutoVorki extends Plugin {
             int sleep = calc.getRandomIntBetweenRange(25, 200);
             if (config.useStaff() && inv.containsItem(config.staffID()))
                 actionItem(config.staffID(), MenuAction.ITEM_SECOND_OPTION);
-            startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128));
+            standLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128) - ((config.mainhand().getRange() - 1) * 128));
             if (config.invokeWalk())
-                walk.walkTile(startLoc.getSceneX(), startLoc.getSceneY());
+                walk.walkTile(standLoc.getSceneX(), standLoc.getSceneY());
             else
-                walk.sceneWalk(startLoc, 0, 0);
+                walk.sceneWalk(standLoc, 0, 0);
             killSpawn = true;
         }
     }
@@ -356,6 +374,10 @@ public class AutoVorki extends Plugin {
         }
         if ("startVorki".equals(configButtonClicked.getKey())) {
             if (!startVorki) {
+                if (!config.debug() && config.mainhand().getRange() > 1) {
+                    utils.sendGameMessage("Range is not currently supported.");
+                    return;
+                }
                 startVorki = true;
                 timeout = 0;
                 state = null;
@@ -366,6 +388,7 @@ public class AutoVorki extends Plugin {
                 looted = true;
                 lootValue = 0;
                 killSpawn = false;
+                walkToStand = false;
                 inInstance = false;
                 dodgeBomb = false;
                 kills = 0;
@@ -393,6 +416,7 @@ public class AutoVorki extends Plugin {
         int pot = -1;
         int sleep = 0;
         Widget widget = null;
+        Widget item = null;
         player = client.getLocalPlayer();
 
         if (player != null && client != null) {
@@ -403,8 +427,8 @@ public class AutoVorki extends Plugin {
             if (state != AutoVorkiState.TIMEOUT)
                 lastState = state;
             inInstance = isInVorkath();
-            if (inInstance && startLoc != null)
-                safeX = getSafeX(startLoc);
+            if (inInstance && standLoc != null)
+                safeX = getSafeX(getStandLoc());
             if (player.isMoving() && !inInstance && timeout <= 2 && vorkath == null) {
                 timeout = 1;
                 return;
@@ -451,7 +475,7 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.staffID());
                     break;
                 case WITHDRAW_MAINHAND:
-                    withdrawItem(config.mainhandID());
+                    withdrawItem(config.mainhand().getItemId());
                     break;
                 case WITHDRAW_SUPER_COMBAT:
                     withdrawItem(config.superCombat().getDose4());
@@ -463,7 +487,7 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.antivenom().getDose4());
                     break;
                 case WITHDRAW_OFFHAND:
-                    withdrawItem(config.offhandID());
+                    withdrawItem(config.offhand().getItemId());
                     break;
                 case WITHDRAW_PRAYER_RESTORE:
                     withdrawItem(config.prayer().getDose4(), config.prayerAmount());
@@ -549,14 +573,15 @@ public class AutoVorki extends Plugin {
                     }
 
                     startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128));
+                    standLoc = getStandLoc();
                     if (!player.getLocalLocation().equals(startLoc)) {
                         walkToStart();
                         timeout = 2;
                         break;
                     }
                     actionNPC(NpcID.VORKATH_8059, MenuAction.NPC_FIRST_OPTION); // 8061
-                    acidX = startLoc.getSceneX();
-                    acidY = startLoc.getSceneY();
+                    acidX = standLoc.getSceneX();
+                    acidY = standLoc.getSceneY();
                     steps = 0;
                     timeout = 2;
                     specced = false;
@@ -586,7 +611,8 @@ public class AutoVorki extends Plugin {
                             attack();
                         }
                     } else {
-                        if (inv.isFull()) {
+                        if (inv.isFull() && config.useSpec() != AutoVorkiConfig.Spec.DRAGON_WARHAMMER) {
+                            // don't need inventory space for dwh
                             eatFood();
                         } else {
                             actionItem(config.useSpec().getItemId(), MenuAction.ITEM_SECOND_OPTION);
@@ -594,13 +620,14 @@ public class AutoVorki extends Plugin {
                     }
                     break;
                 case ACID_WALK:
-                    acidX = startLoc.getSceneX();
-                    acidY = startLoc.getSceneY();
+                    acidX = standLoc.getSceneX();
+                    acidY = standLoc.getSceneY();
+
                     if (steps >= 0) {
                         if (steps == 1) {
                             actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION);
                         } else if (steps == 2) {
-                            walkToStart();
+                            walkToStart(config.mainhand().getRange());
                         } else if (steps > 2) {
                             if (steps % 2 == 0) {
                                     actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION);
@@ -623,9 +650,9 @@ public class AutoVorki extends Plugin {
                                         drinkSuperCombat();
                                 }
                                 if (config.invokeWalk()) {
-                                    walk.walkTile(safeX, startLoc.getSceneY() - 1);
+                                    walk.walkTile(safeX, getStandLoc().getSceneY() - 1);
                                 } else {
-                                    walk.sceneWalk(new LocalPoint(safeX * 128, startLoc.getY() - 128), 0, 0);
+                                    walk.sceneWalk(new LocalPoint(safeX * 128, getStandLoc().getY() - 128), 0, 0);
                                 }
                             }
                         }
@@ -707,17 +734,43 @@ public class AutoVorki extends Plugin {
                 case ATTACK_VORKATH:
                     attack();
                     break;
+                case EQUIP_DIAMOND_BOLTS: // equip diamonds
+                    WidgetItem diamond = inv.getWidgetItem(diamondBolts);
+                    if (diamond != null) {
+                        actionItem(diamond.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
+                    }
+                    break;
+                case EQUIP_RUBY_BOLTS: // equip rubies
+                    WidgetItem ruby = inv.getWidgetItem(rubyBolts);
+                    if (ruby != null) {
+                        actionItem(ruby.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
+                    }
+                    break;
+                case WITHDRAW_RUBY_BOLTS:
+                    item = bank.getBankItemWidgetAnyOf(rubyBolts);
+                    if (item != null) {
+                        withdrawAllItem(item.getItemId());
+                    }
+                    timeout = 3;
+                    break;
+                case WITHDRAW_DIAMOND_BOLTS:
+                    item = bank.getBankItemWidgetAnyOf(diamondBolts);
+                    if (item != null) {
+                        withdrawAllItem(item.getItemId());
+                    }
+                    timeout = 3;
+                    break;
             }
         }
     }
 
     void attack() {
         if (steps == 0) {
-            if (!equip.isEquipped(config.mainhandID()) && timeout <= 1 && specced) {
-                actionItem(config.mainhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+            if (!equip.isEquipped(config.mainhand().getItemId()) && timeout <= 1 && specced) {
+                actionItem(config.mainhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, 0);
                 attack = true;
-            } else if (!equip.isEquipped(config.offhandID()) && timeout <= 1 && specced) {
-                actionItem(config.offhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
+            } else if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && specced && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
+                actionItem(config.offhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, 0);
                 attack = true;
             } else {
                 attack = false;
@@ -844,7 +897,7 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.DRINK_POOL;
                 }
                 return AutoVorkiState.TELEPORT_TO_MOONCLAN;
-            } else if (!inv.isFull()) {
+            } else if (!withdrawn) {
                 if (player.getWorldLocation().equals(moonclanBankTile)) {
                     deposited = false;
                     withdrawn = false;
@@ -860,9 +913,9 @@ public class AutoVorki extends Plugin {
                 }
                 return AutoVorkiState.TIMEOUT;
             } else {
-                if (inv.isFull() && player.getWorldArea().intersectsWith(moonclanTele))
+                if (withdrawn && player.getWorldArea().intersectsWith(moonclanTele))
                     return AutoVorkiState.TRAVEL_BANK;
-                if (inv.isFull() && player.getWorldLocation().equals(moonclanBankTile))
+                if (withdrawn && player.getWorldLocation().equals(moonclanBankTile))
                     return AutoVorkiState.FIND_BANK;
                 if (player.getWorldArea().intersectsWith(kickedOffIsland))
                     return AutoVorkiState.USE_BOAT;
@@ -871,6 +924,12 @@ public class AutoVorki extends Plugin {
             }
         } else { // is in instance
             if (vorkath != null) {
+                if (walkToStand) {
+                    walkToStart(config.mainhand().getRange());
+                    timeout = 3;
+                    walkToStand = false;
+                    return AutoVorkiState.TIMEOUT;
+                }
                 if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getId() == NpcID.VORKATH_8059)
                     return AutoVorkiState.DISABLE_PRAYER;
                 if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && !toLoot.isEmpty() && !inv.isFull())
@@ -939,11 +998,16 @@ public class AutoVorki extends Plugin {
                         return AutoVorkiState.DISABLE_PRAYER;
                     if (specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
                         specced = false;
-                    if (!specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500)
+                    if (!specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
                         return AutoVorkiState.SPECIAL_ATTACK;
                     if (attack) {
-                        if (!equip.isEquipped(config.mainhandID())
-                                || !equip.isEquipped(config.offhandID()))
+                        if (calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
+                            return AutoVorkiState.EQUIP_DIAMOND_BOLTS;
+                        if (calculateHealth(vorkath, 750) > 265 && playerUtils.isItemEquipped(diamondBolts) && config.mainhand().getRange() > 5)
+                            return AutoVorkiState.EQUIP_RUBY_BOLTS;
+                        if (!equip.isEquipped(config.mainhand().getItemId())
+                                || (!equip.isEquipped(config.offhand().getItemId())
+                                && config.offhand() != AutoVorkiConfig.Offhand.NONE))
                             return AutoVorkiState.EQUIP_WEAPONS;
                         return AutoVorkiState.ATTACK_VORKATH;
                     } else
@@ -998,10 +1062,12 @@ public class AutoVorki extends Plugin {
                         && !equip.isEquipped(config.useSpec().getItemId())) {
                     return AutoVorkiState.WITHDRAW_SPEC_WEAPON;
                 }
-                if (!inv.containsItem(config.mainhandID()) && !equip.isEquipped(config.mainhandID())) {
+                if (!inv.containsItem(config.mainhand().getItemId()) && !equip.isEquipped(config.mainhand().getItemId())) {
                     return AutoVorkiState.WITHDRAW_MAINHAND;
                 }
-                if (!inv.containsItem(config.offhandID()) && !equip.isEquipped(config.offhandID())) {
+                if (!inv.containsItem(config.offhand().getItemId())
+                        && !equip.isEquipped(config.offhand().getItemId())
+                        && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
                     return AutoVorkiState.WITHDRAW_OFFHAND;
                 }
                 if (!inv.containsItem(config.superCombat().getDose4())) {
@@ -1039,6 +1105,14 @@ public class AutoVorki extends Plugin {
 
                     }
                 }
+                if (config.mainhand().getRange() > 5) { // if using a crossbow
+                    if (!inv.containsItem(rubyBolts) && !playerUtils.isItemEquipped(rubyBolts))
+                        return AutoVorkiState.WITHDRAW_RUBY_BOLTS;
+                    if (!inv.containsItem(diamondBolts) && !playerUtils.isItemEquipped(diamondBolts) && config.useDiamond())
+                        return AutoVorkiState.WITHDRAW_DIAMOND_BOLTS;
+                }
+                if (!playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
+                    return AutoVorkiState.EQUIP_RUBY_BOLTS;
                 if (config.useStaff() && !inv.containsItem(config.staffID()) && !equip.isEquipped(config.staffID())) {
                     return AutoVorkiState.WITHDRAW_MAGIC_STAFF;
                 }
@@ -1052,6 +1126,7 @@ public class AutoVorki extends Plugin {
                 }
                 return AutoVorkiState.FINISHED_WITHDRAWING;
             } else if (deposited && inv.getItemCount(config.food().getId(), false) >= 4) {
+                equipWeapons(false);
                 return config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.TALK_TO_BANKER ? AutoVorkiState.TALK_TO_BANKER : AutoVorkiState.TELE_SEA_BOOTS;
             } else {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
@@ -1065,13 +1140,17 @@ public class AutoVorki extends Plugin {
     }
 
     void equipWeapons() {
-        if (!equip.isEquipped(config.mainhandID()) && timeout <= 1) {
-            actionItem(config.mainhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
-            attack = true;
+        equipWeapons(true);
+    }
+
+    void equipWeapons(boolean att) {
+        if (!equip.isEquipped(config.mainhand().getItemId()) && timeout <= 1) {
+            actionItem(config.mainhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, 0);
+            attack = att;
         }
-        if (!equip.isEquipped(config.offhandID()) && timeout <= 1) {
-            actionItem(config.offhandID(), MenuAction.ITEM_SECOND_OPTION, 0);
-            attack = true;
+        if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
+            actionItem(config.offhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, 0);
+            attack = att;
         }
     }
 
@@ -1162,8 +1241,8 @@ public class AutoVorki extends Plugin {
     }
 
     private boolean needsRepot() {
-        int real = client.getRealSkillLevel(Skill.STRENGTH);
-        int boost = client.getBoostedSkillLevel(Skill.STRENGTH);
+        int real = client.getRealSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : Skill.DEFENCE));
+        int boost = client.getBoostedSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : Skill.DEFENCE));
         int repot = config.boostLevel();
         return boost <= (real + repot);
     }
@@ -1172,9 +1251,17 @@ public class AutoVorki extends Plugin {
         actionNPC(goodBanker, MenuAction.NPC_THIRD_OPTION);
     }
 
+    private LocalPoint getStandLoc() {
+        return new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128) - ((config.mainhand().getRange() - 1) * 128));
+    }
+
     private void walkToStart() {
+        walkToStart(1);
+    }
+
+    private void walkToStart(int range) { // this is gonna be a pain
         if (vorkath != null)
-            startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128));
+            startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128) - ((range - 1) * 128));
         if (!config.invokeWalk())
             walk.sceneWalk(new LocalPoint(startLoc.getX(), startLoc.getY()), 0, 0);
         else

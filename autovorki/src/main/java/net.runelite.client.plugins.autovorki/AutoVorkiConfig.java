@@ -41,134 +41,170 @@ public interface AutoVorkiConfig extends Config {
         return true;
     }
 
-    @ConfigItem(keyName = "mainhandID", name = "Mainhand ID", description = "The item ID of your weapon slot", position = 2)
-    default int mainhandID() {
-        return ItemID.DRAGON_HUNTER_LANCE;
+    @ConfigSection(
+            name = "Weapons",
+            description = "",
+            position = 2,
+            keyName = "weaponsSection"
+    )
+    String weaponsSection = "Weapons";
+
+    @ConfigItem(keyName = "mainhandID", name = "MH", description = "Your main weapon", position = 1, section = weaponsSection)
+    default Mainhand mainhand() {
+        return Mainhand.DRAGON_HUNTER_LANCE;
     }
 
-    @ConfigItem(keyName = "offhandID", name = "Offhand ID", description = "The item ID of your shield slot", position = 3)
-    default int offhandID() {
-        return ItemID.AVERNIC_DEFENDER;
+    @ConfigItem(keyName = "offhandID", name = "OH", description = "Your offhand item", position = 3, section = weaponsSection)
+    default Offhand offhand() {
+        return Offhand.AVERNIC_DEFENDER;
     }
 
-    @ConfigItem(keyName = "useSpec", name = "Spec", description = "Which special attack do you want to use", position = 4)
+    @ConfigItem(keyName = "useSpec", name = "Spec", description = "Which special attack do you want to use", position = 4, section = weaponsSection)
     default Spec useSpec() {
         return Spec.BANDOS_GODSWORD;
     }
 
-    @ConfigItem(keyName = "useStaff", name = "Equip staff", description = "Equip a staff for crumble undead<br>Useful if your magic attack is too low", position = 5)
+    @ConfigItem(keyName = "useStaff", name = "Equip staff", description = "Equip a staff for crumble undead<br>Useful if your magic attack is too low", position = 5, section = weaponsSection)
     default boolean useStaff() {
         return true;
     }
 
-    @ConfigItem(keyName = "staffID", name = "Staff ID", description = "The item ID of your magic weapon", position = 6, hidden = true, unhide = "useStaff")
+    @ConfigItem(keyName = "staffID", name = "Staff ID", description = "The item ID of your magic weapon", position = 6, hidden = true, unhide = "useStaff", section = weaponsSection)
     default int staffID() {
         return ItemID.SANGUINESTI_STAFF;
     }
 
-    @ConfigItem(keyName = "foodID", name = "Food", description = "The name of your food", position = 7)
+    @ConfigItem(keyName = "useDiamond", name = "Use Diamond bolts", description = "Use diamond bolts and ruby during the fight?", position = 7, section = weaponsSection)
+    default boolean useDiamond() {
+        return true;
+    }
+
+    @ConfigSection(
+            name = "Consumables",
+            description = "",
+            position = 3,
+            keyName = "consumablesSection"
+    )
+    String consumablesSection = "Consumables";
+
+    @ConfigItem(keyName = "foodID", name = "Food", description = "The name of your food", position = 7, section = consumablesSection)
     default Food food() {
         return Food.ANGLERFISH;
     }
 
     @Range(min = 1, max = 14)
-    @ConfigItem(keyName = "minFood", name = "Minimum food", description = "Minimum amount of food per kill", position = 8)
+    @ConfigItem(keyName = "minFood", name = "Minimum food", description = "Minimum amount of food per kill", position = 8, section = consumablesSection)
     default int minFood() {
         return 4;
     }
 
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "eatAt", name = "Eat at", description = "Eat food when under this HP", position = 9)
+    @ConfigItem(keyName = "eatAt", name = "Eat at", description = "Eat food when under this HP", position = 9, section = consumablesSection)
     default int eatAt() {
         return 35;
     }
 
-    @ConfigItem(keyName = "prayerID", name = "Prayer restore", description = "The name of your prayer restore", position = 10)
+    @ConfigItem(keyName = "prayerID", name = "Prayer restore", description = "The name of your prayer restore", position = 10, section = consumablesSection)
     default Prayer prayer() {
         return Prayer.PRAYER_POTION;
     }
 
     @Range(min = 1, max = 8)
-    @ConfigItem(keyName = "prayerAmount", name = "Prayer pots", description = "Quantity of prayer restores to bring", position = 11)
+    @ConfigItem(keyName = "prayerAmount", name = "Prayer pots", description = "Quantity of prayer restores to bring", position = 11, section = consumablesSection)
     default int prayerAmount() {
         return 4;
     }
 
     @Range(min = 1, max = 8)
-    @ConfigItem(keyName = "minPray", name = "Minimum pray", description = "Minimum amount of prayer DOSES for new kill", position = 12)
+    @ConfigItem(keyName = "minPray", name = "Minimum pray", description = "Minimum amount of prayer DOSES for new kill", position = 12, section = consumablesSection)
     default int minPray() {
         return 4;
     }
 
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 13)
+    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 13, section = consumablesSection)
     default int restoreAt() {
         return 20;
     }
 
-
-    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 14)
+    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 14, section = consumablesSection)
     default Antifire antifire() {
         return Antifire.EXT_SUPER_ANTIFIRE;
     }
 
-    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 15)
+    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 15, section = consumablesSection)
     default boolean drinkAntifire() {
         return true;
     }
 
-    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 16)
+    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 16, section = consumablesSection)
     default Antivenom antivenom() {
         return Antivenom.ANTI_VENOM_PLUS;
     }
 
-    @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 17)
-    default HouseTele houseTele() { return HouseTele.CONSTRUCTION_CAPE_T; }
-
-    @ConfigItem(keyName = "moonClanTele", name = "MoonClan", description = "The name of your moonclan teleport", position = 18)
-    default MoonClanTele moonClanTele() {
-        return MoonClanTele.PORTAL_NEXUS;
-    }
-
-    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 19)
-    default int cMoonClanTele() {
-        return 0;
-    }
-
-    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 20)
-    default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
-
-    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 22)
+    @ConfigItem(keyName = "superCombatID", name = "Boost", description = "The name of your super combat pot", position = 17, section = consumablesSection)
     default SuperCombat superCombat() {
         return SuperCombat.DIVINE_SUPER_COMBAT;
     }
 
-    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 23)
+    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 18, section = consumablesSection)
     default int boostLevel() {
         return 10;
     }
 
-    @ConfigItem(keyName = "lootBones", name = "Loot Superior dragon bones", description = "", position = 993)
+    @ConfigSection(
+            name = "Teleports",
+            description = "",
+            position = 4,
+            keyName = "teleportsSection"
+    )
+    String teleportsSection = "Teleports";
+
+    @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 19, section = teleportsSection)
+    default HouseTele houseTele() { return HouseTele.CONSTRUCTION_CAPE_T; }
+
+    @ConfigItem(keyName = "moonClanTele", name = "Lunar Isle", description = "The name of your Lunar Isle teleport", position = 20, section = teleportsSection)
+    default MoonClanTele moonClanTele() {
+        return MoonClanTele.PORTAL_NEXUS;
+    }
+
+    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 21, section = teleportsSection)
+    default int cMoonClanTele() {
+        return 0;
+    }
+
+    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 22, section = teleportsSection)
+    default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
+
+    @ConfigSection(
+            name = "Loot",
+            description = "",
+            position = 5,
+            keyName = "lootSection"
+    )
+    String lootSection = "Loot";
+
+    @ConfigItem(keyName = "lootBones", name = "Loot Superior dragon bones", description = "", position = 993, section = lootSection)
     default boolean lootBones() {
         return true;
     }
 
-    @ConfigItem(keyName = "eatLoot", name = "Eat food to loot", description = "", position = 994)
+    @ConfigItem(keyName = "eatLoot", name = "Eat food to loot", description = "", position = 994, section = lootSection)
     default boolean eatLoot() {
         return true;
     }
 
-    @ConfigItem(keyName = "lootValue", name = "Item value to loot", description = "Loot items over this value", position = 995)
+    @ConfigItem(keyName = "lootValue", name = "Item value to loot", description = "Loot items over this value", position = 995, section = lootSection)
     default int lootValue() {
         return 25000;
     }
 
-    @ConfigItem(keyName = "includedItems", name = "Included items", description = "Full or partial names of items to loot regardless of value<br>Seperate with a comma", position = 996)
+    @ConfigItem(keyName = "includedItems", name = "Included items", description = "Full or partial names of items to loot regardless of value<br>Seperate with a comma", position = 996, section = lootSection)
     default String includedItems() {
         return "rune longsword";
     }
 
-    @ConfigItem(keyName = "excludedItems", name = "Excluded items", description = "Full or partial names of items to NOT loot<br>Seperate with a comma", position = 997)
+    @ConfigItem(keyName = "excludedItems", name = "Excluded items", description = "Full or partial names of items to NOT loot<br>Seperate with a comma", position = 997, section = lootSection)
     default String excludedItems() {
         return "ruby bolt,diamond bolt,emerald bolt,dragonstone bolt";
     }
@@ -188,9 +224,45 @@ public interface AutoVorkiConfig extends Config {
         return false;
     }
 
+    enum Mainhand {
+        DRAGON_HUNTER_LANCE(ItemID.DRAGON_HUNTER_LANCE, 1),
+        GHRAZI_RAPIER(ItemID.GHRAZI_RAPIER, 1),
+        ZAMORAKIAN_HASTA(ItemID.ZAMORAKIAN_HASTA, 1),
+        ABYSSAL_DAGGER(ItemID.ABYSSAL_DAGGER, 1),
+        LEAF_BLADED_SWORD(ItemID.LEAFBLADED_SWORD, 1),
+        DRAGON_HUNTER_CROSSBOW(ItemID.DRAGON_HUNTER_CROSSBOW, 7),
+        DRAGON_CROSSBOW(ItemID.DRAGON_CROSSBOW, 7),
+        RUNE_CROSSBOW(ItemID.RUNE_CROSSBOW, 7),
+        BLOWPIPE(ItemID.TOXIC_BLOWPIPE, 5);
+
+        @Getter private final int itemId, range;
+        Mainhand (int itemId, int range) {
+            this.itemId = itemId;
+            this.range = range;
+        }
+    }
+
+    enum Offhand {
+        AVERNIC_DEFENDER(ItemID.AVERNIC_DEFENDER),
+        DRAGON_DEFENDER(ItemID.DRAGON_DEFENDER),
+        DRAGONFIRE_SHIELD(ItemID.DRAGONFIRE_SHIELD),
+        TOKTZ_KET_XIL(ItemID.TOKTZKETXIL),
+        RUNE_DEFENDER(ItemID.RUNE_DEFENDER),
+        DRAGONFIRE_WARD(ItemID.DRAGONFIRE_WARD),
+        ANTI_DRAGON_SHIELD(ItemID.ANTIDRAGON_SHIELD),
+        TWISTED_BUCKLER(ItemID.TWISTED_BUCKLER),
+        NONE(-1);
+
+        @Getter private final int itemId;
+        Offhand(int itemId) {
+            this.itemId = itemId;
+        }
+    }
+
     enum RellekkaTele {
         TALK_TO_BANKER(0),
         FREMENNIK_BOOTS_4(1);
+
         @Getter private final int option;
         RellekkaTele(int option) { this.option = option; }
     }
@@ -198,7 +270,9 @@ public interface AutoVorkiConfig extends Config {
     enum Spec {
         NONE(-1, 0),
         BANDOS_GODSWORD(ItemID.BANDOS_GODSWORD, 50),
-        DRAGON_WARHAMMER(ItemID.DRAGON_WARHAMMER, 50);
+        DRAGON_WARHAMMER(ItemID.DRAGON_WARHAMMER, 50),
+        DRAGON_CLAWS(ItemID.DRAGON_CLAWS, 50);
+
         @Getter private final int itemId, specAmt;
         Spec(int itemId, int specAmt) {
             this.itemId = itemId;
@@ -287,7 +361,11 @@ public interface AutoVorkiConfig extends Config {
 
     enum SuperCombat {
         DIVINE_SUPER_COMBAT(ItemID.DIVINE_SUPER_COMBAT_POTION4, ItemID.DIVINE_SUPER_COMBAT_POTION3, ItemID.DIVINE_SUPER_COMBAT_POTION2, ItemID.DIVINE_SUPER_COMBAT_POTION1),
-        SUPER_COMBAT(ItemID.SUPER_COMBAT_POTION4, ItemID.SUPER_COMBAT_POTION3, ItemID.SUPER_COMBAT_POTION2, ItemID.SUPER_COMBAT_POTION1);
+        DIVINE_BASTION(ItemID.DIVINE_BASTION_POTION4, ItemID.DIVINE_BASTION_POTION3, ItemID.DIVINE_BASTION_POTION2, ItemID.DIVINE_BASTION_POTION1),
+        DIVINE_RANGING(ItemID.DIVINE_RANGING_POTION4, ItemID.DIVINE_RANGING_POTION3, ItemID.DIVINE_RANGING_POTION2, ItemID.DIVINE_RANGING_POTION1),
+        SUPER_COMBAT(ItemID.SUPER_COMBAT_POTION4, ItemID.SUPER_COMBAT_POTION3, ItemID.SUPER_COMBAT_POTION2, ItemID.SUPER_COMBAT_POTION1),
+        BASTION(ItemID.BASTION_POTION4, ItemID.BASTION_POTION3, ItemID.BASTION_POTION2, ItemID.BASTION_POTION2),
+        RANGING(ItemID.RANGING_POTION4, ItemID.RANGING_POTION3, ItemID.RANGING_POTION2, ItemID.RANGING_POTION1);
 
         @Getter
         private final int dose4, dose3, dose2, dose1;
