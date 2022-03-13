@@ -374,10 +374,10 @@ public class AutoVorki extends Plugin {
         }
         if ("startVorki".equals(configButtonClicked.getKey())) {
             if (!startVorki) {
-                if (!config.debug() && config.mainhand().getRange() > 1) {
+                /*if (!config.debug() && config.mainhand().getRange() > 1) {
                     utils.sendGameMessage("Range is not currently supported.");
                     return;
-                }
+                }*/
                 startVorki = true;
                 timeout = 0;
                 state = null;
