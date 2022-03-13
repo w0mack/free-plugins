@@ -88,30 +88,31 @@ public interface AutoVorkiConfig extends Config {
         return Prayer.PRAYER_POTION;
     }
 
+    @Range(min = 1, max = 8)
+    @ConfigItem(keyName = "prayerAmount", name = "Prayer pots", description = "Quantity of prayer restores to bring", position = 11)
+    default int prayerAmount() {
+        return 4;
+    }
+
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 11)
+    @ConfigItem(keyName = "restoreAt", name = "Drink prayer at", description = "Drink prayer restore when under this amount of prayer", position = 12)
     default int restoreAt() {
         return 20;
     }
 
-    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 12)
+    @ConfigItem(keyName = "antifireID", name = "Antifire", description = "The name of your antifire potion", position = 13)
     default Antifire antifire() {
         return Antifire.EXT_SUPER_ANTIFIRE;
     }
 
-    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 13)
+    @ConfigItem(keyName = "drinkAntifire", name = "Drink antifire", description = "Automatically drink antifire", position = 14)
     default boolean drinkAntifire() {
         return true;
     }
 
-    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 14)
+    @ConfigItem(keyName = "antivenomID", name = "Antivenom", description = "The name of your antivenom potion", position = 15)
     default Antivenom antivenom() {
         return Antivenom.ANTI_VENOM_PLUS;
-    }
-
-    @ConfigItem(keyName = "drinkAntivenom", name = "Drink antivenom", description = "Automatically drink antivenom<br>Ignore if using serpentine helm", position = 15)
-    default boolean drinkAntivenom() {
-        return true;
     }
 
     @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 16)

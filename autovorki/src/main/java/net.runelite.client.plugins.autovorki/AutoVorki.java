@@ -242,11 +242,11 @@ public class AutoVorki extends Plugin {
         if (npc.getName().equals("Vorkath")) {
             vorkath = null;
 
-            if (client.getVar(Varbits.QUICK_PRAYER) == 1) {
+            /*if (client.getVar(Varbits.QUICK_PRAYER) == 1) {
                 LegacyMenuEntry entry = new LegacyMenuEntry("Deactivate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
                 int sleep = calc.getRandomIntBetweenRange(25, 200);
                 utils.doInvokeMsTime(entry, sleep);
-            }
+            }*/
         }
 
         if (npc.getName().equals("Zombified Spawn")) {
@@ -273,31 +273,12 @@ public class AutoVorki extends Plugin {
 
         if (vorkath != null) {
             if (actor.getAnimation() == 7957 && actor.getName().contains("Vorkath")) { // acid walk
-                walkToStart();
                 steps = 30;
-            }
-            if (actor.getAnimation() == 7950 && actor.getName().contains("Vorkath")) {
-                Widget widget = client.getWidget(10485775);
-
-                if (widget != null)
-                {
-                    prayBounds = widget.getBounds();
+                startLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128));
+                if (!player.getLocalLocation().equals(startLoc)) {
+                    walkToStart();
                 }
-
-                if (client.getVar(Varbits.QUICK_PRAYER) == 0) // turn on prayer of it's off
-                {
-                    LegacyMenuEntry entry = new LegacyMenuEntry("Activate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
-                    int sleep = calc.getRandomIntBetweenRange(25, 200);
-                    utils.doInvokeMsTime(entry, sleep);
-                }
-            }
-            if (actor.getAnimation() == 7949 && actor.getName().contains("Vorkath")) {
-                if (client.getVar(Varbits.QUICK_PRAYER) == 1)
-                {
-                    LegacyMenuEntry entry = new LegacyMenuEntry("Deactivate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
-                    int sleep = calc.getRandomIntBetweenRange(25, 200);
-                    utils.doInvokeMsTime(entry, sleep);
-                }
+                timeout = 0;
             }
         }
     }
@@ -407,6 +388,7 @@ public class AutoVorki extends Plugin {
         LocalPoint localLoc = LocalPoint.fromWorld(client, loc);
 
         int pot = -1;
+        int sleep = 0;
         player = client.getLocalPlayer();
 
         if (player != null && client != null) {
@@ -480,8 +462,8 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.offhandID());
                     break;
                 case WITHDRAW_PRAYER_RESTORE:
-                    withdrawItem(config.prayer().getDose4(), 4);
-                    timeout = 1;
+                    withdrawItem(config.prayer().getDose4(), config.prayerAmount());
+                    timeout = 2;
                     break;
                 case WITHDRAW_RUNE_POUCH:
                     withdrawItem(ItemID.RUNE_POUCH);
@@ -576,8 +558,9 @@ public class AutoVorki extends Plugin {
                                 utils.doInvokeMsTime(targetMenu, 0);
                             else
                                 utils.doActionMsTime(targetMenu, bounds.getBounds(), 0);
+                            timeout = 1;
+                        } else {
                             attack = true;
-                            timeout = 3;
                         }
                     }
                     break;
@@ -612,7 +595,7 @@ public class AutoVorki extends Plugin {
                                         drinkPrayer();
                                     else if (config.drinkAntifire() && needsAntifire())
                                         drinkAntifire();
-                                    else if (config.drinkAntivenom() && needsAntivenom())
+                                    else if (needsAntivenom())
                                         drinkAntivenom();
                                     else if (needsRepot())
                                         drinkSuperCombat();
@@ -673,9 +656,28 @@ public class AutoVorki extends Plugin {
                     drinkSuperCombat();
                     break;
                 case ENABLE_PRAYER:
-                    LegacyMenuEntry entry = new LegacyMenuEntry("Activate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
-                    int sleep = calc.getRandomIntBetweenRange(25, 200);
-                    utils.doInvokeMsTime(entry, sleep);
+                    widget = client.getWidget(10485775);
+                    if (widget != null) {
+                        prayBounds = widget.getBounds();
+                    }
+                    targetMenu = new LegacyMenuEntry("Activate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, widget.getId(), false);
+                    sleep = calc.getRandomIntBetweenRange(25, 200);
+                    if (config.invokes())
+                        utils.doInvokeMsTime(targetMenu, sleep);
+                    else
+                        utils.doActionMsTime(targetMenu, widget.getBounds(), sleep);
+                    break;
+                case DISABLE_PRAYER:
+                    widget = client.getWidget(10485775);
+                    if (widget != null) {
+                        prayBounds = widget.getBounds();
+                    }
+                    targetMenu = new LegacyMenuEntry("Deactivate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, widget.getId(), false);
+                    sleep = calc.getRandomIntBetweenRange(25, 200);
+                    if (config.invokes())
+                        utils.doInvokeMsTime(targetMenu, sleep);
+                    else
+                        utils.doActionMsTime(targetMenu, widget.getBounds(), sleep);
                     break;
                 case EQUIP_WEAPONS:
                     equipWeapons();
@@ -735,14 +737,16 @@ public class AutoVorki extends Plugin {
         String killComplete = "Your Vorkath";
         String petDrop = "You have a funny feeling like you're being followed.";
 
-        if (event.getMessage().equals(prayerMessage) && client.getVar(Varbits.QUICK_PRAYER) == 0 ) {
+        /*if (event.getMessage().equals(prayerMessage) && client.getVar(Varbits.QUICK_PRAYER) == 0 ) {
             LegacyMenuEntry entry = new LegacyMenuEntry("Activate", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, 10485775, false);
             int sleep = calc.getRandomIntBetweenRange(25, 200);
             utils.doInvokeMsTime(entry, sleep);
-        } else if (event.getMessage().equals(spawnExplode) || (event.getMessage().equals(unfrozenMessage))) {
+        } else */
+        if (event.getMessage().equals(spawnExplode) || (event.getMessage().equals(unfrozenMessage))) {
             killSpawn = false;
             zombSpawn = null;
             timeout = 0;
+            attack = true;
             equipWeapons();
         } else if (event.getMessage().contains(killComplete)) {
             kills++;
@@ -836,6 +840,8 @@ public class AutoVorki extends Plugin {
             }
         } else { // is in instance
             if (vorkath != null) {
+                if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getId() == NpcID.VORKATH_8059)
+                    return AutoVorkiState.DISABLE_PRAYER;
                 if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && !toLoot.isEmpty() && !inv.isFull())
                     return AutoVorkiState.LOOT_VORKATH;
                 if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && !toLoot.isEmpty() && inv.isFull() && config.eatLoot())
@@ -854,9 +860,6 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.KILL_SPAWN;
                 if (steps > 0)
                     return AutoVorkiState.ACID_WALK;
-
-                if (client.getVar(Varbits.QUICK_PRAYER) == 0)
-                    return AutoVorkiState.ENABLE_PRAYER;
 
                 /* in fight logic */
 
@@ -882,7 +885,7 @@ public class AutoVorki extends Plugin {
                 }
 
                 // need to drink antivenom?
-                if (config.drinkAntivenom() && needsAntivenom()) {
+                if (needsAntivenom()) {
                     attack = true;
                     return AutoVorkiState.DRINK_ANTIVENOM;
                 }
@@ -893,11 +896,27 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.DRINK_SUPER_COMBAT;
                 }
 
+                // if vorkath is waking
+                if (vorkath.getId() == NpcID.VORKATH_8058) {
+                    if (client.getVar(Varbits.QUICK_PRAYER) == 0)
+                        return AutoVorkiState.ENABLE_PRAYER;
+                }
+
                 // if vorkath is *woke* state
                 if (vorkath.getId() == NpcID.VORKATH_8061) {
-                    if (!specced && config.useBGS())
+                    if (client.getVar(Varbits.QUICK_PRAYER) == 0 && vorkath.getAnimation() != 7949)
+                        return AutoVorkiState.ENABLE_PRAYER;
+                    if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getAnimation() == 7949)
+                        return AutoVorkiState.DISABLE_PRAYER;
+                    if (specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
+                        specced = false;
+                    if (!specced && config.useBGS() && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 500) {
+                        if (inv.isFull() && !equip.isEquipped(ItemID.BANDOS_GODSWORD))
+                            return AutoVorkiState.EAT_FOOD;
+                        if (attack)
+                            return AutoVorkiState.ATTACK_VORKATH;
                         return AutoVorkiState.SPECIAL_ATTACK;
-                    else {
+                    } else {
                         if (attack && steps == 0) {
                             return AutoVorkiState.ATTACK_VORKATH;
                         } else {
@@ -912,6 +931,8 @@ public class AutoVorki extends Plugin {
 
                 // if vorkath is napping
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
+                    if (client.getVar(Varbits.QUICK_PRAYER) == 1)
+                        return AutoVorkiState.DISABLE_PRAYER;
                     if (looted) { // this will always be true, but why not triple check
                         if (inv.containsItemAmount(
                                 config.food().getId(), config.minFood(),
