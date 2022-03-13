@@ -162,8 +162,6 @@ public class AutoVorki extends Plugin {
         botTimer = null;
         steps = 0;
         safeX = -1;
-        diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
-        rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
     }
 
     public static boolean isInPOH(Client client) {
@@ -391,6 +389,12 @@ public class AutoVorki extends Plugin {
                 walkToStand = false;
                 inInstance = false;
                 dodgeBomb = false;
+                diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
+                rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
+                if (!config.useDragonBolts() && config.mainhand().getRange() > 5) {
+                    rubyBolts.remove(ItemID.RUBY_DRAGON_BOLTS_E);
+                    diamondBolts.remove(ItemID.DIAMOND_DRAGON_BOLTS_E);
+                }
                 kills = 0;
                 excluded = config.excludedItems().toLowerCase().split("\\s*,\\s*");
                 excludedItems.clear();
@@ -451,7 +455,7 @@ public class AutoVorki extends Plugin {
                 case TRAVEL_BANK:
                     if (player.getWorldArea().intersectsWith(moonclanTele)) {
                         walk.sceneWalk(moonclanBankTile, 0, 0);
-                        timeout = 8;
+                        timeout = calc.getRandomIntBetweenRange(2, 8);
                     }
                     break;
                 case EQUIP_SPEC_WEAPON:
@@ -687,7 +691,7 @@ public class AutoVorki extends Plugin {
                     }
                     attack = true;
                     dodgeBomb = false;
-                    timeout = 1;
+                    timeout = calc.getRandomIntBetweenRange(0, 1);
                     break;
                 case EAT_FOOD:
                     eatFood();

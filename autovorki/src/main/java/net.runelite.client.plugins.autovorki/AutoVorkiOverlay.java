@@ -51,7 +51,7 @@ public class AutoVorkiOverlay extends OverlayPanel {
         if (plugin.lastState != null)
             panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.lastState.toString().toLowerCase().replace("FINISHED_WITHDRAWING", "FINISHED_BANKING").replace("_", " ").replace("WITHDRAW", "").replace("DEPOSIT", "BANK")).build());
         //if (config.debug())
-        panelComponent.getChildren().add(LineComponent.builder().left("Timeout: ").right(Integer.toString(plugin.steps > 0 ? plugin.steps : Math.max(plugin.timeout, 0))).build());
+        panelComponent.getChildren().add(LineComponent.builder().left(plugin.steps > 0 ? "Steps: " : "Timeout: ").right(Integer.toString(plugin.steps > 0 ? plugin.steps : Math.max(plugin.timeout, 0))).build());
         if (plugin.kills > 0)
             panelComponent.getChildren().add(LineComponent.builder().left("Kills: ").right(Integer.toString(plugin.kills)).build());
         if (plugin.lootValue > 0)

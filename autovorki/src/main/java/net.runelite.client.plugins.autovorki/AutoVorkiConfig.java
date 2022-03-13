@@ -74,7 +74,12 @@ public interface AutoVorkiConfig extends Config {
         return ItemID.SANGUINESTI_STAFF;
     }
 
-    @ConfigItem(keyName = "useDiamond", name = "Use Diamond bolts", description = "Use diamond bolts and ruby during the fight?", position = 7, section = weaponsSection)
+    @ConfigItem(keyName = "useDragonBolts", name = "Use Dragon bolt versions", description = "Use dragon variations of bolts during the kill", position = 7, section = weaponsSection)
+    default boolean useDragonBolts() {
+        return true;
+    }
+
+    @ConfigItem(keyName = "useDiamond", name = "Use Diamond (e)", description = "Use diamond bolts and ruby during the kill", position = 7, section = weaponsSection)
     default boolean useDiamond() {
         return true;
     }
