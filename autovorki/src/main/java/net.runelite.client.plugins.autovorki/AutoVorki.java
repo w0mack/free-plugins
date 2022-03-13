@@ -739,12 +739,14 @@ public class AutoVorki extends Plugin {
                     if (diamond != null) {
                         actionItem(diamond.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
                     }
+                    attack = true;
                     break;
                 case EQUIP_RUBY_BOLTS: // equip rubies
                     WidgetItem ruby = inv.getWidgetItem(rubyBolts);
                     if (ruby != null) {
                         actionItem(ruby.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
                     }
+                    attack = true;
                     break;
                 case WITHDRAW_RUBY_BOLTS:
                     item = bank.getBankItemWidgetAnyOf(rubyBolts);
@@ -984,6 +986,12 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.DRINK_SUPER_COMBAT;
                 }
 
+                // swap bolts
+                if (calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
+                    return AutoVorkiState.EQUIP_DIAMOND_BOLTS;
+                if (calculateHealth(vorkath, 750) > 265 && playerUtils.isItemEquipped(diamondBolts) && config.mainhand().getRange() > 5)
+                    return AutoVorkiState.EQUIP_RUBY_BOLTS;
+
                 // if vorkath is WAKING
                 if (vorkath.getId() == NpcID.VORKATH_8058) {
                     if (client.getVar(Varbits.QUICK_PRAYER) == 0)
@@ -1001,10 +1009,6 @@ public class AutoVorki extends Plugin {
                     if (!specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
                         return AutoVorkiState.SPECIAL_ATTACK;
                     if (attack) {
-                        if (calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
-                            return AutoVorkiState.EQUIP_DIAMOND_BOLTS;
-                        if (calculateHealth(vorkath, 750) > 265 && playerUtils.isItemEquipped(diamondBolts) && config.mainhand().getRange() > 5)
-                            return AutoVorkiState.EQUIP_RUBY_BOLTS;
                         if (!equip.isEquipped(config.mainhand().getItemId())
                                 || (!equip.isEquipped(config.offhand().getItemId())
                                 && config.offhand() != AutoVorkiConfig.Offhand.NONE))
