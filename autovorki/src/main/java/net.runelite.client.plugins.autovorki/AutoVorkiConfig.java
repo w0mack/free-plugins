@@ -266,7 +266,8 @@ public interface AutoVorkiConfig extends Config {
 
     enum RellekkaTele {
         TALK_TO_BANKER(0),
-        FREMENNIK_BOOTS_4(1);
+        FREMENNIK_BOOTS_4(1),
+        RETURN_ORB(29712);
 
         @Getter private final int option;
         RellekkaTele(int option) { this.option = option; }

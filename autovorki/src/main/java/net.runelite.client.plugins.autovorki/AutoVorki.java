@@ -131,6 +131,8 @@ public class AutoVorki extends Plugin {
 
     Set<Integer> diamondBolts;
     Set<Integer> rubyBolts;
+    Set<Integer> avernics;
+    Set<Integer> dhcb;
 
     public AutoVorki() {
         moonclanTele = new WorldArea(new WorldPoint(2106, 3912, 0), new WorldPoint(2115, 3919, 0));
@@ -396,6 +398,8 @@ public class AutoVorki extends Plugin {
                     diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
                     rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
                 }
+                avernics = Set.of(ItemID.AVERNIC_DEFENDER, ItemID.AVERNIC_DEFENDER_L);
+                dhcb = Set.of(ItemID.DRAGON_HUNTER_CROSSBOW, ItemID.DRAGON_HUNTER_CROSSBOW_B, ItemID.DRAGON_HUNTER_CROSSBOW_T);
                 kills = 0;
                 excluded = config.excludedItems().toLowerCase().split("\\s*,\\s*");
                 excludedItems.clear();
@@ -480,7 +484,14 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.staffID());
                     break;
                 case WITHDRAW_MAINHAND:
-                    withdrawItem(config.mainhand().getItemId());
+                    if (config.mainhand() == AutoVorkiConfig.Mainhand.DRAGON_HUNTER_CROSSBOW) {
+                        item = bank.getBankItemWidgetAnyOf(dhcb);
+                        if (item != null) {
+                            withdrawItem(item.getItemId());
+                        }
+                    } else {
+                        withdrawItem(config.mainhand().getItemId());
+                    }
                     break;
                 case WITHDRAW_SUPER_COMBAT:
                     withdrawItem(config.superCombat().getDose4());
@@ -492,7 +503,14 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.antivenom().getDose4());
                     break;
                 case WITHDRAW_OFFHAND:
-                    withdrawItem(config.offhand().getItemId());
+                    if (config.offhand() == AutoVorkiConfig.Offhand.AVERNIC_DEFENDER) {
+                        item = bank.getBankItemWidgetAnyOf(avernics);
+                        if (item != null) {
+                            withdrawItem(item.getItemId());
+                        }
+                    } else {
+                        withdrawItem(config.offhand().getItemId());
+                    }
                     break;
                 case WITHDRAW_PRAYER_RESTORE:
                     withdrawItem(config.prayer().getDose4(), config.prayerAmount());
@@ -747,6 +765,8 @@ public class AutoVorki extends Plugin {
                     attack = true;
                     break;
                 case EQUIP_RUBY_BOLTS: // equip rubies
+                    if (bank.isOpen())
+                        deposited = false;
                     WidgetItem ruby = inv.getWidgetItem(rubyBolts);
                     if (ruby != null) {
                         actionItem(ruby.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
@@ -766,6 +786,10 @@ public class AutoVorki extends Plugin {
                         withdrawAllItem(item.getItemId());
                     }
                     timeout = 3;
+                    break;
+                case RETURN_ORB:
+                    actionObject(config.rellekkaTele().getOption(), MenuAction.GAME_OBJECT_FIRST_OPTION);
+                    timeout = calc.getRandomIntBetweenRange(3, 6);
                     break;
             }
         }
@@ -1014,8 +1038,22 @@ public class AutoVorki extends Plugin {
                     if (!specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
                         return AutoVorkiState.SPECIAL_ATTACK;
                     if (attack) {
-                        if (!equip.isEquipped(config.mainhand().getItemId())
-                                || (!equip.isEquipped(config.offhand().getItemId())
+                        WidgetItem item;
+                        int mh = config.mainhand().getItemId();
+                        int oh = config.offhand().getItemId();
+                        if (config.mainhand() == AutoVorkiConfig.Mainhand.DRAGON_HUNTER_CROSSBOW) {
+                            item = inv.getWidgetItem(dhcb);
+                            if (item != null) {
+                               mh = item.getId();
+                            }
+                        }
+                        if (config.offhand() == AutoVorkiConfig.Offhand.AVERNIC_DEFENDER) {
+                            item = inv.getWidgetItem(avernics);
+                            if (item != null) {
+                                oh = item.getId();
+                            }
+                        }
+                        if (!equip.isEquipped(mh) || (!equip.isEquipped(oh)
                                 && config.offhand() != AutoVorkiConfig.Offhand.NONE))
                             return AutoVorkiState.EQUIP_WEAPONS;
                         return AutoVorkiState.ATTACK_VORKATH;
@@ -1061,6 +1099,11 @@ public class AutoVorki extends Plugin {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
             }
             if (deposited && !withdrawn) {
+                if (!playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5) {
+                    if (!inv.containsItem(rubyBolts))
+                        return AutoVorkiState.WITHDRAW_RUBY_BOLTS;
+                    return AutoVorkiState.EQUIP_RUBY_BOLTS;
+                }
                 if (config.useSpec() != AutoVorkiConfig.Spec.NONE
                         && inv.containsItem(config.useSpec().getItemId())
                         && !equip.isEquipped(config.useSpec().getItemId()) && !inv.isFull()) {
@@ -1115,13 +1158,9 @@ public class AutoVorki extends Plugin {
                     }
                 }
                 if (config.mainhand().getRange() > 5) { // if using a crossbow
-                    if (!inv.containsItem(rubyBolts) && !playerUtils.isItemEquipped(rubyBolts))
-                        return AutoVorkiState.WITHDRAW_RUBY_BOLTS;
                     if (!inv.containsItem(diamondBolts) && !playerUtils.isItemEquipped(diamondBolts) && config.useDiamond())
                         return AutoVorkiState.WITHDRAW_DIAMOND_BOLTS;
                 }
-                if (!playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
-                    return AutoVorkiState.EQUIP_RUBY_BOLTS;
                 if (config.useStaff() && !inv.containsItem(config.staffID()) && !equip.isEquipped(config.staffID())) {
                     return AutoVorkiState.WITHDRAW_MAGIC_STAFF;
                 }
@@ -1134,9 +1173,11 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
                 }
                 return AutoVorkiState.FINISHED_WITHDRAWING;
-            } else if (deposited && inv.getItemCount(config.food().getId(), false) >= 4) {
+            } else if (deposited && inv.getItemCount(config.food().getId(), false) >= config.minFood()) {
                 equipWeapons(false);
-                return config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.TALK_TO_BANKER ? AutoVorkiState.TALK_TO_BANKER : AutoVorkiState.TELE_SEA_BOOTS;
+                return config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.TALK_TO_BANKER ?
+                        AutoVorkiState.TALK_TO_BANKER : (config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.RETURN_ORB ?
+                        AutoVorkiState.RETURN_ORB : AutoVorkiState.TELE_SEA_BOOTS);
             } else {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
             }
@@ -1153,11 +1194,24 @@ public class AutoVorki extends Plugin {
     }
 
     void equipWeapons(boolean att) {
-        if (!equip.isEquipped(config.mainhand().getItemId()) && timeout <= 1) {
+        WidgetItem item;
+        if (config.mainhand() == AutoVorkiConfig.Mainhand.DRAGON_HUNTER_CROSSBOW) {
+            item = inv.getWidgetItem(dhcb);
+            if (item != null) {
+                actionItem(item.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
+                attack = att;
+            }
+        } else if (!equip.isEquipped(config.mainhand().getItemId()) && timeout <= 1) {
             actionItem(config.mainhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, 0);
             attack = att;
         }
-        if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
+        if (config.offhand() == AutoVorkiConfig.Offhand.AVERNIC_DEFENDER) {
+            item = inv.getWidgetItem(avernics);
+            if (item != null) {
+                actionItem(item.getId(), MenuAction.ITEM_SECOND_OPTION, 0);
+                attack = att;
+            }
+        } else if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
             actionItem(config.offhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, 0);
             attack = att;
         }
