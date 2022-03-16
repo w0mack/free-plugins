@@ -323,12 +323,12 @@ public class AutoVorki extends Plugin {
         }
         if (projectile.getId() == 395) {
             if (config.useStaff() && inv.containsItem(config.staffID()))
-                actionItem(config.staffID(), MenuAction.ITEM_SECOND_OPTION);
+                actionItem(config.staffID(), MenuAction.ITEM_SECOND_OPTION, calc.getRandomIntBetweenRange(25, 200));
             standLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128) - ((config.mainhand().getRange() - 1) * 128));
             if (config.invokeWalk())
                 walk.walkTile(standLoc.getSceneX(), standLoc.getSceneY());
             else
-                walk.sceneWalk(standLoc, 0, (int)sleepDelay());
+                walk.sceneWalk(standLoc, 0, 0);
             killSpawn = true;
         }
     }
@@ -517,6 +517,10 @@ public class AutoVorki extends Plugin {
                     break;
                 case WITHDRAW_FOOD_FILL:
                     withdrawAllItem(config.food().getId());
+                    break;
+                case WITHDRAW_FOOD_ONE:
+                    withdrawItem(config.food().getId());
+                    timeout = 1;
                     break;
                 case WITHDRAW_SPEC_WEAPON:
                     withdrawItem(config.useSpec().getItemId());
@@ -1113,6 +1117,15 @@ public class AutoVorki extends Plugin {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
             }
             if (deposited && !withdrawn) {
+                if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
+                        && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
+                        && inv.containsItem(config.food().getId()) ) {
+                    return AutoVorkiState.EAT_FOOD;
+                } else if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
+                        && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
+                        && !inv.containsItem(config.food().getId()) ) {
+                    return AutoVorkiState.WITHDRAW_FOOD_ONE;
+                }
                 if (!playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5) {
                     if (!inv.containsItem(rubyBolts))
                         return AutoVorkiState.WITHDRAW_RUBY_BOLTS;
@@ -1181,9 +1194,6 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.WITHDRAW_FREM_SEA_BOOTS;
                 if (!inv.isFull()) {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
-                }
-                if (config.food() == AutoVorkiConfig.Food.ANGLERFISH && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)) {
-                    return AutoVorkiState.EAT_FOOD;
                 }
                 return AutoVorkiState.FINISHED_WITHDRAWING;
             } else if (deposited && inv.getItemCount(config.food().getId(), false) >= config.minFood()) {
