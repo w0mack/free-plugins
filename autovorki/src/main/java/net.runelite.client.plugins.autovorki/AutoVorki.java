@@ -639,6 +639,18 @@ public class AutoVorki extends Plugin {
                     acidY = standLoc.getSceneY();
 
                     if (steps >= 0) {
+                        if (config.mainhand().getRange() > 1) {
+                            if (playerUtils.isRunEnabled()) {
+                                widget = client.getWidget(160, 25);
+                                if (widget != null) {
+                                    bounds = widget.getBounds();
+                                }
+
+                                targetMenu = new LegacyMenuEntry("Toggle Run", "", 1, 57, -1,
+                                        10485783, false);
+                                utils.doInvokeMsTime(targetMenu, 0);
+                            }
+                        }
                         if (steps == 1) {
                             actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION);
                         } else if (steps == 2) {
