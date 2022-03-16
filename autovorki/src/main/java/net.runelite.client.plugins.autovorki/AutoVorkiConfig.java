@@ -42,9 +42,168 @@ public interface AutoVorkiConfig extends Config {
     }
 
     @ConfigSection(
-            name = "Weapons",
+            name = "Sleep Delays",
             description = "",
             position = 2,
+            keyName = "sleepDelays"
+    )
+    String sleepDelays = "Sleep Delays";
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepMin",
+            name = "Sleep Min",
+            description = "",
+            position = 2,
+            section = sleepDelays
+    )
+    default int sleepMin() {
+        return 60;
+    }
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepMax",
+            name = "Sleep Max",
+            description = "",
+            position = 3,
+            section = sleepDelays
+    )
+    default int sleepMax() {
+        return 350;
+    }
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepTarget",
+            name = "Sleep Target",
+            description = "",
+            position = 4,
+            section = sleepDelays
+    )
+    default int sleepTarget() {
+        return 100;
+    }
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepDeviation",
+            name = "Sleep Deviation",
+            description = "",
+            position = 5,
+            section = sleepDelays
+    )
+    default int sleepDeviation() {
+        return 10;
+    }
+
+    @ConfigItem(
+            keyName = "sleepWeightedDistribution",
+            name = "Sleep Weighted Distribution",
+            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+            position = 6,
+            section = sleepDelays
+    )
+    default boolean sleepWeightedDistribution() {
+        return false;
+    }
+
+    @ConfigSection(
+            name = "Tick Delays",
+            description = "",
+            position = 3,
+            keyName = "tickDelays"
+    )
+    String tickDelays = "Tick Delays";
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysMin",
+            name = "Game Tick Min",
+            description = "",
+            position = 8,
+            section = tickDelays
+    )
+    default int tickDelaysMin() {
+        return 1;
+    }
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysMax",
+            name = "Game Tick Max",
+            description = "",
+            position = 9,
+            section = tickDelays
+    )
+    default int tickDelaysMax() {
+        return 3;
+    }
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysTarget",
+            name = "Game Tick Target",
+            description = "",
+            position = 10,
+            section = tickDelays
+    )
+    default int tickDelaysTarget() {
+        return 2;
+    }
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysDeviation",
+            name = "Game Tick Deviation",
+            description = "",
+            position = 11,
+            section = tickDelays
+    )
+    default int tickDelaysDeviation() {
+        return 1;
+    }
+
+    @ConfigItem(
+            keyName = "tickDelaysWeightedDistribution",
+            name = "Game Tick Weighted Distribution",
+            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+            position = 12,
+            section = tickDelays
+    )
+    default boolean tickDelaysWeightedDistribution() {
+        return false;
+    }
+
+
+    @ConfigSection(
+            name = "Weapons",
+            description = "",
+            position = 4,
             keyName = "weaponsSection"
     )
     String weaponsSection = "Weapons";
@@ -87,7 +246,7 @@ public interface AutoVorkiConfig extends Config {
     @ConfigSection(
             name = "Consumables",
             description = "",
-            position = 3,
+            position = 5,
             keyName = "consumablesSection"
     )
     String consumablesSection = "Consumables";
@@ -158,9 +317,9 @@ public interface AutoVorkiConfig extends Config {
     }
 
     @ConfigSection(
-            name = "Teleports",
+            name = "Teleports + PoH",
             description = "",
-            position = 4,
+            position = 6,
             keyName = "teleportsSection"
     )
     String teleportsSection = "Teleports";
@@ -168,14 +327,14 @@ public interface AutoVorkiConfig extends Config {
     @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 19, section = teleportsSection)
     default HouseTele houseTele() { return HouseTele.CONSTRUCTION_CAPE_T; }
 
-    @ConfigItem(keyName = "moonClanTele", name = "Lunar Isle", description = "The name of your Lunar Isle teleport", position = 20, section = teleportsSection)
-    default MoonClanTele moonClanTele() {
-        return MoonClanTele.PORTAL_NEXUS;
+    @ConfigItem(keyName = "poolID", name = "Pool ID", description = "Game Object ID for pool in PoH", position = 20, section = teleportsSection)
+    default int poolID() {
+        return 29241;
     }
 
-    @ConfigItem(keyName = "cMoonClanTele", name = "Object ID", description = "Object ID for custom Moonclan Teleport", position = 21, section = teleportsSection)
+    @ConfigItem(keyName = "cMoonClanTele", name = "Lunar Isle ID", description = "Game Object ID for Lunar Isle teleport", position = 21, section = teleportsSection)
     default int cMoonClanTele() {
-        return 0;
+        return ObjectID.PORTAL_NEXUS_33402;
     }
 
     @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 22, section = teleportsSection)
@@ -184,7 +343,7 @@ public interface AutoVorkiConfig extends Config {
     @ConfigSection(
             name = "Loot",
             description = "",
-            position = 5,
+            position = 7,
             keyName = "lootSection"
     )
     String lootSection = "Loot";
@@ -385,9 +544,8 @@ public interface AutoVorkiConfig extends Config {
     }
 
     enum MoonClanTele {
-        PORTAL_NEXUS(ObjectID.PORTAL_NEXUS_33402),
-        MOONCLAN_PORTAL(29339),
-        CUSTOM(-1);
+        PORTAL_NEXUS(-1),
+        MOONCLAN_PORTAL(-1);
 
         @Getter
         private final int objectID;
