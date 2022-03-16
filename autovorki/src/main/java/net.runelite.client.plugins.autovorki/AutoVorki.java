@@ -462,15 +462,6 @@ public class AutoVorki extends Plugin {
                         timeout = calc.getRandomIntBetweenRange(2, 8) + tickDelay();
                     }
                     break;
-                case EQUIP_SPEC_WEAPON:
-                    targetMenu = new LegacyMenuEntry("Wield", "", 9, MenuAction.CC_OP_LOW_PRIORITY, 0, WidgetInfo.BANK_INVENTORY_ITEMS_CONTAINER.getId(), false);
-                    if (!config.invokes())
-                        utils.doActionMsTime(targetMenu, inv.getWidgetItem(config.useSpec().getItemId()).getCanvasBounds(), (int)sleepDelay());
-                    else
-                        utils.doInvokeMsTime(targetMenu, (int)sleepDelay());
-                    timeout = 2;
-                    deposited = false;
-                    break;
                 case DEPOSIT_INVENTORY:
                     bank.depositAll();
                     deposited = true;
@@ -602,6 +593,8 @@ public class AutoVorki extends Plugin {
                     timeout = 2;
                     specced = false;
                     attack = true;
+                    toLoot.clear();
+                    looted = true;
                     break;
                 case LOOT_VORKATH:
                     if (!oldLoot.isEmpty())
@@ -683,7 +676,7 @@ public class AutoVorki extends Plugin {
                 case KILL_SPAWN:
                     if (zombSpawn != null) {
                         targetMenu =  new LegacyMenuEntry("Cast", "", zombSpawn.getIndex(), MenuAction.SPELL_CAST_ON_NPC.getId(), 0, 0, false);
-                        utils.oneClickCastSpell(WidgetInfo.SPELL_CRUMBLE_UNDEAD, targetMenu, zombSpawn.getConvexHull().getBounds(), 100 + ((int)sleepDelay() / 2));
+                        utils.oneClickCastSpell(WidgetInfo.SPELL_CRUMBLE_UNDEAD, targetMenu, zombSpawn.getConvexHull().getBounds(), 100);
                         killSpawn = false;
                         timeout = 10;
                     }
@@ -965,7 +958,11 @@ public class AutoVorki extends Plugin {
                 if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getId() == NpcID.VORKATH_8059)
                     return AutoVorkiState.DISABLE_PRAYER;
 
-
+                if (vorkath.getId() == NpcID.VORKATH_8059) {
+                    if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) - 20)) {
+                        return AutoVorkiState.EAT_FOOD;
+                    }
+                }
 
                 // vorkath is napping
                 if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && (!toLoot.isEmpty()) || !oldLoot.isEmpty()) {
@@ -1122,11 +1119,6 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.EQUIP_RUBY_BOLTS;
                 }
                 if (config.useSpec() != AutoVorkiConfig.Spec.NONE
-                        && inv.containsItem(config.useSpec().getItemId())
-                        && !equip.isEquipped(config.useSpec().getItemId()) && !inv.isFull()) {
-                    return AutoVorkiState.EQUIP_SPEC_WEAPON;
-                }
-                if (config.useSpec() != AutoVorkiConfig.Spec.NONE
                         && !inv.containsItem(config.useSpec().getItemId())
                         && !equip.isEquipped(config.useSpec().getItemId())) {
                     return AutoVorkiState.WITHDRAW_SPEC_WEAPON;
@@ -1139,6 +1131,7 @@ public class AutoVorki extends Plugin {
                         && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
                     return AutoVorkiState.WITHDRAW_OFFHAND;
                 }
+                equipWeapons(false);
                 if (!inv.containsItem(config.superCombat().getDose4())) {
                     return AutoVorkiState.WITHDRAW_SUPER_COMBAT;
                 }
@@ -1188,6 +1181,9 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.WITHDRAW_FREM_SEA_BOOTS;
                 if (!inv.isFull()) {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
+                }
+                if (config.food() == AutoVorkiConfig.Food.ANGLERFISH && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)) {
+                    return AutoVorkiState.EAT_FOOD;
                 }
                 return AutoVorkiState.FINISHED_WITHDRAWING;
             } else if (deposited && inv.getItemCount(config.food().getId(), false) >= config.minFood()) {
