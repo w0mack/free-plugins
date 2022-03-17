@@ -957,7 +957,7 @@ public class AutoVorki extends Plugin {
                 if (player.getWorldLocation().equals(moonclanBankTile)) {
                     if (inv.containsItem(config.food().getId())) {
                         int max = client.getRealSkillLevel(Skill.HITPOINTS);
-                        if (config.food() == AutoVorkiConfig.Food.ANGLERFISH) {
+                        if (config.food() == AutoVorkiConfig.Food.ANGLERFISH && config.overEat()) {
                             max = (client.getRealSkillLevel(Skill.HITPOINTS) + 15);
                         }
                         if (client.getBoostedSkillLevel(Skill.HITPOINTS) < max) {
@@ -983,7 +983,7 @@ public class AutoVorki extends Plugin {
                 if (withdrawn && player.getWorldLocation().equals(moonclanBankTile)) {
                     if (inv.containsItem(config.food().getId())) {
                         int max = client.getRealSkillLevel(Skill.HITPOINTS);
-                        if (config.food() == AutoVorkiConfig.Food.ANGLERFISH) {
+                        if (config.food() == AutoVorkiConfig.Food.ANGLERFISH && config.overEat()) {
                             max = (client.getRealSkillLevel(Skill.HITPOINTS) + 15);
                         }
                         if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= max) {
