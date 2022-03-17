@@ -135,6 +135,7 @@ public class AutoVorki extends Plugin {
     Set<Integer> rubyBolts;
     Set<Integer> avernics;
     Set<Integer> dhcb;
+    private boolean eatToFull;
 
     public AutoVorki() {
         moonclanTele = new WorldArea(new WorldPoint(2106, 3912, 0), new WorldPoint(2115, 3919, 0));
@@ -166,6 +167,7 @@ public class AutoVorki extends Plugin {
         botTimer = null;
         steps = 0;
         safeX = -1;
+        eatToFull = false;
     }
 
     public static boolean isInPOH(Client client) {
@@ -201,6 +203,7 @@ public class AutoVorki extends Plugin {
         botTimer = null;
         steps = 0;
         safeX = -1;
+        eatToFull = false;
     }
 
     @Provides
@@ -393,6 +396,7 @@ public class AutoVorki extends Plugin {
                 walkToStand = false;
                 inInstance = false;
                 dodgeBomb = false;
+                eatToFull = false;
                 if (!config.useDragonBolts() && config.mainhand().getRange() > 5) {
                     diamondBolts = Set.of(ItemID.DIAMOND_BOLTS_E);
                     rubyBolts = Set.of(ItemID.RUBY_BOLTS_E);
@@ -463,9 +467,10 @@ public class AutoVorki extends Plugin {
                     }
                     break;
                 case DEPOSIT_INVENTORY:
-                    bank.depositAll();
+                    if (!inv.isEmpty())
+                        bank.depositAll();
                     deposited = true;
-                    timeout = 3 + tickDelay();
+                    timeout = 2 + tickDelay();
                     break;
                 case TELE_TO_POH:
                     teleToPoH();
@@ -666,7 +671,8 @@ public class AutoVorki extends Plugin {
                                 }
                                 if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt()) {
                                     if (inv.containsItem(config.food().getId())) {
-                                        eatFood();
+                                        if (config.eatWoox())
+                                            eatFood();
                                     } else {
                                         teleToPoH();
                                         break;
@@ -949,6 +955,15 @@ public class AutoVorki extends Plugin {
                 return AutoVorkiState.TELEPORT_TO_MOONCLAN;
             } else if (!withdrawn) {
                 if (player.getWorldLocation().equals(moonclanBankTile)) {
+                    if (inv.containsItem(config.food().getId())) {
+                        int max = client.getRealSkillLevel(Skill.HITPOINTS);
+                        if (config.food() == AutoVorkiConfig.Food.ANGLERFISH) {
+                            max = (client.getRealSkillLevel(Skill.HITPOINTS) + 15);
+                        }
+                        if (client.getBoostedSkillLevel(Skill.HITPOINTS) < max) {
+                            return AutoVorkiState.EAT_FOOD;
+                        }
+                    }
                     deposited = false;
                     withdrawn = false;
                     return AutoVorkiState.FIND_BANK;
@@ -965,8 +980,18 @@ public class AutoVorki extends Plugin {
             } else {
                 if (player.getWorldArea().intersectsWith(moonclanTele))
                     return AutoVorkiState.TRAVEL_BANK;
-                if (withdrawn && player.getWorldLocation().equals(moonclanBankTile))
+                if (withdrawn && player.getWorldLocation().equals(moonclanBankTile)) {
+                    if (inv.containsItem(config.food().getId())) {
+                        int max = client.getRealSkillLevel(Skill.HITPOINTS);
+                        if (config.food() == AutoVorkiConfig.Food.ANGLERFISH) {
+                            max = (client.getRealSkillLevel(Skill.HITPOINTS) + 15);
+                        }
+                        if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= max) {
+                            return AutoVorkiState.EAT_FOOD;
+                        }
+                    }
                     return AutoVorkiState.FIND_BANK;
+                }
                 if (player.getWorldArea().intersectsWith(kickedOffIsland))
                     return AutoVorkiState.USE_BOAT;
                 if (player.getWorldArea().intersectsWith(afterBoat))
@@ -1149,7 +1174,7 @@ public class AutoVorki extends Plugin {
                 } else if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
                         && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
                         && !inv.containsItem(config.food().getId()) ) {
-                    return AutoVorkiState.WITHDRAW_FOOD_ONE;
+                    return AutoVorkiState.WITHDRAW_FOOD_FILL;
                 }
                 if (!playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5) {
                     if (!inv.containsItem(rubyBolts))

@@ -251,21 +251,26 @@ public interface AutoVorkiConfig extends Config {
     )
     String consumablesSection = "Consumables";
 
-    @ConfigItem(keyName = "foodID", name = "Food", description = "The name of your food", position = 7, section = consumablesSection)
+    @ConfigItem(keyName = "foodID", name = "Food", description = "The name of your food", position = 6, section = consumablesSection)
     default Food food() {
         return Food.ANGLERFISH;
     }
 
     @Range(min = 1, max = 14)
-    @ConfigItem(keyName = "minFood", name = "Minimum food", description = "Minimum amount of food per kill", position = 8, section = consumablesSection)
+    @ConfigItem(keyName = "minFood", name = "Minimum food", description = "Minimum amount of food per kill", position = 7, section = consumablesSection)
     default int minFood() {
         return 4;
     }
 
     @Range(min = 1, max = 99)
-    @ConfigItem(keyName = "eatAt", name = "Eat at", description = "Eat food when under this HP", position = 9, section = consumablesSection)
+    @ConfigItem(keyName = "eatAt", name = "Eat at", description = "Eat food when under this HP", position = 8, section = consumablesSection)
     default int eatAt() {
         return 35;
+    }
+
+    @ConfigItem(keyName = "eatWoox", name = "Eat while woox walking", description = "Could cause clashing, turn off if it dies", position = 9, section = consumablesSection)
+    default boolean eatWoox() {
+        return false;
     }
 
     @ConfigItem(keyName = "prayerID", name = "Prayer restore", description = "The name of your prayer restore", position = 10, section = consumablesSection)
