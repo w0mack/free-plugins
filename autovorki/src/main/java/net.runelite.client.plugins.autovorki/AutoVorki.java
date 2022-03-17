@@ -941,9 +941,9 @@ public class AutoVorki extends Plugin {
     AutoVorkiState getStates() {
         if (!inInstance) {
             if (isInPOH(client)) {
-                if (client.getBoostedSkillLevel(Skill.HITPOINTS) < client.getRealSkillLevel(Skill.HITPOINTS)
+                if (config.usePool() && (client.getBoostedSkillLevel(Skill.HITPOINTS) < client.getRealSkillLevel(Skill.HITPOINTS)
                         || client.getBoostedSkillLevel(Skill.PRAYER) < client.getRealSkillLevel(Skill.PRAYER)
-                        || client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) < 1000) {
+                        || client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) < 1000)) {
                     return AutoVorkiState.DRINK_POOL;
                 }
                 return AutoVorkiState.TELEPORT_TO_MOONCLAN;

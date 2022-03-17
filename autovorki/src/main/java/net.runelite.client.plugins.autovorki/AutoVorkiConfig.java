@@ -328,17 +328,22 @@ public interface AutoVorkiConfig extends Config {
     @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 19, section = teleportsSection)
     default HouseTele houseTele() { return HouseTele.CONSTRUCTION_CAPE_T; }
 
-    @ConfigItem(keyName = "poolID", name = "Pool ID", description = "Game Object ID for pool in PoH", position = 20, section = teleportsSection)
+    @ConfigItem(keyName = "usePool", name = "Use PoH pool", description = "Restore PRAYER and HP with rejuv pool in PoH", position = 20, section = teleportsSection)
+    default boolean usePool() {
+        return true;
+    }
+
+    @ConfigItem(keyName = "poolID", name = "Pool ID", description = "Game Object ID for pool in PoH", position = 21, section = teleportsSection)
     default int poolID() {
         return 29241;
     }
 
-    @ConfigItem(keyName = "cMoonClanTele", name = "Lunar Isle ID", description = "Game Object ID for Lunar Isle teleport", position = 21, section = teleportsSection)
+    @ConfigItem(keyName = "cMoonClanTele", name = "Lunar Isle ID", description = "Game Object ID for Lunar Isle teleport", position = 22, section = teleportsSection)
     default int cMoonClanTele() {
         return ObjectID.PORTAL_NEXUS_33402;
     }
 
-    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 22, section = teleportsSection)
+    @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 23, section = teleportsSection)
     default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
 
     @ConfigSection(
