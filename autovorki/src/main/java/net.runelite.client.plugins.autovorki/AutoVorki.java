@@ -664,9 +664,15 @@ public class AutoVorki extends Plugin {
                                     teleToPoH();
                                     break;
                                 }
-                                if (config.invokes()) {
-                                    if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt())
+                                if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt()) {
+                                    if (inv.containsItem(config.food().getId())) {
                                         eatFood();
+                                    } else {
+                                        teleToPoH();
+                                        break;
+                                    }
+                                }
+                                if (config.invokes()) {
                                     if (client.getBoostedSkillLevel(Skill.PRAYER) <= config.restoreAt())
                                         drinkPrayer();
                                     else if (config.drinkAntifire() && needsAntifire())
@@ -679,7 +685,7 @@ public class AutoVorki extends Plugin {
                                 if (config.invokeWalk()) {
                                     walk.walkTile(safeX, getStandLoc().getSceneY() - 1);
                                 } else {
-                                    walk.sceneWalk(new LocalPoint(safeX * 128, getStandLoc().getY() - 128), 0, calc.getRandomIntBetweenRange(0, 100));
+                                    walk.sceneWalk(new LocalPoint(safeX * 128, getStandLoc().getY() - 128), 0, calc.getRandomIntBetweenRange(50, 100));
                                 }
                             }
                         }
@@ -762,6 +768,9 @@ public class AutoVorki extends Plugin {
                     attack();
                     break;
                 case EQUIP_DIAMOND_BOLTS: // equip diamonds
+                    if (inInstance) {
+
+                    }
                     WidgetItem diamond = inv.getWidgetItem(diamondBolts);
                     if (diamond != null) {
                         actionItem(diamond.getId(), MenuAction.ITEM_SECOND_OPTION);
@@ -975,7 +984,7 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.DISABLE_PRAYER;
 
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
-                    if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) - 20)) {
+                    if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) - 20) && inv.containsItem(config.food().getId())) {
                         return AutoVorkiState.EAT_FOOD;
                     }
                 }
@@ -1046,10 +1055,14 @@ public class AutoVorki extends Plugin {
                 }
 
                 // swap bolts
-                if (calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
-                    return AutoVorkiState.EQUIP_DIAMOND_BOLTS;
-                if (calculateHealth(vorkath, 750) > 265 && playerUtils.isItemEquipped(diamondBolts) && config.mainhand().getRange() > 5)
-                    return AutoVorkiState.EQUIP_RUBY_BOLTS;
+                if (vorkath.getId() == NpcID.VORKATH_8061) {
+                    if (calculateHealth(vorkath, 750) > 0) { // returns -1 if null, 0 if dead
+                        if (calculateHealth(vorkath, 750) != 0 && calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
+                            return AutoVorkiState.EQUIP_DIAMOND_BOLTS;
+                        if (calculateHealth(vorkath, 750) != 0 && calculateHealth(vorkath, 750) > 265 && playerUtils.isItemEquipped(diamondBolts) && config.mainhand().getRange() > 5)
+                            return AutoVorkiState.EQUIP_RUBY_BOLTS;
+                    }
+                }
 
                 // if vorkath is WAKING
                 if (vorkath.getId() == NpcID.VORKATH_8058) {
@@ -1131,7 +1144,7 @@ public class AutoVorki extends Plugin {
             if (deposited && !withdrawn) {
                 if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
                         && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
-                        && inv.containsItem(config.food().getId()) ) {
+                        && inv.containsItem(config.food().getId())) {
                     return AutoVorkiState.EAT_FOOD;
                 } else if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
                         && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
@@ -1339,10 +1352,10 @@ public class AutoVorki extends Plugin {
     }
 
     private boolean needsRepot() {
-        int real = client.getRealSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_BASTION ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.BASTION ? Skill.RANGED : Skill.DEFENCE))));
-        int boost = client.getBoostedSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_BASTION ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.BASTION ? Skill.RANGED : Skill.DEFENCE))));
+        //int real = client.getRealSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_BASTION ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.BASTION ? Skill.RANGED : Skill.DEFENCE))));
+        int boost = client.getBoostedSkillLevel(config.superCombat() == AutoVorkiConfig.SuperCombat.RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_RANGING ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.DIVINE_BASTION ? Skill.RANGED : (config.superCombat() == AutoVorkiConfig.SuperCombat.BASTION ? Skill.RANGED : Skill.STRENGTH))));
         int repot = config.boostLevel();
-        return boost <= (real + repot);
+        return boost <= repot;
     }
 
     private void openBank() {
@@ -1445,9 +1458,11 @@ public class AutoVorki extends Plugin {
     }
 
     void lootItem(List<TileItem> itemList) {
-        TileItem lootItem = this.getNearestTileItem(itemList);
-        if (lootItem != null) {
-            this.clientThread.invoke(() -> this.client.invokeMenuAction("", "", lootItem.getId(), MenuAction.GROUND_ITEM_THIRD_OPTION.getId(), lootItem.getTile().getSceneLocation().getX(), lootItem.getTile().getSceneLocation().getY()));
+        if (vorkath.getId() == NpcID.VORKATH_8059) {
+            TileItem lootItem = this.getNearestTileItem(itemList);
+            if (lootItem != null) {
+                this.clientThread.invoke(() -> this.client.invokeMenuAction("", "", lootItem.getId(), MenuAction.GROUND_ITEM_THIRD_OPTION.getId(), lootItem.getTile().getSceneLocation().getX(), lootItem.getTile().getSceneLocation().getY()));
+            }
         }
     }
 

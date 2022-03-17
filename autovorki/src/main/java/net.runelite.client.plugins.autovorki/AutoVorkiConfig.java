@@ -61,7 +61,7 @@ public interface AutoVorkiConfig extends Config {
             section = sleepDelays
     )
     default int sleepMin() {
-        return 60;
+        return 20;
     }
 
     @Range(
@@ -76,7 +76,7 @@ public interface AutoVorkiConfig extends Config {
             section = sleepDelays
     )
     default int sleepMax() {
-        return 350;
+        return 200;
     }
 
     @Range(
@@ -91,7 +91,7 @@ public interface AutoVorkiConfig extends Config {
             section = sleepDelays
     )
     default int sleepTarget() {
-        return 100;
+        return 50;
     }
 
     @Range(
@@ -311,9 +311,10 @@ public interface AutoVorkiConfig extends Config {
         return SuperCombat.DIVINE_SUPER_COMBAT;
     }
 
-    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink a super combat pot at", position = 18, section = consumablesSection)
+    @Range(min = 70, max = 120)
+    @ConfigItem(keyName = "boostLevel", name = "Re-boost at", description = "The level to drink re-pot at<br>Range: checks range level<br>Melee: checks strength level", position = 18, section = consumablesSection)
     default int boostLevel() {
-        return 10;
+        return 107;
     }
 
     @ConfigSection(
