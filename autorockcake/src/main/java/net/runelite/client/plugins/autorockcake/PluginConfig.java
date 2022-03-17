@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Owain van Brakel <https:github.com/Owain94>
+ * Copyright (c) 2018, Andrew EP | ElPinche256 <https://github.com/ElPinche256>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,22 +22,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.runelite.client.plugins.autorockcake;
 
-rootProject.name = "ChasOnRS"
+import net.runelite.client.config.*;
 
-include(":autovorki")
-include(":autocontinue")
-include(":autooffer")
-include(":autobasalt")
-include(":autotrade")
-include(":autorockcake")
+@ConfigGroup("AutoRockCake")
+public interface PluginConfig extends Config
+{
 
-for (project in rootProject.children) {
-    project.apply {
-        projectDir = file(name)
-        buildFileName = "$name.gradle.kts"
+	@ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 0, title = "startPlugin")
+	default Button startPlugin() {
+		return new Button();
+	}
 
-        require(projectDir.isDirectory) { "Project '${project.path} must have a $projectDir directory" }
-        require(buildFile.isFile) { "Project '${project.path} must have a $buildFile build script" }
-    }
+	@ConfigItem(
+		keyName = "showOverlay",
+		name = "Show UI",
+		description = "Show the UI on screen",
+		position = 1
+	)
+	default boolean showOverlay() {
+		return true;
+	}
+
+	@ConfigItem(keyName = "overloaded", name = "Only while overloaded", description = "Only lower HP while you are overloaded", position = 2)
+	default boolean whileOverloaded() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "debug",
+		name = "Debug Messages",
+		description = "",
+		position = 999
+	)
+	default boolean debug() {
+		return false;
+	}
 }
