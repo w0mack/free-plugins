@@ -60,6 +60,7 @@ public class AutoRockCake extends Plugin
 	private Chatbox chat;
 	@Inject
 	private InventoryUtils inv;
+	ChatMessage message;
 
 	@Inject
 	PluginOverlay overlay;
@@ -130,9 +131,12 @@ public class AutoRockCake extends Plugin
 
 	@Subscribe
 	private void onChatMessage(ChatMessage event) {
-		if (event.getMessage().equals("You drink some of your overload potion.")) {
-			timeout = 12;
+		if (event.getType() == ChatMessageType.CONSOLE) {
+			return;
 		}
+		if (event.getMessage().equalsIgnoreCase("You drink some of your overload potion.")
+				&& event.getType() == ChatMessageType.SPAM)
+			timeout = 12;
 	}
 
 	@Subscribe
@@ -163,6 +167,7 @@ public class AutoRockCake extends Plugin
 						actionItem(item.getId(),
 								item.getId() == ItemID.DWARVEN_ROCK_CAKE_7510 ? MenuAction.ITEM_THIRD_OPTION : MenuAction.ITEM_FIRST_OPTION);
 					}
+					timeout = 0;
 					break;
 				default:
 					timeout = 1;
@@ -174,10 +179,18 @@ public class AutoRockCake extends Plugin
 	PluginState getState() {
 		if (timeout > 0 || player.isMoving())
 			return PluginState.TIMEOUT;
-		if (config.whileOverloaded() && client.getVarbitValue(3955) == 0)
-			return PluginState.TIMEOUT;
-		if (client.getBoostedSkillLevel(Skill.HITPOINTS) > 1)
-			return PluginState.LOWER_HP;
+		if (client.getBoostedSkillLevel(Skill.HITPOINTS) > 1) {
+			if (config.whileOverloaded()) {
+				if (client.getVarbitValue(3955) == 0) {
+					timeout = calc.getRandomIntBetweenRange(2, 18);
+					return PluginState.TIMEOUT;
+				} else {
+					return PluginState.LOWER_HP;
+				}
+			} else {
+				return PluginState.LOWER_HP;
+			}
+		}
 		timeout = calc.getRandomIntBetweenRange(2, 18);
 		return PluginState.TIMEOUT;
 	}
