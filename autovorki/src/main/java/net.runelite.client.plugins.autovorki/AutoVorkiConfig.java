@@ -251,9 +251,15 @@ public interface AutoVorkiConfig extends Config {
     )
     String consumablesSection = "Consumables";
 
-    @ConfigItem(keyName = "foodID", name = "Food", description = "The name of your food", position = 5, section = consumablesSection)
+    @ConfigItem(keyName = "foodID", name = "Food", description = "The name of your food", position = 1, section = consumablesSection)
     default Food food() {
         return Food.ANGLERFISH;
+    }
+
+    @Range(min = 1, max = 28)
+    @ConfigItem(keyName = "withdrawFood", name = "Withdraw food", description = "The amount of food to withdraw when banking", position = 2, section = consumablesSection)
+    default int withdrawFood() {
+        return 14;
     }
 
     @Range(min = 1, max = 14)
@@ -364,9 +370,13 @@ public interface AutoVorkiConfig extends Config {
     )
     String lootSection = "Loot";
 
-    @ConfigItem(keyName = "lootBones", name = "Loot Superior dragon bones", description = "", position = 993, section = lootSection)
+    @ConfigItem(keyName = "lootBones", name = "Loot Superior dragon bones", description = "", position = 992, section = lootSection)
     default boolean lootBones() {
         return true;
+    }
+    @ConfigItem(keyName = "lootHides", name = "Loot Un-noted Blue dragonhide", description = "", position = 993, section = lootSection)
+    default boolean lootHides() {
+        return false;
     }
 
     @ConfigItem(keyName = "eatLoot", name = "Eat food to loot", description = "", position = 994, section = lootSection)

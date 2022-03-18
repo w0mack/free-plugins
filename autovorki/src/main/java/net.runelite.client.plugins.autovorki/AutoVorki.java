@@ -521,7 +521,8 @@ public class AutoVorki extends Plugin {
                         withdrawItem(config.houseTele().getId());
                     break;
                 case WITHDRAW_FOOD_FILL:
-                    withdrawAllItem(config.food().getId());
+                    withdrawItem(config.food().getId(), config.withdrawFood());
+                    timeout = 3;
                     break;
                 case WITHDRAW_FOOD_ONE:
                     withdrawItem(config.food().getId());
@@ -1242,7 +1243,7 @@ public class AutoVorki extends Plugin {
                 }
                 if (!inv.containsItem(ItemID.FREMENNIK_SEA_BOOTS_4) && config.rellekkaTele() == AutoVorkiConfig.RellekkaTele.FREMENNIK_BOOTS_4)
                     return AutoVorkiState.WITHDRAW_FREM_SEA_BOOTS;
-                if (!inv.isFull()) {
+                if (inv.getItemCount(config.food().getId(), false) < config.withdrawFood()) {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
                 }
                 return AutoVorkiState.FINISHED_WITHDRAWING;
@@ -1479,6 +1480,8 @@ public class AutoVorki extends Plugin {
             return false;
         if (name.equalsIgnoreCase("superior dragon bones") && config.lootBones())
             return true;
+        if (item.getId() == (ItemID.BLUE_DRAGONHIDE + 1) && config.lootHides())
+            return false;
         return value >= config.lootValue();
     }
 
