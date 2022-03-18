@@ -532,7 +532,7 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.useSpec().getItemId());
                     break;
                 case FINISHED_WITHDRAWING:
-                    if (inv.isFull())
+                    if (inv.getItemCount(config.food().getId(), false) >= config.withdrawFood())
                         withdrawn = true;
                     break;
                 case WITHDRAW_FREM_SEA_BOOTS:
@@ -1168,11 +1168,13 @@ public class AutoVorki extends Plugin {
                 return AutoVorkiState.DEPOSIT_INVENTORY;
             }
             if (deposited && !withdrawn) {
-                if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
+                if (config.overEat()
+                        && config.food() == AutoVorkiConfig.Food.ANGLERFISH
                         && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
                         && inv.containsItem(config.food().getId())) {
                     return AutoVorkiState.EAT_FOOD;
-                } else if (config.food() == AutoVorkiConfig.Food.ANGLERFISH
+                } else if (config.overEat()
+                        && config.food() == AutoVorkiConfig.Food.ANGLERFISH
                         && client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) + 15)
                         && !inv.containsItem(config.food().getId()) ) {
                     return AutoVorkiState.WITHDRAW_FOOD_FILL;
