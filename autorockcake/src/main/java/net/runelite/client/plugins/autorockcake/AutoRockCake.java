@@ -131,12 +131,12 @@ public class AutoRockCake extends Plugin
 
 	@Subscribe
 	private void onChatMessage(ChatMessage event) {
-		if (event.getType() == ChatMessageType.CONSOLE) {
+		if (event.getType() == ChatMessageType.CONSOLE)
 			return;
-		}
-		if (event.getMessage().equalsIgnoreCase("You drink some of your overload potion.")
+
+		if (event.getMessage().contains("You drink some of your overload potion.")
 				&& event.getType() == ChatMessageType.SPAM)
-			timeout = 12;
+			timeout = 12 + (calc.getRandomIntBetweenRange(1, 4));
 	}
 
 	@Subscribe
@@ -152,8 +152,6 @@ public class AutoRockCake extends Plugin
 			}
 			if (state != PluginState.TIMEOUT)
 				lastState = state;
-			if (player.isMoving())
-				return;
 			switch (state) {
 				case TIMEOUT:
 					if (timeout <= 0)
@@ -169,34 +167,29 @@ public class AutoRockCake extends Plugin
 					}
 					timeout = 0;
 					break;
-				default:
-					timeout = 1;
-					break;
 			}
 		}
+	}
+
+	boolean canLowerHP() {
+		if (client.getBoostedSkillLevel(Skill.HITPOINTS) >= 2) {
+			if (config.whileOverloaded() && client.getVarbitValue(3955) == 0)
+				return false;
+			else if (config.whileOverloaded() && client.getVarbitValue(3955) != 0)
+				return true;
+			else
+				return true;
+		}
+		return false;
 	}
 
 	PluginState getState() {
-		if (timeout > 0 || player.isMoving())
+		if (timeout != 0 || player.isMoving())
 			return PluginState.TIMEOUT;
-		if (client.getBoostedSkillLevel(Skill.HITPOINTS) > 1) {
-			if (config.whileOverloaded()) {
-				if (client.getVarbitValue(3955) == 0) {
-					timeout = calc.getRandomIntBetweenRange(2, 18);
-					return PluginState.TIMEOUT;
-				} else {
-					return PluginState.LOWER_HP;
-				}
-			} else {
-				return PluginState.LOWER_HP;
-			}
-		}
+		if (canLowerHP())
+			return PluginState.LOWER_HP;
 		timeout = calc.getRandomIntBetweenRange(2, 18);
 		return PluginState.TIMEOUT;
-	}
-
-	boolean inRegion(Client client, List<Integer> region) {
-		return Arrays.stream(client.getMapRegions()).anyMatch(region::contains);
 	}
 
 	private boolean actionItem(int id, MenuAction action) {
@@ -206,8 +199,7 @@ public class AutoRockCake extends Plugin
 	private boolean actionItem(int id, MenuAction action, int delay) {
 		if (inv.containsItem(id)) {
 			WidgetItem item = inv.getWidgetItem(id);
-			targetMenu = new LegacyMenuEntry("", "", item.getId(), action, item.getIndex(), WidgetInfo.INVENTORY.getId(), false);
-			utils.doInvokeMsTime(targetMenu, delay);
+			utils.doItemActionMsTime(item, action.getId(), WidgetInfo.INVENTORY.getId(), delay);
 			return true;
 		}
 		return false;
