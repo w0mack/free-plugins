@@ -218,7 +218,7 @@ public interface AutoVorkiConfig extends Config {
         return Offhand.AVERNIC_DEFENDER;
     }
 
-    @ConfigItem(keyName = "useSpec", name = "Spec", description = "Which special attack do you want to use", position = 4, section = weaponsSection)
+    @ConfigItem(keyName = "useSpec", name = "Spec", description = "Special attack weapon<br>Will be ignored if using range", position = 4, section = weaponsSection)
     default Spec useSpec() {
         return Spec.BANDOS_GODSWORD;
     }

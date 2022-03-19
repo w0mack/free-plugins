@@ -488,7 +488,7 @@ public class AutoVorki extends Plugin {
                         withdrawItem(config.mainhand().getItemId());
                     }
                     break;
-                case WITHDRAW_SUPER_COMBAT:
+                case WITHDRAW_COMBAT_POTION:
                     withdrawItem(config.superCombat().getDose4());
                     break;
                 case WITHDRAW_ANTIFIRE:
@@ -949,8 +949,7 @@ public class AutoVorki extends Plugin {
         if (!inInstance) {
             if (isInPOH(client)) {
                 if (config.usePool() && (client.getBoostedSkillLevel(Skill.HITPOINTS) < client.getRealSkillLevel(Skill.HITPOINTS)
-                        || client.getBoostedSkillLevel(Skill.PRAYER) < client.getRealSkillLevel(Skill.PRAYER)
-                        || client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) < 1000)) {
+                        || client.getBoostedSkillLevel(Skill.PRAYER) < client.getRealSkillLevel(Skill.PRAYER))) {
                     return AutoVorkiState.DRINK_POOL;
                 }
                 return AutoVorkiState.TELEPORT_TO_MOONCLAN;
@@ -1010,13 +1009,15 @@ public class AutoVorki extends Plugin {
                     return AutoVorkiState.DISABLE_PRAYER;
 
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
-                    if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) - 20) && inv.containsItem(config.food().getId())) {
+                    if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= (client.getRealSkillLevel(Skill.HITPOINTS) - 20)
+                            && inv.containsItem(config.food().getId())
+                            && inv.getItemCount(config.food().getId(), false) > config.minFood() ) {
                         return AutoVorkiState.EAT_FOOD;
                     }
                 }
 
                 // vorkath is napping
-                if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && (!toLoot.isEmpty()) || !oldLoot.isEmpty()) {
+                if (vorkath.getId() == NpcID.VORKATH_8059 && !looted && (!toLoot.isEmpty() || !oldLoot.isEmpty())) {
                     if (inv.isFull()) {
                         if (!config.eatLoot()) {
                             oldLoot.addAll(toLoot);
@@ -1102,9 +1103,9 @@ public class AutoVorki extends Plugin {
                         return AutoVorkiState.ENABLE_PRAYER;
                     if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getAnimation() == 7949)
                         return AutoVorkiState.DISABLE_PRAYER;
-                    if (specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
+                    if (config.mainhand().getRange() == 1 && specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
                         specced = false;
-                    if (!specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
+                    if (config.mainhand().getRange() == 1 && !specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
                         return AutoVorkiState.SPECIAL_ATTACK;
                     if (attack) {
                         WidgetItem item;
@@ -1184,7 +1185,8 @@ public class AutoVorki extends Plugin {
                         return AutoVorkiState.WITHDRAW_RUBY_BOLTS;
                     return AutoVorkiState.EQUIP_RUBY_BOLTS;
                 }
-                if (config.useSpec() != AutoVorkiConfig.Spec.NONE
+                if (config.mainhand().getRange() == 1
+                        && config.useSpec() != AutoVorkiConfig.Spec.NONE
                         && !inv.containsItem(config.useSpec().getItemId())
                         && !equip.isEquipped(config.useSpec().getItemId())) {
                     return AutoVorkiState.WITHDRAW_SPEC_WEAPON;
@@ -1199,7 +1201,7 @@ public class AutoVorki extends Plugin {
                 }
                 equipWeapons(false);
                 if (!inv.containsItem(config.superCombat().getDose4())) {
-                    return AutoVorkiState.WITHDRAW_SUPER_COMBAT;
+                    return AutoVorkiState.WITHDRAW_COMBAT_POTION;
                 }
                 if (!inv.containsItem(config.antifire().getDose4())) {
                     return AutoVorkiState.WITHDRAW_ANTIFIRE;
@@ -1527,7 +1529,8 @@ public class AutoVorki extends Plugin {
         if (inv.containsItem(id)) {
             WidgetItem item = inv.getWidgetItem(id);
             targetMenu = new LegacyMenuEntry("", "", item.getId(), action, item.getIndex(), WidgetInfo.INVENTORY.getId(), false);
-            utils.doItemActionMsTime(item, action.getId(), WidgetInfo.INVENTORY.getId(), delay);
+            // add invokes toggles
+            utils.doInvokeMsTime(targetMenu, delay);
             return true;
         }
         return false;
