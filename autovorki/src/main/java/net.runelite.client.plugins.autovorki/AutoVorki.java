@@ -207,6 +207,7 @@ public class AutoVorki extends Plugin {
         steps = 0;
         safeX = -1;
         eatToFull = false;
+        chinBreakHandler.stopPlugin(this);
     }
 
     @Provides
@@ -399,7 +400,7 @@ public class AutoVorki extends Plugin {
                 inInstance = false;
                 dodgeBomb = false;
                 eatToFull = false;
-                this.chinBreakHandler.startPlugin(this);
+                chinBreakHandler.startPlugin(this);
                 if (!config.useDragonBolts() && config.mainhand().getRange() > 5) {
                     diamondBolts = Set.of(ItemID.DIAMOND_BOLTS_E);
                     rubyBolts = Set.of(ItemID.RUBY_BOLTS_E);
@@ -978,7 +979,7 @@ public class AutoVorki extends Plugin {
                     withdrawn = false;
                     return AutoVorkiState.FIND_BANK;
                 }
-                if (this.chinBreakHandler.shouldBreak(this) && player.getWorldArea().intersectsWith(moonclanTele)) {
+                if (chinBreakHandler.shouldBreak(this) && player.getWorldArea().intersectsWith(moonclanTele)) {
                     return AutoVorkiState.HANDLE_BREAK;
                 }
                 if (player.getWorldArea().intersectsWith(moonclanTele)) {
@@ -991,7 +992,7 @@ public class AutoVorki extends Plugin {
                 }
                 return AutoVorkiState.TIMEOUT;
             } else {
-                if (this.chinBreakHandler.shouldBreak(this) && player.getWorldArea().intersectsWith(moonclanTele)){
+                if (chinBreakHandler.shouldBreak(this) && player.getWorldArea().intersectsWith(moonclanTele)){
                     return AutoVorkiState.HANDLE_BREAK;
                 }
                 if (player.getWorldArea().intersectsWith(moonclanTele))
