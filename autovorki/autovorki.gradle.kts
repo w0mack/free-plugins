@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "3.2.0"
+version = "3.2.1"
 
 project.extra["PluginName"] = "AutoVorki" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Kills and loots Vorkath, and rebanks at Moonclan" // This is the description that is used in the external plugin manager panel
@@ -34,8 +34,8 @@ dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
 
-    compileOnly("com.openosrs:runelite-api:$openosrsVersion+")
-    compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
+    compileOnly("com.openosrs:runelite-api:4.20.4")
+    compileOnly("com.openosrs:runelite-client:4.20.4")
     compileOnly(group = "com.openosrs.externals", name = "iutils", version = "4.8.5+");
     //compileOnly(project(":iutils"))
 
