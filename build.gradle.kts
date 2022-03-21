@@ -66,10 +66,10 @@ subprojects {
         annotationProcessor(Libraries.lombok)
         annotationProcessor(Libraries.pf4j)
 
-        compileOnly("com.openosrs:http-api:$openosrsVersion+")
-        compileOnly("com.openosrs:runelite-api:$openosrsVersion+")
-        compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
-        compileOnly("com.openosrs.rs:runescape-api:$openosrsVersion+")
+        compileOnly("com.openosrs:http-api:4.20.4")
+        compileOnly("com.openosrs:runelite-api:4.20.4")
+        compileOnly("com.openosrs:runelite-client:4.20.4")
+        compileOnly("com.openosrs.rs:runescape-api:4.20.4")
 
 
         compileOnly(Libraries.guice)

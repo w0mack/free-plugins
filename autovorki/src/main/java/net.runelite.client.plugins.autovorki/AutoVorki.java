@@ -26,6 +26,7 @@ import net.runelite.client.plugins.iutils.ui.Chatbox;
 import net.runelite.client.plugins.iutils.ui.Equipment;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
+import net.runelite.client.plugins.iutils.scripts.ReflectBreakHandler;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -96,6 +97,8 @@ public class AutoVorki extends Plugin {
     private iUtils utils;
     @Inject
     private WalkUtils walk;
+    @Inject
+    private ReflectBreakHandler chinBreakHandler;
     @Inject
     InventoryUtils inv;
     @Inject
@@ -212,10 +215,13 @@ public class AutoVorki extends Plugin {
     }
 
     protected void startUp() {
+            chinBreakHandler.registerPlugin(this);
+
     }
 
     protected void shutDown() {
-        reset();
+            chinBreakHandler.unregisterPlugin(this);
+            reset();
     }
 
     @Subscribe
@@ -393,6 +399,7 @@ public class AutoVorki extends Plugin {
                 inInstance = false;
                 dodgeBomb = false;
                 eatToFull = false;
+                this.chinBreakHandler.startPlugin(this);
                 if (!config.useDragonBolts() && config.mainhand().getRange() > 5) {
                     diamondBolts = Set.of(ItemID.DIAMOND_BOLTS_E);
                     rubyBolts = Set.of(ItemID.RUBY_BOLTS_E);
@@ -416,11 +423,13 @@ public class AutoVorki extends Plugin {
         }
     }
 
+
+
     @Subscribe
     private void onGameTick(GameTick event) {
-        if (!startVorki)
+        if (!startVorki ||chinBreakHandler.isBreakActive(this)) {
             return;
-
+        }
         WorldPoint loc = Objects.requireNonNull(client.getLocalPlayer()).getWorldLocation();
         LocalPoint localLoc = LocalPoint.fromWorld(client, loc);
 
@@ -457,7 +466,7 @@ public class AutoVorki extends Plugin {
                     timeout = 2 + tickDelay();
                     break;
                 case TRAVEL_BANK:
-                    if (player.getWorldArea().intersectsWith(moonclanTele)) {
+                    if (player.getWorldArea().intersectsWith(moonclanTele)){
                         walk.sceneWalk(moonclanBankTile, 0, (int)sleepDelay());
                         timeout = calc.getRandomIntBetweenRange(2, 8) + tickDelay();
                     }
@@ -728,6 +737,10 @@ public class AutoVorki extends Plugin {
                 case EAT_FOOD:
                     eatFood();
                     break;
+                case HANDLE_BREAK:
+                    chinBreakHandler.startBreak(this);
+                    timeout = 10;
+                    break;
                 case RESTORE_PRAYER:
                     drinkPrayer();
                     break;
@@ -809,6 +822,7 @@ public class AutoVorki extends Plugin {
                     break;
                 case UNHANDLED:
                     utils.sendGameMessage("Unhandled state - stopping");
+                    chinBreakHandler.stopPlugin(this);
                     timeout = 2;
                     shutDown();
                     break;
@@ -964,6 +978,9 @@ public class AutoVorki extends Plugin {
                     withdrawn = false;
                     return AutoVorkiState.FIND_BANK;
                 }
+                if (this.chinBreakHandler.shouldBreak(this) && player.getWorldArea().intersectsWith(moonclanTele)) {
+                    return AutoVorkiState.HANDLE_BREAK;
+                }
                 if (player.getWorldArea().intersectsWith(moonclanTele)) {
                     return AutoVorkiState.TRAVEL_BANK;
                 }
@@ -974,6 +991,9 @@ public class AutoVorki extends Plugin {
                 }
                 return AutoVorkiState.TIMEOUT;
             } else {
+                if (this.chinBreakHandler.shouldBreak(this) && player.getWorldArea().intersectsWith(moonclanTele)){
+                    return AutoVorkiState.HANDLE_BREAK;
+                }
                 if (player.getWorldArea().intersectsWith(moonclanTele))
                     return AutoVorkiState.TRAVEL_BANK;
                 if (withdrawn && player.getWorldLocation().equals(moonclanBankTile)) {
