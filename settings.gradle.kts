@@ -31,6 +31,8 @@ include(":autooffer")
 include(":autobasalt")
 include(":autotrade")
 include(":autorockcake")
+include(":autosarachnis")
+include(":autochompykiller")
 
 for (project in rootProject.children) {
     project.apply {
