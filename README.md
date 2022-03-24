@@ -7,10 +7,11 @@ Thanks to Oiuyo / OliVorkath for the inspiration and special attack logic.
 Updates will be slow as I'm still learning.
 
 How to use AutoVorki:  
-(Currently only supports melee and will stop upon death)
+Supports melee and range   
+(will stop upon death)
 1. Start off with house tabs / cons cape in invent
 2. Already have your armour equipped
-3. Requires max ornate pool and portal nexus with left click Moonclan tele OR moonclan portal
+3. Requires house teleport with left click MoonClan / Lunar Isla teleport
 4. Set up your quickprayers
 5. Good luck have fun
 

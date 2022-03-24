@@ -77,9 +77,9 @@ public class AutoVorki extends Plugin {
     LocalPoint startLoc;
     LocalPoint standLoc;
     String[] excluded;
+    List<String> includedItems = new ArrayList<>();
     List<String> excludedItems = new ArrayList<>();
     String[] included;
-    List<String> includedItems = new ArrayList<>();
     List<TileItem> toLoot = new ArrayList<>();
     List<TileItem> oldLoot = new ArrayList<>();
     Instant botTimer;
@@ -385,10 +385,6 @@ public class AutoVorki extends Plugin {
         }
         if ("startVorki".equals(configButtonClicked.getKey())) {
             if (!startVorki) {
-                /*if (!config.debug() && config.mainhand().getRange() > 1) {
-                    utils.sendGameMessage("Range is not currently supported.");
-                    return;
-                }*/
                 startVorki = true;
                 timeout = 0;
                 state = null;
