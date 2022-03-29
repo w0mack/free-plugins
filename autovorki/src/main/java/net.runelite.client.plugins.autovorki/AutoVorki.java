@@ -651,16 +651,16 @@ public class AutoVorki extends Plugin {
 
                                 targetMenu = new LegacyMenuEntry("Toggle Run", "", 1, 57, -1,
                                         10485783, false);
-                                utils.doInvokeMsTime(targetMenu, 0);
+                                utils.doInvokeMsTime(targetMenu, 150);
                             }
                         }
                         if (steps == 1) {
-                            actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION);
+                            actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION, 0);
                         } else if (steps == 2) {
                             walkToStart(config.mainhand().getRange());
                         } else if (steps > 2) {
                             if (steps % 2 == 0) {
-                                    actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION, calc.getRandomIntBetweenRange(0, 100));
+                                    actionNPC(vorkath.getId(), MenuAction.NPC_SECOND_OPTION, calc.getRandomIntBetweenRange(0, 50));
                             } else { // move back here
                                 if (safeX == -1) {
                                     utils.sendGameMessage("Unable to find suitable walk path");
@@ -689,7 +689,7 @@ public class AutoVorki extends Plugin {
                                 if (config.invokeWalk()) {
                                     walk.walkTile(safeX, getStandLoc().getSceneY() - 1);
                                 } else {
-                                    walk.sceneWalk(new LocalPoint(safeX * 128, getStandLoc().getY() - 128), 0, calc.getRandomIntBetweenRange(50, 100));
+                                    walk.sceneWalk(new LocalPoint(safeX * 128, getStandLoc().getY() - 128), 0, calc.getRandomIntBetweenRange(0, 50));
                                 }
                             }
                         }
