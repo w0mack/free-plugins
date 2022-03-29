@@ -997,7 +997,7 @@ public class AutoVorki extends Plugin {
                         if (config.food() == AutoVorkiConfig.Food.ANGLERFISH && config.overEat()) {
                             max = (client.getRealSkillLevel(Skill.HITPOINTS) + 15);
                         }
-                        if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= max) {
+                        if (client.getBoostedSkillLevel(Skill.HITPOINTS) < max) {
                             return AutoVorkiState.EAT_FOOD;
                         }
                     }
