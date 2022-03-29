@@ -434,6 +434,7 @@ public interface AutoVorkiConfig extends Config {
 
     enum Offhand {
         AVERNIC_DEFENDER(ItemID.AVERNIC_DEFENDER),
+        AVERNIC_DEFENDER_L(ItemID.AVERNIC_DEFENDER_L),
         DRAGON_DEFENDER(ItemID.DRAGON_DEFENDER),
         DRAGONFIRE_SHIELD(ItemID.DRAGONFIRE_SHIELD),
         TOKTZ_KET_XIL(ItemID.TOKTZKETXIL),

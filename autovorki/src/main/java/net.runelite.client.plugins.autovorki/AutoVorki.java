@@ -136,7 +136,6 @@ public class AutoVorki extends Plugin {
 
     Set<Integer> diamondBolts;
     Set<Integer> rubyBolts;
-    Set<Integer> avernics;
     Set<Integer> dhcb;
     private boolean eatToFull;
 
@@ -405,10 +404,9 @@ public class AutoVorki extends Plugin {
                     diamondBolts = Set.of(ItemID.DIAMOND_BOLTS_E);
                     rubyBolts = Set.of(ItemID.RUBY_BOLTS_E);
                 } else {
-                    diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E, ItemID.DIAMOND_BOLTS_E);
-                    rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E, ItemID.RUBY_BOLTS_E);
+                    diamondBolts = Set.of(ItemID.DIAMOND_DRAGON_BOLTS_E);
+                    rubyBolts = Set.of(ItemID.RUBY_DRAGON_BOLTS_E);
                 }
-                avernics = Set.of(ItemID.AVERNIC_DEFENDER, ItemID.AVERNIC_DEFENDER_L);
                 dhcb = Set.of(ItemID.DRAGON_HUNTER_CROSSBOW, ItemID.DRAGON_HUNTER_CROSSBOW_B, ItemID.DRAGON_HUNTER_CROSSBOW_T);
                 kills = 0;
                 excluded = config.excludedItems().toLowerCase().split("\\s*,\\s*");
@@ -504,14 +502,7 @@ public class AutoVorki extends Plugin {
                     withdrawItem(config.antivenom().getDose4());
                     break;
                 case WITHDRAW_OFFHAND:
-                    if (config.offhand() == AutoVorkiConfig.Offhand.AVERNIC_DEFENDER) {
-                        item = bank.getBankItemWidgetAnyOf(avernics);
-                        if (item != null) {
-                            withdrawItem(item.getItemId());
-                        }
-                    } else {
-                        withdrawItem(config.offhand().getItemId());
-                    }
+                    withdrawItem(config.offhand().getItemId());
                     break;
                 case WITHDRAW_PRAYER_RESTORE:
                     withdrawItem(config.prayer().getDose4(), config.prayerAmount());
@@ -890,6 +881,7 @@ public class AutoVorki extends Plugin {
         String deathMessage = "Oh dear, you are dead!";
         String killComplete = "Your Vorkath";
         String petDrop = "You have a funny feeling like you're being followed.";
+        String serpHelm = "Your serpentine helm has run out of";
 
         if (event.getMessage().equals(spawnExplode) || (event.getMessage().equals(unfrozenMessage))) {
             killSpawn = false;
@@ -920,6 +912,8 @@ public class AutoVorki extends Plugin {
             shutDown();
         } else if (event.getMessage().equals(petDrop)) {
             obtainedPet = true;
+        } else if (event.getMessage().contains(serpHelm)) {
+            teleToPoH();
         }
     }
 
@@ -1134,12 +1128,6 @@ public class AutoVorki extends Plugin {
                                mh = item.getId();
                             }
                         }
-                        if (config.offhand() == AutoVorkiConfig.Offhand.AVERNIC_DEFENDER) {
-                            item = inv.getWidgetItem(avernics);
-                            if (item != null) {
-                                oh = item.getId();
-                            }
-                        }
                         if (!equip.isEquipped(mh) || (!equip.isEquipped(oh)
                                 && config.offhand() != AutoVorkiConfig.Offhand.NONE))
                             return AutoVorkiState.EQUIP_WEAPONS;
@@ -1153,6 +1141,10 @@ public class AutoVorki extends Plugin {
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
                     if (client.getVar(Varbits.QUICK_PRAYER) == 1)
                         return AutoVorkiState.DISABLE_PRAYER;
+                    if (inv.containsItem(ItemID.VIAL)) {
+                        actionItem(ItemID.VIAL, MenuAction.ITEM_FIFTH_OPTION);
+                        return AutoVorkiState.TIMEOUT;
+                    }
                     if (looted) {
                         if (inv.containsItemAmount(
                                 config.food().getId(), config.minFood(),
@@ -1225,6 +1217,16 @@ public class AutoVorki extends Plugin {
                 }
                 if (!inv.containsItem(config.antivenom().getDose4()) && config.antivenom().getDose4() != ItemID.SERPENTINE_HELM) {
                     return AutoVorkiState.WITHDRAW_ANTIVENOM;
+                }
+                if (config.antivenom().getDose4() == ItemID.SERPENTINE_HELM && equip.isEquipped(ItemID.SERPENTINE_HELM_UNCHARGED)) {
+                    utils.sendGameMessage("Ran out of zulrah scales, stopping.");
+                    shutDown();
+                    return null;
+                }
+                if (config.antivenom().getDose4() == ItemID.SERPENTINE_HELM && !equip.isEquipped(ItemID.SERPENTINE_HELM)) {
+                    utils.sendGameMessage("Not wearing a serpentine helm, stopping.");
+                    shutDown();
+                    return null;
                 }
                 if (inv.getItemCount(config.prayer().getDose4(), false) == 0) {
                     return AutoVorkiState.WITHDRAW_PRAYER_RESTORE;
@@ -1300,13 +1302,7 @@ public class AutoVorki extends Plugin {
             actionItem(config.mainhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, (int)sleepDelay());
             attack = att;
         }
-        if (config.offhand() == AutoVorkiConfig.Offhand.AVERNIC_DEFENDER) {
-            item = inv.getWidgetItem(avernics);
-            if (item != null) {
-                actionItem(item.getId(), MenuAction.ITEM_SECOND_OPTION, (int)sleepDelay());
-                attack = att;
-            }
-        } else if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
+        if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
             actionItem(config.offhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, (int)sleepDelay());
             attack = att;
         }
@@ -1501,7 +1497,7 @@ public class AutoVorki extends Plugin {
             return false;
         if (name.equalsIgnoreCase("superior dragon bones") && config.lootBones())
             return true;
-        if (item.getId() == (ItemID.BLUE_DRAGONHIDE + 1) && config.lootHides())
+        if (item.getId() == (ItemID.BLUE_DRAGONHIDE) && config.lootHides())
             return false;
         return value >= config.lootValue();
     }
