@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "3.3.4"
+version = "3.3.5"
 
 project.extra["PluginName"] = "AutoVorki" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Kills and loots Vorkath, and rebanks at Moonclan" // This is the description that is used in the external plugin manager panel

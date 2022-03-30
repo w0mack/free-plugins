@@ -1498,7 +1498,7 @@ public class AutoVorki extends Plugin {
         if (name.equalsIgnoreCase("superior dragon bones") && config.lootBones())
             return true;
         if (item.getId() == (ItemID.BLUE_DRAGONHIDE) && config.lootHides())
-            return false;
+            return true;
         return value >= config.lootValue();
     }
 
