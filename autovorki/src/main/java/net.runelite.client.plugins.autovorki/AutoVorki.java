@@ -880,7 +880,7 @@ public class AutoVorki extends Plugin {
         String unfrozenMessage = "You become unfrozen as you kill the spawn.";
         String deathMessage = "Oh dear, you are dead!";
         String killComplete = "Your Vorkath";
-        String petDrop = "You have a funny feeling like you're being followed.";
+        String petDrop = "funny feeling";
         String serpHelm = "Your serpentine helm has run out of";
 
         if (event.getMessage().equals(spawnExplode) || (event.getMessage().equals(unfrozenMessage))) {
@@ -910,7 +910,7 @@ public class AutoVorki extends Plugin {
             utils.sendGameMessage("Died at: " + format.format(date));
             reset();
             shutDown();
-        } else if (event.getMessage().equals(petDrop)) {
+        } else if (event.getMessage().toLowerCase().contains(petDrop.toLowerCase())) {
             obtainedPet = true;
         } else if (event.getMessage().contains(serpHelm)) {
             teleToPoH();
