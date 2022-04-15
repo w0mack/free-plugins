@@ -510,6 +510,7 @@ public class AutoVorki extends Plugin {
                     break;
                 case WITHDRAW_RUNE_POUCH:
                     withdrawItem(bank.getBankItemWidget(ItemID.RUNE_POUCH) != null ? ItemID.RUNE_POUCH : ItemID.RUNE_POUCH_L);
+                    timeout = 2 + tickDelay();
                     break;
                 case WITHDRAW_HOUSE_TELE:
                     if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
@@ -1231,7 +1232,7 @@ public class AutoVorki extends Plugin {
                 if (inv.getItemCount(config.prayer().getDose4(), false) == 0) {
                     return AutoVorkiState.WITHDRAW_PRAYER_RESTORE;
                 }
-                if (!inv.containsItem(ItemID.RUNE_POUCH) && !inv.containsItem(ItemID.RUNE_POUCH_L)) {
+                if (!inv.containsItem(Set.of(ItemID.RUNE_POUCH, ItemID.RUNE_POUCH_L))) {
                     return AutoVorkiState.WITHDRAW_RUNE_POUCH;
                 }
                 if (config.houseTele() == AutoVorkiConfig.HouseTele.HOUSE_TELEPORT) {
