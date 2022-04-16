@@ -544,7 +544,7 @@ public class AutoVorki extends Plugin {
                     actionNPC(badBanker, MenuAction.NPC_FIRST_OPTION);
                     break;
                 case DRINK_POOL:
-                    if (client.getVar(Varbits.QUICK_PRAYER) == 1) {
+                    if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1) {
                         widget = client.getWidget(10485775);
                         if (widget != null) {
                             prayBounds = widget.getBounds();
@@ -1017,7 +1017,7 @@ public class AutoVorki extends Plugin {
                     walkToStand = false;
                     return AutoVorkiState.TIMEOUT;
                 }
-                if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getId() == NpcID.VORKATH_8059)
+                if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1 && vorkath.getId() == NpcID.VORKATH_8059)
                     return AutoVorkiState.DISABLE_PRAYER;
 
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
@@ -1105,15 +1105,15 @@ public class AutoVorki extends Plugin {
 
                 // if vorkath is WAKING
                 if (vorkath.getId() == NpcID.VORKATH_8058) {
-                    if (client.getVar(Varbits.QUICK_PRAYER) == 0)
+                    if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 0)
                         return AutoVorkiState.ENABLE_PRAYER;
                 }
 
                 // if vorkath is AWAKE
                 if (vorkath.getId() == NpcID.VORKATH_8061) {
-                    if (client.getVar(Varbits.QUICK_PRAYER) == 0 && vorkath.getAnimation() != 7949)
+                    if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 0 && vorkath.getAnimation() != 7949)
                         return AutoVorkiState.ENABLE_PRAYER;
-                    if (client.getVar(Varbits.QUICK_PRAYER) == 1 && vorkath.getAnimation() == 7949)
+                    if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1 && vorkath.getAnimation() == 7949)
                         return AutoVorkiState.DISABLE_PRAYER;
                     if (config.mainhand().getRange() == 1 && specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
                         specced = false;
@@ -1140,7 +1140,7 @@ public class AutoVorki extends Plugin {
 
                 // if vorkath is SLEEPING
                 if (vorkath.getId() == NpcID.VORKATH_8059) {
-                    if (client.getVar(Varbits.QUICK_PRAYER) == 1)
+                    if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1)
                         return AutoVorkiState.DISABLE_PRAYER;
                     if (inv.containsItem(ItemID.VIAL)) {
                         actionItem(ItemID.VIAL, MenuAction.ITEM_FIFTH_OPTION);

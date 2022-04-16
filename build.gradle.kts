@@ -39,7 +39,7 @@ subprojects {
     group = "com.openosrs.externals"
 
     project.extra["PluginProvider"] = "ChasOnRS"
-    project.extra["ProjectSupportUrl"] = "https://discord.gg/Xc63rW2H84"
+    project.extra["ProjectSupportUrl"] = "https://discord.gg/chas"
     project.extra["PluginLicense"] = "3-Clause BSD License"
 
     repositories {
