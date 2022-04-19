@@ -463,7 +463,8 @@ public interface AutoVorkiConfig extends Config {
         NONE(-1, 0),
         BANDOS_GODSWORD(ItemID.BANDOS_GODSWORD, 50),
         DRAGON_WARHAMMER(ItemID.DRAGON_WARHAMMER, 50),
-        DRAGON_CLAWS(ItemID.DRAGON_CLAWS, 50);
+        DRAGON_CLAWS(ItemID.DRAGON_CLAWS, 50),
+        BLOWPIPE(ItemID.TOXIC_BLOWPIPE, 50);
 
         @Getter private final int itemId, specAmt;
         Spec(int itemId, int specAmt) {

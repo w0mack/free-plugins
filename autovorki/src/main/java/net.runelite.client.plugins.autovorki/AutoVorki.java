@@ -330,6 +330,10 @@ public class AutoVorki extends Plugin {
         if (projectile.getId() == 1481) {// fire bomb
             dodgeBomb = true;
         }
+        if (projectile.getId() == 1043) {
+            specced = true;
+            attack = true;
+        }
         if (projectile.getId() == 395) {
             if (config.useStaff() && inv.containsItem(config.staffID()))
                 actionItem(config.staffID(), MenuAction.ITEM_SECOND_OPTION, calc.getRandomIntBetweenRange(25, 200));
@@ -1115,9 +1119,9 @@ public class AutoVorki extends Plugin {
                         return AutoVorkiState.ENABLE_PRAYER;
                     if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1 && vorkath.getAnimation() == 7949)
                         return AutoVorkiState.DISABLE_PRAYER;
-                    if (config.mainhand().getRange() == 1 && specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
+                    if ((config.mainhand().getRange() == 1 || config.mainhand().getRange() == 5) && specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= 800 && calculateHealth(vorkath, 750) >= 350)
                         specced = false;
-                    if (config.mainhand().getRange() == 1 && !specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
+                    if ((config.mainhand().getRange() == 1 || config.mainhand().getRange() == 5) && !specced && config.useSpec() != AutoVorkiConfig.Spec.NONE && client.getVar(VarPlayer.SPECIAL_ATTACK_PERCENT) >= (config.useSpec().getSpecAmt() * 10))
                         return AutoVorkiState.SPECIAL_ATTACK;
                     if (attack) {
                         WidgetItem item;
