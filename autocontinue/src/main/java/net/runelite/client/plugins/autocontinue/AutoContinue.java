@@ -119,15 +119,15 @@ public class AutoContinue extends Plugin
 	private void continueChat() {
 		targetMenu = null;
 		if (chat.chatState() == Chatbox.ChatState.NPC_CHAT)
-			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_TYPE_6, -1, client.getWidget(231, 5).getId(), false);
+			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(231, 5).getId(), false);
 		if (chat.chatState() == Chatbox.ChatState.PLAYER_CHAT)
-			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_TYPE_6, -1, client.getWidget(217, 5).getId(), false);
+			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(217, 5).getId(), false);
 		if (chat.chatState() == Chatbox.ChatState.ITEM_CHAT)
-			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_TYPE_6, -1, client.getWidget(11, 4).getId(), false);
+			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(11, 4).getId(), false);
 		if (chat.chatState() == Chatbox.ChatState.SPECIAL)
-			targetMenu = new LegacyMenuEntry("Continue", "", 1, MenuAction.CC_OP, 2, client.getWidget(193, 0).getId(), false);
+			targetMenu = new LegacyMenuEntry("Continue", "", 1, MenuAction.WIDGET_CONTINUE, 2, client.getWidget(193, 0).getId(), false);
 		if (chat.chatState() == Chatbox.ChatState.MODEL)
-			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_TYPE_6, -1, client.getWidget(229, 2).getId(), false);
+			targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(229, 2).getId(), false);
 		utils.doInvokeMsTime(targetMenu, 0);
 	}
 }

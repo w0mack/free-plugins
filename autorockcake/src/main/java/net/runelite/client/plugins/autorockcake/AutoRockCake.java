@@ -15,6 +15,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.iutils.*;
 import net.runelite.client.plugins.iutils.game.Game;
 import net.runelite.client.plugins.iutils.ui.Chatbox;
+import net.runelite.client.plugins.iutils.util.LegacyInventoryAssistant;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
 
@@ -59,6 +60,9 @@ public class AutoRockCake extends Plugin
 	private Chatbox chat;
 	@Inject
 	private InventoryUtils inv;
+	@Inject
+	LegacyInventoryAssistant inventoryAssistant;
+
 	ChatMessage message;
 
 	@Inject
@@ -117,7 +121,7 @@ public class AutoRockCake extends Plugin
 			case "startPlugin":
 				if (!startPlugin) {
 					startPlugin = true;
-					timeout = calc.getRandomIntBetweenRange(3, 10);
+					timeout = 2;
 					botTimer = Instant.now();
 					state = PluginState.TIMEOUT;
 					overlayManager.add(overlay);
@@ -159,10 +163,10 @@ public class AutoRockCake extends Plugin
 						timeout--;
 					break;
 				case LOWER_HP:
+					log.info("lowering hp");
 					WidgetItem item = inv.getWidgetItem(cakes);
 					if (item != null) {
-						actionItem(item.getId(),
-								item.getId() == ItemID.DWARVEN_ROCK_CAKE_7510 ? MenuAction.ITEM_THIRD_OPTION : MenuAction.ITEM_FIRST_OPTION);
+						useItem(item);
 					}
 					timeout = 0;
 					break;
@@ -191,17 +195,12 @@ public class AutoRockCake extends Plugin
 		return PluginState.TIMEOUT;
 	}
 
-	private boolean actionItem(int id, MenuAction action) {
-		return actionItem(id, action, calc.getRandomIntBetweenRange(25, 400));
-	}
-
-	private boolean actionItem(int id, MenuAction action, int delay) {
-		if (inv.containsItem(id)) {
-			WidgetItem item = inv.getWidgetItem(id);
-			utils.doItemActionMsTime(item, action.getId(), WidgetInfo.INVENTORY.getId(), delay);
-			return true;
+	private void useItem(WidgetItem item) {
+		if (item != null) {
+			targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), "guzzle");
+			int sleepTime = calc.getRandomIntBetweenRange(25, 200);
+			utils.doActionMsTime(targetMenu, item.getCanvasBounds(), sleepTime);
 		}
-		return false;
 	}
 
 }

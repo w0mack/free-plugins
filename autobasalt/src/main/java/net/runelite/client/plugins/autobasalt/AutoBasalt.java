@@ -288,7 +288,7 @@ public class AutoBasalt extends Plugin
 		client.setSelectedItemSlot(item1.getIndex());
 		client.setSelectedItemID(item1.getId());
 
-		client.invokeMenuAction("Use", "", item2.getId(), MenuAction.ITEM_USE_ON_WIDGET_ITEM.getId(), 2, WidgetInfo.INVENTORY.getId());
+		client.invokeMenuAction("Use", "", item2.getId(), MenuAction.ITEM_USE_ON_ITEM.getId(), 2, WidgetInfo.INVENTORY.getId());
 
 	}
 

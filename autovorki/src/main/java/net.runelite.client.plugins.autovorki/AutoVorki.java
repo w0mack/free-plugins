@@ -24,6 +24,7 @@ import net.runelite.client.plugins.iutils.*;
 import net.runelite.client.plugins.iutils.game.Game;
 import net.runelite.client.plugins.iutils.ui.Chatbox;
 import net.runelite.client.plugins.iutils.ui.Equipment;
+import net.runelite.client.plugins.iutils.util.LegacyInventoryAssistant;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
 import net.runelite.client.plugins.iutils.scripts.ReflectBreakHandler;
@@ -101,6 +102,8 @@ public class AutoVorki extends Plugin {
     private ReflectBreakHandler chinBreakHandler;
     @Inject
     InventoryUtils inv;
+    @Inject
+    LegacyInventoryAssistant inventoryAssistant;
     @Inject
     Equipment equip;
     @Inject
@@ -336,7 +339,7 @@ public class AutoVorki extends Plugin {
         }
         if (projectile.getId() == 395) {
             if (config.useStaff() && inv.containsItem(config.staffID()))
-                actionItem(config.staffID(), MenuAction.ITEM_SECOND_OPTION, calc.getRandomIntBetweenRange(25, 200));
+                actionItem(config.staffID(), calc.getRandomIntBetweenRange(25, 200), "wear", "wield", "equip");
             standLoc = new LocalPoint(vorkath.getLocalLocation().getX(), vorkath.getLocalLocation().getY() - (4 * 128) - ((config.mainhand().getRange() - 1) * 128));
             if (config.invokeWalk())
                 walk.walkTile(standLoc.getSceneX(), standLoc.getSceneY());
@@ -541,7 +544,7 @@ public class AutoVorki extends Plugin {
                     withdrawItem(ItemID.FREMENNIK_SEA_BOOTS_4);
                     break;
                 case TELE_SEA_BOOTS:
-                    actionItem(ItemID.FREMENNIK_SEA_BOOTS_4, MenuAction.ITEM_THIRD_OPTION);
+                    actionItem(ItemID.FREMENNIK_SEA_BOOTS_4, "wear", "equip", "wield");
                     timeout = calc.getRandomIntBetweenRange(3, 6) + tickDelay();
                     break;
                 case TALK_TO_BANKER:
@@ -638,7 +641,7 @@ public class AutoVorki extends Plugin {
                             // don't need inventory space for dwh
                             eatFood();
                         } else {
-                            actionItem(config.useSpec().getItemId(), MenuAction.ITEM_SECOND_OPTION);
+                            actionItem(config.useSpec().getItemId(), "wear", "equip", "wield");
                         }
                     }
                     break;
@@ -706,7 +709,7 @@ public class AutoVorki extends Plugin {
                     break;
                 case KILL_SPAWN:
                     if (zombSpawn != null) {
-                        targetMenu =  new LegacyMenuEntry("Cast", "", zombSpawn.getIndex(), MenuAction.SPELL_CAST_ON_NPC.getId(), 0, 0, false);
+                        targetMenu =  new LegacyMenuEntry("Cast", "", zombSpawn.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC, 0, 0, false);
                         utils.oneClickCastSpell(WidgetInfo.SPELL_CRUMBLE_UNDEAD, targetMenu, zombSpawn.getConvexHull().getBounds(), 100);
                         killSpawn = false;
                         timeout = 10;
@@ -781,12 +784,9 @@ public class AutoVorki extends Plugin {
                     attack();
                     break;
                 case EQUIP_DIAMOND_BOLTS: // equip diamonds
-                    if (inInstance) {
-
-                    }
                     WidgetItem diamond = inv.getWidgetItem(diamondBolts);
                     if (diamond != null) {
-                        actionItem(diamond.getId(), MenuAction.ITEM_SECOND_OPTION);
+                        actionItem(diamond.getId(), "wear", "equip", "wield");
                     }
                     attack = true;
                     break;
@@ -795,7 +795,7 @@ public class AutoVorki extends Plugin {
                         deposited = false;
                     WidgetItem ruby = inv.getWidgetItem(rubyBolts);
                     if (ruby != null) {
-                        actionItem(ruby.getId(), MenuAction.ITEM_SECOND_OPTION);
+                        actionItem(ruby.getId(), "wear", "equip", "wield");
                     }
                     attack = true;
                     break;
@@ -830,10 +830,10 @@ public class AutoVorki extends Plugin {
     void attack() {
         if (steps == 0) {
             if (!equip.isEquipped(config.mainhand().getItemId()) && timeout <= 1 && specced) {
-                actionItem(config.mainhand().getItemId(), MenuAction.ITEM_SECOND_OPTION);
+                actionItem(config.mainhand().getItemId(), "wear", "equip", "wield");
                 attack = true;
             } else if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && specced && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
-                actionItem(config.offhand().getItemId(), MenuAction.ITEM_SECOND_OPTION);
+                actionItem(config.offhand().getItemId(), "wear", "equip", "wield");
                 attack = true;
             } else {
                 attack = false;
@@ -929,11 +929,11 @@ public class AutoVorki extends Plugin {
     private void continueChat() {
         targetMenu = null;
         if (chat.chatState() == Chatbox.ChatState.NPC_CHAT) {
-            targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_TYPE_6, -1, client.getWidget(231, 5).getId(), false);
+            targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(231, 5).getId(), false);
             bounds = client.getWidget(231, 5).getBounds();
         }
         if (chat.chatState() == Chatbox.ChatState.PLAYER_CHAT) {
-            targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_TYPE_6, -1, client.getWidget(217, 5).getId(), false);
+            targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(217, 5).getId(), false);
             bounds = client.getWidget(217, 5).getBounds();
         }
         if (!config.invokes())
@@ -1100,7 +1100,7 @@ public class AutoVorki extends Plugin {
                 // swap bolts
                 if (vorkath.getId() == NpcID.VORKATH_8061) {
                     if (calculateHealth(vorkath, 750) > 0) { // returns -1 if null, 0 if dead
-                        if (calculateHealth(vorkath, 750) != 0 && calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5)
+                        if (calculateHealth(vorkath, 750) != 0 && calculateHealth(vorkath, 750) <= 265 && playerUtils.isItemEquipped(rubyBolts) && config.mainhand().getRange() > 5 && config.useDiamond())
                             return AutoVorkiState.EQUIP_DIAMOND_BOLTS;
                         if (calculateHealth(vorkath, 750) != 0 && calculateHealth(vorkath, 750) > 265 && playerUtils.isItemEquipped(diamondBolts) && config.mainhand().getRange() > 5)
                             return AutoVorkiState.EQUIP_RUBY_BOLTS;
@@ -1147,7 +1147,7 @@ public class AutoVorki extends Plugin {
                     if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1)
                         return AutoVorkiState.DISABLE_PRAYER;
                     if (inv.containsItem(ItemID.VIAL)) {
-                        actionItem(ItemID.VIAL, MenuAction.ITEM_FIFTH_OPTION);
+                        actionItem(ItemID.VIAL, "drop");
                         return AutoVorkiState.TIMEOUT;
                     }
                     if (looted) {
@@ -1288,7 +1288,7 @@ public class AutoVorki extends Plugin {
     }
 
     void eatFood() {
-        actionItem(config.food().getId(), MenuAction.ITEM_FIRST_OPTION);
+        actionItem(config.food().getId(), "eat");
     }
 
     void equipWeapons() {
@@ -1300,15 +1300,15 @@ public class AutoVorki extends Plugin {
         if (config.mainhand() == AutoVorkiConfig.Mainhand.DRAGON_HUNTER_CROSSBOW) {
             item = inv.getWidgetItem(dhcb);
             if (item != null) {
-                actionItem(item.getId(), MenuAction.ITEM_SECOND_OPTION, (int)sleepDelay());
+                actionItem(item.getId(), (int)sleepDelay(), "wear", "equip", "wield");
                 attack = att;
             }
         } else if (!equip.isEquipped(config.mainhand().getItemId()) && timeout <= 1) {
-            actionItem(config.mainhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, (int)sleepDelay());
+            actionItem(config.mainhand().getItemId(), (int)sleepDelay(), "wear", "equip", "wield");
             attack = att;
         }
         if (!equip.isEquipped(config.offhand().getItemId()) && timeout <= 1 && config.offhand() != AutoVorkiConfig.Offhand.NONE) {
-            actionItem(config.offhand().getItemId(), MenuAction.ITEM_SECOND_OPTION, (int)sleepDelay());
+            actionItem(config.offhand().getItemId(), (int)sleepDelay(), "wear", "equip", "wield");
             attack = att;
         }
     }
@@ -1327,7 +1327,7 @@ public class AutoVorki extends Plugin {
             teleToPoH();
             return;
         }
-        actionItem(pot, MenuAction.ITEM_FIRST_OPTION);
+        actionItem(pot, "drink", "eat");
     }
 
     void drinkAntivenom() {
@@ -1346,7 +1346,7 @@ public class AutoVorki extends Plugin {
             teleToPoH();
             return;
         }
-        actionItem(pot, MenuAction.ITEM_FIRST_OPTION);
+        actionItem(pot, "drink", "eat");
     }
 
     void drinkAntifire() {
@@ -1363,7 +1363,7 @@ public class AutoVorki extends Plugin {
             teleToPoH();
             return;
         }
-        actionItem(pot, MenuAction.ITEM_FIRST_OPTION);
+        actionItem(pot, "drink", "eat");
     }
 
     void drinkPrayer() {
@@ -1380,7 +1380,7 @@ public class AutoVorki extends Plugin {
             teleToPoH();
             return;
         }
-        actionItem(pot, MenuAction.ITEM_FIRST_OPTION);
+        actionItem(pot, "drink", "eat");
     }
 
     private boolean needsAntifire() {
@@ -1476,9 +1476,9 @@ public class AutoVorki extends Plugin {
 
     private void teleToPoH() {
         if (config.houseTele().getId() == ItemID.CONSTRUCT_CAPET || config.houseTele().getId() == ItemID.CONSTRUCT_CAPE)
-            actionItem(ItemID.CONSTRUCT_CAPET, MenuAction.ITEM_FOURTH_OPTION);
+            actionItem(ItemID.CONSTRUCT_CAPET, "tele to poh");
         else if (config.houseTele().getId() == ItemID.TELEPORT_TO_HOUSE)
-            actionItem(ItemID.TELEPORT_TO_HOUSE, MenuAction.ITEM_FIRST_OPTION);
+            actionItem(ItemID.TELEPORT_TO_HOUSE, "break");
         else if (config.houseTele().getId() == 1) {
             Widget widget = client.getWidget(218, 29);
             if (widget != null) {
@@ -1543,19 +1543,22 @@ public class AutoVorki extends Plugin {
         return false;
     }
 
-    private boolean actionItem(int id, MenuAction action, int delay) {
+    private boolean actionItem(int id, int delay, String... action) {
         if (inv.containsItem(id)) {
             WidgetItem item = inv.getWidgetItem(id);
-            targetMenu = new LegacyMenuEntry("", "", item.getId(), action, item.getIndex(), WidgetInfo.INVENTORY.getId(), false);
-            // add invokes toggles
-            utils.doInvokeMsTime(targetMenu, delay);
+            targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), action);
+            if (config.invokes()) {
+                utils.doInvokeMsTime(targetMenu, delay);
+            } else {
+                utils.doActionMsTime(targetMenu, item.getCanvasBounds(), delay);
+            }
             return true;
         }
         return false;
     }
 
-    private boolean actionItem(int id, MenuAction action) {
-        return actionItem(id, action, (int)sleepDelay());
+    private boolean actionItem(int id, String... action) {
+        return actionItem(id, (int)sleepDelay(), action);
     }
 
     private boolean actionNPC(int id, MenuAction action, int delay) {
