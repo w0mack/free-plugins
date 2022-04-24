@@ -544,7 +544,7 @@ public class AutoVorki extends Plugin {
                     withdrawItem(ItemID.FREMENNIK_SEA_BOOTS_4);
                     break;
                 case TELE_SEA_BOOTS:
-                    actionItem(ItemID.FREMENNIK_SEA_BOOTS_4, "wear", "equip", "wield");
+                    actionItem(ItemID.FREMENNIK_SEA_BOOTS_4, "teleport");
                     timeout = calc.getRandomIntBetweenRange(3, 6) + tickDelay();
                     break;
                 case TALK_TO_BANKER:
