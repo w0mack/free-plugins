@@ -15,8 +15,8 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.iutils.*;
 import net.runelite.client.plugins.iutils.game.Game;
-import net.runelite.client.plugins.iutils.game.InventoryItem;
 import net.runelite.client.plugins.iutils.ui.Chatbox;
+import net.runelite.client.plugins.iutils.util.LegacyInventoryAssistant;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
 
@@ -49,7 +49,7 @@ public class AutoBasalt extends Plugin
 	@Inject
 	private WalkUtils walk;
 	@Inject
-	private InventoryUtils inventory;
+	private InventoryUtils inv;
 	@Inject
 	private ObjectUtils objectUtils;
 	@Inject
@@ -60,6 +60,8 @@ public class AutoBasalt extends Plugin
 	private BankUtils bank;
 	@Inject
 	private Chatbox chat;
+	@Inject
+	private LegacyInventoryAssistant inventoryAssistant;
 
 	@Inject
 	PluginOverlay overlay;
@@ -177,7 +179,7 @@ public class AutoBasalt extends Plugin
 					timeout = calc.getRandomIntBetweenRange(1, 4);
 					break;
 				case NOTE_BASALT:
-					if (inventory.containsItem(ItemID.BASALT)) {
+					if (inv.containsItem(ItemID.BASALT)) {
 						itemOnNPC(ItemID.BASALT, snowflake);
 						timeout = calc.getRandomIntBetweenRange(2, 4);
 					}
@@ -187,8 +189,8 @@ public class AutoBasalt extends Plugin
 					timeout = calc.getRandomIntBetweenRange(2, 4);
 					break;
 				case MAKE_TELES:
-					if (inventory.getItemCount(ItemID.EFH_SALT, true) >= 3
-							&& inventory.getItemCount(ItemID.URT_SALT, true) >= 3) {
+					if (inv.getItemCount(ItemID.EFH_SALT, true) >= 3
+							&& inv.getItemCount(ItemID.URT_SALT, true) >= 3) {
 						targetMenu = new LegacyMenuEntry("Make", "", 1, MenuAction.CC_OP, -1, client.getWidget(270, config.craftTele() == PluginConfig.CraftTele.ICY_BASALT ? 14 : 15).getId(), false);
 						utils.doActionMsTime(targetMenu, client.getWidget(270, config.craftTele() == PluginConfig.CraftTele.ICY_BASALT ? 14 : 15).getBounds(), calc.getRandomIntBetweenRange(25, 200));
 					} else {
@@ -212,7 +214,7 @@ public class AutoBasalt extends Plugin
 				return PluginState.TIMEOUT;
 			}
 			if (config.mine() == PluginConfig.Mine.BASALT) {
-				if (!inventory.isFull())
+				if (!inv.isFull())
 					return PluginState.MINE;
 				else {
 					if (!config.makeTele())
@@ -221,9 +223,9 @@ public class AutoBasalt extends Plugin
 						if (chat.chatState() == Chatbox.ChatState.MAKE) {
 							return PluginState.MAKE_TELES;
 						} else {
-							if (inventory.getItemCount(ItemID.BASALT, false) >= 1
-									&& inventory.getItemCount(ItemID.TE_SALT, true) >= 1
-									&& inventory.getItemCount((config.craftTele() == PluginConfig.CraftTele.ICY_BASALT ? ItemID.EFH_SALT : ItemID.URT_SALT), true) >= 3) {
+							if (inv.getItemCount(ItemID.BASALT, false) >= 1
+									&& inv.getItemCount(ItemID.TE_SALT, true) >= 1
+									&& inv.getItemCount((config.craftTele() == PluginConfig.CraftTele.ICY_BASALT ? ItemID.EFH_SALT : ItemID.URT_SALT), true) >= 3) {
 								return PluginState.USE_ITEMS;
 							} else {
 								utils.sendGameMessage("You do not have the materials to make this item.");
@@ -238,7 +240,7 @@ public class AutoBasalt extends Plugin
 			}
 		} else if (inRegion(client, weissRegion)) {
 			if (config.mine() == PluginConfig.Mine.BASALT) {
-				if (inventory.isFull())
+				if (inv.isFull())
 					return PluginState.NOTE_BASALT;
 				else
 					return PluginState.DESCEND_STAIRS;
@@ -265,8 +267,23 @@ public class AutoBasalt extends Plugin
 		return Arrays.stream(client.getMapRegions()).anyMatch(region::contains);
 	}
 
+	void itemOnItem(int id1, int id2) {
+		WidgetItem item1 = inv.getWidgetItem(id1);
+		WidgetItem item2 = inv.getWidgetItem(id2);
+		if (item1 == null || item2 == null)
+			return;
+
+		client.setSelectedSpellWidget(WidgetInfo.INVENTORY.getId());
+		client.setSelectedSpellChildIndex(inventoryAssistant.getWidgetItem(Arrays.asList(id1)).getIndex());
+		client.setSelectedSpellItemId(inventoryAssistant.getWidgetItem(Arrays.asList(id1)).getWidget().getItemId());
+
+		targetMenu = new LegacyMenuEntry("", "", id2, MenuAction.WIDGET_TARGET_ON_WIDGET, inventoryAssistant.getWidgetItem(Arrays.asList(id2)).getIndex(), WidgetInfo.INVENTORY.getId(), false);
+		utils.doActionMsTime(targetMenu, inventoryAssistant.getWidgetItem(Arrays.asList(id2)).getCanvasBounds(), 0);
+
+	}
+
 	void itemOnNPC(int itemId, int npcId) {
-		WidgetItem item = inventory.getWidgetItem(itemId);
+		WidgetItem item = inv.getWidgetItem(itemId);
 		if (item == null)
 			return;
 
@@ -274,22 +291,12 @@ public class AutoBasalt extends Plugin
 		if (npc == null)
 			return;
 
-		targetMenu = new LegacyMenuEntry("Use", "", npc.getIndex(), MenuAction.ITEM_USE_ON_NPC, 0, 0, false);
-		utils.doModifiedActionMsTime(targetMenu, item.getId(), item.getIndex(), MenuAction.ITEM_USE_ON_NPC.getId(), npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 200));
-	}
+		client.setSelectedSpellWidget(WidgetInfo.INVENTORY.getId());
+		client.setSelectedSpellChildIndex(inventoryAssistant.getWidgetItem(Arrays.asList(itemId)).getIndex());
+		client.setSelectedSpellItemId(inventoryAssistant.getWidgetItem(Arrays.asList(itemId)).getWidget().getItemId());
 
-	void itemOnItem(int id1, int id2) {
-		WidgetItem item1 = inventory.getWidgetItem(id1);
-		WidgetItem item2 = inventory.getWidgetItem(id2);
-		if (item1 == null || item2 == null)
-			return;
-
-		client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
-		client.setSelectedItemSlot(item1.getIndex());
-		client.setSelectedItemID(item1.getId());
-
-		client.invokeMenuAction("Use", "", item2.getId(), MenuAction.ITEM_USE_ON_ITEM.getId(), 2, WidgetInfo.INVENTORY.getId());
-
+		targetMenu = new LegacyMenuEntry("Use", "", npc.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC, 0, 0, false);
+		utils.doModifiedActionMsTime(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId(), npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 200));
 	}
 
 	void actionObject(int id, MenuAction action) {
