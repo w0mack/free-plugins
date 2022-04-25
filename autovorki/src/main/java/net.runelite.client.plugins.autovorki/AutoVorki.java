@@ -786,7 +786,6 @@ public class AutoVorki extends Plugin {
                 case EQUIP_DIAMOND_BOLTS: // equip diamonds
                     if (bank.isOpen()) {
                         bank.close();
-                        break;
                     }
                     WidgetItem diamond = inv.getWidgetItem(diamondBolts);
                     if (diamond != null) {
@@ -797,10 +796,8 @@ public class AutoVorki extends Plugin {
                 case EQUIP_RUBY_BOLTS: // equip rubies
                     if (bank.isOpen())
                         deposited = false;
-                    if (bank.isOpen()) {
+                    if (bank.isOpen())
                         bank.close();
-                        break;
-                    }
                     WidgetItem ruby = inv.getWidgetItem(rubyBolts);
                     if (ruby != null) {
                         actionItem(ruby.getId(), "wear", "equip", "wield");
