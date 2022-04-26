@@ -795,12 +795,20 @@ public class AutoVorki extends Plugin {
                     break;
                 case EQUIP_RUBY_BOLTS: // equip rubies
                     if (bank.isOpen())
-                        deposited = false;
-                    if (bank.isOpen())
-                        bank.close();
+                        targetMenu = new LegacyMenuEntry("", "", 9, MenuAction.CC_OP_LOW_PRIORITY, 0, WidgetInfo.BANK_INVENTORY_ITEMS_CONTAINER.getId(), false);
                     WidgetItem ruby = inv.getWidgetItem(rubyBolts);
                     if (ruby != null) {
-                        actionItem(ruby.getId(), "wear", "equip", "wield");
+                        if (bank.isOpen()) {
+                            if (config.invokes()) {
+                                utils.doInvokeMsTime(targetMenu, 0);
+                            } else {
+                                utils.doActionMsTime(targetMenu, ruby.getCanvasBounds(), sleepDelay());
+                            }
+                            deposited = false;
+                            withdrawn = false;
+                        } else {
+                            actionItem(ruby.getId(), "wear", "equip", "wield");
+                        }
                     }
                     attack = true;
                     break;
