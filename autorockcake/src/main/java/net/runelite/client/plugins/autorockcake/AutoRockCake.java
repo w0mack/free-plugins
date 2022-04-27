@@ -157,9 +157,6 @@ public class AutoRockCake extends Plugin
 		player = client.getLocalPlayer();
 		if (player != null && client != null) {
 			state = getState();
-			if (config.debug() && state != lastState && state != PluginState.TIMEOUT) {
-				utils.sendGameMessage(this.getClass().getName() + ": " + state.toString());
-			}
 			if (state != PluginState.TIMEOUT)
 				lastState = state;
 
