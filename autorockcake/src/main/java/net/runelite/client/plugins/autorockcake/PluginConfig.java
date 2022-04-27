@@ -44,16 +44,20 @@ public interface PluginConfig extends Config
 	default boolean showOverlay() {
 		return true;
 	}
-	@ConfigItem(keyName = "drinkOvl", name = "Drink Overload", description = "Drink overload", position = 2)
-	default boolean drinkOvl() {
-		return true;
-	}
-	@ConfigItem(keyName = "drinkAbs", name = "Drink Absorption", description = "Drink Absorption", position = 3)
-	default boolean drinkAbs() {
+	@ConfigItem(keyName = "onlyNMZ", name = "In NMZ Only", description = "", position = 3)
+	default boolean onlyNMZ() {
 		return true;
 	}
 	@ConfigItem(keyName = "lowerHP", name = "Lower HP to 1", description = "", position = 4)
 	default boolean lowerHP() {
+		return true;
+	}
+	@ConfigItem(keyName = "drinkOvl", name = "Drink Overload", description = "Drink overload", position = 5)
+	default boolean drinkOvl() {
+		return true;
+	}
+	@ConfigItem(keyName = "drinkAbs", name = "Drink Absorption", description = "Drink Absorption", position = 6)
+	default boolean drinkAbs() {
 		return true;
 	}
 

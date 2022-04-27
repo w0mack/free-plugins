@@ -168,7 +168,7 @@ public class AutoRockCake extends Plugin
 		player = client.getLocalPlayer();
 		if (player != null && client != null) {
 			state = getState();
-			if (!atNMZ())
+			if (config.onlyNMZ() && !atNMZ())
 				state = PluginState.NOT_IN_NMZ;
 			if (state != PluginState.TIMEOUT)
 				lastState = state;
@@ -217,11 +217,11 @@ public class AutoRockCake extends Plugin
 	}
 
 	PluginState getState() {
-		if (timeout != 0 || player.isMoving())
+		if (timeout != 0)
 			return PluginState.TIMEOUT;
-		if (config.drinkOvl() && client.getVarbitValue(3955) == 0 && inv.containsItem(overload))
+		if (atNMZ() && config.drinkOvl() && client.getVarbitValue(3955) == 0 && inv.containsItem(overload))
 			return PluginState.DRINK_OVERLOAD;
-		if (config.drinkAbs() && abs && inv.containsItem(absorption))
+		if (atNMZ() && config.drinkAbs() && abs && inv.containsItem(absorption))
 			return PluginState.DRINK_ABSORPTION;
 		if (config.lowerHP() && canLowerHP())
 			return PluginState.LOWER_HP;
