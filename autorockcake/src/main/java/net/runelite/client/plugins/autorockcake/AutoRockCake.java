@@ -147,6 +147,8 @@ public class AutoRockCake extends Plugin
 			timeout = 12 + (calc.getRandomIntBetweenRange(1, 4));
 		if (event.getMessage().contains("You can't absorb"))
 			abs = false;
+		if (event.getMessage().contains("Oh dear, you are dead!"))
+			shutDown();
 	}
 
 	@Subscribe
