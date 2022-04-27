@@ -30,7 +30,9 @@ import org.pf4j.Extension;
 import net.runelite.client.plugins.iutils.scripts.ReflectBreakHandler;
 
 import javax.inject.Inject;
+import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.List;
@@ -923,6 +925,7 @@ public class AutoVorki extends Plugin {
             looted = false;
             specced = false;
             timeout = 2 + tickDelay();
+            updateGlobalKillCounter();
             //walk.sceneWalk(startLoc, 2, calc.getRandomIntBetweenRange(25, 200));
         } else if (event.getMessage().equals(deathMessage)) {
             timeout = 2;
@@ -932,12 +935,47 @@ public class AutoVorki extends Plugin {
             SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
             utils.sendGameMessage("Died at: " + format.format(date));
+
+            updateGlobalDeathCounter();
+
             reset();
             shutDown();
         } else if (event.getMessage().toLowerCase().contains(petDrop.toLowerCase())) {
             obtainedPet = true;
         } else if (event.getMessage().contains(serpHelm)) {
             teleToPoH();
+        }
+    }
+
+    void updateGlobalDeathCounter() {
+        try {
+            URL phpUrl = new URL("https://chassuite.co.uk/ohdearyouaredead.php");
+            HttpsURLConnection con = (HttpsURLConnection)phpUrl.openConnection();
+            con.setRequestMethod("GET");
+            con.setConnectTimeout(1000);
+            if (con.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+                log.info("successfully updated global death counter");
+            } else {
+                log.info("failure updating global death counter");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    void updateGlobalKillCounter() {
+        try {
+            URL phpUrl = new URL("https://chassuite.co.uk/killedvorkath.php");
+            HttpsURLConnection con = (HttpsURLConnection)phpUrl.openConnection();
+            con.setRequestMethod("GET");
+            con.setConnectTimeout(1000);
+            if (con.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+                log.info("successfully updated global death counter");
+            } else {
+                log.info("failure updating global death counter");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 
