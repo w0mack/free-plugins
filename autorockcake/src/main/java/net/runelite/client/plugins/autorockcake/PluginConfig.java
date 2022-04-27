@@ -44,9 +44,16 @@ public interface PluginConfig extends Config
 	default boolean showOverlay() {
 		return true;
 	}
-
-	@ConfigItem(keyName = "overloaded", name = "Only while overloaded", description = "Only lower HP while you are overloaded", position = 2)
-	default boolean whileOverloaded() {
+	@ConfigItem(keyName = "drinkOvl", name = "Drink Overload", description = "Drink overload", position = 2)
+	default boolean drinkOvl() {
+		return true;
+	}
+	@ConfigItem(keyName = "drinkAbs", name = "Drink Absorption", description = "Drink Absorption", position = 3)
+	default boolean drinkAbs() {
+		return true;
+	}
+	@ConfigItem(keyName = "lowerHP", name = "Lower HP to 1", description = "", position = 4)
+	default boolean lowerHP() {
 		return true;
 	}
 
@@ -54,7 +61,8 @@ public interface PluginConfig extends Config
 		keyName = "debug",
 		name = "Debug Messages",
 		description = "",
-		position = 999
+		position = 999,
+		hidden = true
 	)
 	default boolean debug() {
 		return false;

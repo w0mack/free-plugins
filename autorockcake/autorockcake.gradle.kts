@@ -25,10 +25,10 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.0.6"
+version = "1.0.8"
 
-project.extra["PluginName"] = "AutoRockCake" // This is the name that is used in the external plugin manager panel
-project.extra["PluginDescription"] = "Automatically breaks your teeth on rock cakes" // This is the description that is used in the external plugin manager panel
+project.extra["PluginName"] = "CS-NightmareZone" // This is the name that is used in the external plugin manager panel
+project.extra["PluginDescription"] = "Keeps you going in NMZ" // This is the description that is used in the external plugin manager panel
 
 dependencies {
     annotationProcessor(Libraries.lombok)

@@ -29,9 +29,9 @@ import java.util.Set;
 @Extension
 @PluginDependency(iUtils.class)
 @PluginDescriptor(
-		name = "AutoRockCake",
-		description = "Automatically breaks your teeth on rock cakes",
-		tags = {"chas", "rock", "cake", "locator", "orb"}
+		name = "CS-NightmareZone",
+		description = "Keeps you going in NMZ",
+		tags = {"chas", "rock", "cake", "locator", "orb", "nmz", "overload", "ovl"}
 )
 @Slf4j
 public class AutoRockCake extends Plugin
@@ -80,7 +80,11 @@ public class AutoRockCake extends Plugin
 	int timeout;
 	List<Integer> bankRegion;
 
+	boolean abs;
+
 	Set<Integer> cakes = Set.of(ItemID.DWARVEN_ROCK_CAKE_7510, ItemID.LOCATOR_ORB);
+	Set<Integer> overload = Set.of(ItemID.OVERLOAD_1, ItemID.OVERLOAD_2, ItemID.OVERLOAD_3, ItemID.OVERLOAD_4);
+	Set<Integer> absorption = Set.of(ItemID.ABSORPTION_1, ItemID.ABSORPTION_2, ItemID.ABSORPTION_3, ItemID.ABSORPTION_4);
 
 	public AutoRockCake() {
 		bankRegion = Arrays.asList();
@@ -125,6 +129,7 @@ public class AutoRockCake extends Plugin
 					botTimer = Instant.now();
 					state = PluginState.TIMEOUT;
 					overlayManager.add(overlay);
+					abs = false;
 				} else {
 					reset();
 				}
@@ -140,6 +145,8 @@ public class AutoRockCake extends Plugin
 		if (event.getMessage().contains("You drink some of your overload potion.")
 				&& event.getType() == ChatMessageType.SPAM)
 			timeout = 12 + (calc.getRandomIntBetweenRange(1, 4));
+		if (event.getMessage().contains("You can't absorb"))
+			abs = false;
 	}
 
 	@Subscribe
@@ -155,6 +162,10 @@ public class AutoRockCake extends Plugin
 			}
 			if (state != PluginState.TIMEOUT)
 				lastState = state;
+
+			if (client.getVarbitValue(Varbits.NMZ_ABSORPTION) < 100)
+				abs = true;
+
 			switch (state) {
 				case TIMEOUT:
 					if (timeout <= 0)
@@ -166,9 +177,17 @@ public class AutoRockCake extends Plugin
 					log.info("lowering hp");
 					WidgetItem item = inv.getWidgetItem(cakes);
 					if (item != null) {
-						useItem(item);
+						useItem(item, "guzzle", "feel");
 					}
 					timeout = 0;
+					break;
+				case DRINK_OVERLOAD:
+					log.info("drinking overload");
+					useItem(inv.getWidgetItem(overload), "drink");
+					break;
+				case DRINK_ABSORPTION:
+					log.info("drinking absorption");
+					useItem(inv.getWidgetItem(absorption), "drink");
 					break;
 			}
 		}
@@ -176,9 +195,9 @@ public class AutoRockCake extends Plugin
 
 	boolean canLowerHP() {
 		if (client.getBoostedSkillLevel(Skill.HITPOINTS) >= 2) {
-			if (config.whileOverloaded() && client.getVarbitValue(3955) == 0)
+			if (client.getVarbitValue(3955) == 0)
 				return false;
-			else if (config.whileOverloaded() && client.getVarbitValue(3955) != 0)
+			else if (client.getVarbitValue(3955) != 0)
 				return true;
 			else
 				return true;
@@ -189,15 +208,19 @@ public class AutoRockCake extends Plugin
 	PluginState getState() {
 		if (timeout != 0 || player.isMoving())
 			return PluginState.TIMEOUT;
-		if (canLowerHP())
+		if (config.drinkAbs() && abs)
+			return PluginState.DRINK_ABSORPTION;
+		if (config.drinkOvl() && client.getVarbitValue(3955) == 0 && inv.containsItem(overload))
+			return PluginState.DRINK_OVERLOAD;
+		if (config.lowerHP() && canLowerHP())
 			return PluginState.LOWER_HP;
 		timeout = calc.getRandomIntBetweenRange(2, 18);
 		return PluginState.TIMEOUT;
 	}
 
-	private void useItem(WidgetItem item) {
+	private void useItem(WidgetItem item, String... actions) {
 		if (item != null) {
-			targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), "guzzle", "feel");
+			targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), actions);
 			int sleepTime = calc.getRandomIntBetweenRange(25, 200);
 			utils.doActionMsTime(targetMenu, item.getCanvasBounds(), sleepTime);
 		}
