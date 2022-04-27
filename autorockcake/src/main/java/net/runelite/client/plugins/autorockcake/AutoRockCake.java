@@ -225,7 +225,7 @@ public class AutoRockCake extends Plugin
 			return PluginState.DRINK_OVERLOAD;
 		if (config.lowerHP() && canLowerHP())
 			return PluginState.LOWER_HP;
-		timeout = calc.getRandomIntBetweenRange(2, 18);
+		timeout = calc.getRandomIntBetweenRange(2, 12);
 		return PluginState.TIMEOUT;
 	}
 

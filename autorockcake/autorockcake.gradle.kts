@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.1.2"
+version = "1.1.3"
 
 project.extra["PluginName"] = "CS-NightmareZone" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Keeps you going in NMZ" // This is the description that is used in the external plugin manager panel
