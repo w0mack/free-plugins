@@ -197,7 +197,7 @@ public class AutoRockCake extends Plugin
 
 	private void useItem(WidgetItem item) {
 		if (item != null) {
-			targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), "guzzle");
+			targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), "guzzle", "feel");
 			int sleepTime = calc.getRandomIntBetweenRange(25, 200);
 			utils.doActionMsTime(targetMenu, item.getCanvasBounds(), sleepTime);
 		}
