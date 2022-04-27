@@ -24,6 +24,7 @@ import java.awt.*;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Extension
@@ -151,6 +152,10 @@ public class AutoRockCake extends Plugin
 			shutDown();
 	}
 
+	boolean atNMZ() {
+		return Objects.requireNonNull(client.getLocalPlayer()).getWorldLocation().getRegionID() == 9033;
+	}
+
 	@Subscribe
 	private void onGameTick(GameTick event)
 	{
@@ -159,6 +164,8 @@ public class AutoRockCake extends Plugin
 		player = client.getLocalPlayer();
 		if (player != null && client != null) {
 			state = getState();
+			if (!atNMZ())
+				state = PluginState.NOT_IN_NMZ;
 			if (state != PluginState.TIMEOUT)
 				lastState = state;
 
@@ -166,6 +173,7 @@ public class AutoRockCake extends Plugin
 				abs = true;
 
 			switch (state) {
+				case NOT_IN_NMZ:
 				case TIMEOUT:
 					if (timeout <= 0)
 						timeout = 0;
