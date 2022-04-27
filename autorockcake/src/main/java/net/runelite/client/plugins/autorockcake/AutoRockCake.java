@@ -219,10 +219,10 @@ public class AutoRockCake extends Plugin
 	PluginState getState() {
 		if (timeout != 0 || player.isMoving())
 			return PluginState.TIMEOUT;
-		if (config.drinkAbs() && abs)
-			return PluginState.DRINK_ABSORPTION;
 		if (config.drinkOvl() && client.getVarbitValue(3955) == 0 && inv.containsItem(overload))
 			return PluginState.DRINK_OVERLOAD;
+		if (config.drinkAbs() && abs && inv.containsItem(absorption))
+			return PluginState.DRINK_ABSORPTION;
 		if (config.lowerHP() && canLowerHP())
 			return PluginState.LOWER_HP;
 		timeout = calc.getRandomIntBetweenRange(2, 12);
