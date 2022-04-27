@@ -27,7 +27,7 @@ public class PluginOverlay extends OverlayPanel {
         setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
         this.plugin = plugin;
         this.config = config;
-        getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "AutoOffer Overlay"));
+        getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "CS-NightmareZone"));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PluginOverlay extends OverlayPanel {
         panelComponent.getChildren().add(LineComponent.builder().left("Runtime: ").right((duration.toHours() > 0 ? (Long.toString(duration.toHours()) + ":") : ("")) + (new SimpleDateFormat("mm:ss").format(new Date(duration.toMillis())))).build());
 
         /* Content */
-        panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.state.toString().toLowerCase().replace("_", " ")).build());
+        panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.state.toString().toLowerCase().replace("_", " ").replace("timeout", "waiting")).build());
         panelComponent.getChildren().add(LineComponent.builder().left("Timeout: ").right(Integer.toString(plugin.timeout)).build());
 
         /* Render */

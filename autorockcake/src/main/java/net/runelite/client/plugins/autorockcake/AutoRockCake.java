@@ -205,15 +205,15 @@ public class AutoRockCake extends Plugin
 	}
 
 	boolean canLowerHP() {
-		if (client.getBoostedSkillLevel(Skill.HITPOINTS) >= 2) {
-			if (client.getVarbitValue(3955) == 0)
+		if (config.lowerHP() && client.getBoostedSkillLevel(Skill.HITPOINTS) >= 2) {
+			if (config.onlyNMZ() && !atNMZ())
 				return false;
-			else if (client.getVarbitValue(3955) != 0)
-				return true;
-			else
-				return true;
+			if ((config.drinkOvl() && atNMZ()) && client.getVarbitValue(3955) == 0)
+				return false;
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	PluginState getState() {
@@ -223,7 +223,7 @@ public class AutoRockCake extends Plugin
 			return PluginState.DRINK_OVERLOAD;
 		if (atNMZ() && config.drinkAbs() && abs && inv.containsItem(absorption))
 			return PluginState.DRINK_ABSORPTION;
-		if (config.lowerHP() && canLowerHP())
+		if (canLowerHP())
 			return PluginState.LOWER_HP;
 		timeout = calc.getRandomIntBetweenRange(2, 12);
 		return PluginState.TIMEOUT;
