@@ -39,7 +39,7 @@ import java.util.stream.IntStream;
 
 @Extension
 @PluginDependency(iUtils.class)
-@PluginDescriptor(name = "AutoVorki", description = "Kills and loots Vorkath, rebanks at Moonclan", tags = {"chas", "autovorki", "vorkath", "auto"})
+@PluginDescriptor(name = "CS-Vorkath", description = "Kills and loots Vorkath, rebanks at Moonclan", tags = {"chas", "autovorki", "vorkath", "auto"})
 @Slf4j
 public class AutoVorki extends Plugin {
     static List<Integer> regions;
@@ -900,6 +900,12 @@ public class AutoVorki extends Plugin {
         String killComplete = "Your Vorkath";
         String petDrop = "funny feeling";
         String serpHelm = "Your serpentine helm has run out of";
+        String invFull = "You don't have enough inventory";
+
+        if (event.getMessage().contains(invFull)) {
+            if (bank.isOpen())
+                bank.depositAll();
+        }
 
         if (event.getMessage().equals(spawnExplode) || (event.getMessage().equals(unfrozenMessage))) {
             killSpawn = false;
