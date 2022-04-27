@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 @Extension
 @PluginDependency(iUtils.class)
@@ -153,7 +154,10 @@ public class AutoRockCake extends Plugin
 	}
 
 	boolean atNMZ() {
-		return Objects.requireNonNull(client.getLocalPlayer()).getWorldLocation().getRegionID() == 9033;
+		IntStream stream = Arrays.stream(client.getMapRegions());
+		List<Integer> regions = List.of(9033);
+		Objects.requireNonNull(regions);
+		return stream.anyMatch(regions::contains);
 	}
 
 	@Subscribe
@@ -168,10 +172,10 @@ public class AutoRockCake extends Plugin
 				state = PluginState.NOT_IN_NMZ;
 			if (state != PluginState.TIMEOUT)
 				lastState = state;
-
 			if (client.getVarbitValue(Varbits.NMZ_ABSORPTION) < 100)
 				abs = true;
-
+			if (client.getVarbitValue(Varbits.NMZ_ABSORPTION) >= 900)
+				abs = false;
 			switch (state) {
 				case NOT_IN_NMZ:
 				case TIMEOUT:
