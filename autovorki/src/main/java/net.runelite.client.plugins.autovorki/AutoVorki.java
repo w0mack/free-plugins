@@ -903,6 +903,7 @@ public class AutoVorki extends Plugin {
         String petDrop = "funny feeling";
         String serpHelm = "Your serpentine helm has run out of";
         String invFull = "You don't have enough inventory";
+        String quiver = "There is no ammo left in your quiver.";
 
         if (event.getMessage().contains(invFull)) {
             if (bank.isOpen())
