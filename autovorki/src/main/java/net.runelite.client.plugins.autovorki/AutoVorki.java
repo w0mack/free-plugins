@@ -1016,6 +1016,8 @@ public class AutoVorki extends Plugin {
     AutoVorkiState getStates() {
         if (!inInstance) {
             if (isInPOH(client)) {
+                if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1)
+                    return AutoVorkiState.DISABLE_PRAYER;
                 if (config.usePool() && (client.getBoostedSkillLevel(Skill.HITPOINTS) < client.getRealSkillLevel(Skill.HITPOINTS)
                         || client.getBoostedSkillLevel(Skill.PRAYER) < client.getRealSkillLevel(Skill.PRAYER))) {
                     return AutoVorkiState.DRINK_POOL;
