@@ -220,13 +220,12 @@ public class AutoVorki extends Plugin {
     }
 
     protected void startUp() {
-            chinBreakHandler.registerPlugin(this);
-
+        chinBreakHandler.registerPlugin(this);
     }
 
     protected void shutDown() {
-            chinBreakHandler.unregisterPlugin(this);
-            reset();
+        reset();
+        chinBreakHandler.unregisterPlugin(this);
     }
 
     @Subscribe
@@ -836,7 +835,7 @@ public class AutoVorki extends Plugin {
                     utils.sendGameMessage("Unhandled state - stopping");
                     chinBreakHandler.stopPlugin(this);
                     timeout = 2;
-                    shutDown();
+                    reset();
                     break;
             }
         }
@@ -940,7 +939,6 @@ public class AutoVorki extends Plugin {
             updateGlobalDeathCounter();
 
             reset();
-            shutDown();
         } else if (event.getMessage().toLowerCase().contains(petDrop.toLowerCase())) {
             obtainedPet = true;
         } else if (event.getMessage().contains(serpHelm)) {
@@ -1111,7 +1109,7 @@ public class AutoVorki extends Plugin {
 
                 if (obtainedPet) {
                     teleToPoH();
-                    shutDown();
+                    reset();
                     return null;
                 }
 
@@ -1285,12 +1283,12 @@ public class AutoVorki extends Plugin {
                 }
                 if (config.antivenom().getDose4() == ItemID.SERPENTINE_HELM && equip.isEquipped(ItemID.SERPENTINE_HELM_UNCHARGED)) {
                     utils.sendGameMessage("Ran out of zulrah scales, stopping.");
-                    shutDown();
+                    reset();
                     return null;
                 }
                 if (config.antivenom().getDose4() == ItemID.SERPENTINE_HELM && !equip.isEquipped(ItemID.SERPENTINE_HELM)) {
                     utils.sendGameMessage("Not wearing a serpentine helm, stopping.");
-                    shutDown();
+                    reset();
                     return null;
                 }
                 if (inv.getItemCount(config.prayer().getDose4(), false) == 0) {
@@ -1304,7 +1302,7 @@ public class AutoVorki extends Plugin {
                             || !inv.runePouchContains(ItemID.DUST_RUNE)
                             || !inv.runePouchContains(ItemID.CHAOS_RUNE)) {
                         utils.sendGameMessage("You do not have either: law, dust and/or chaos runes in your pouch.");
-                        shutDown();
+                        reset();
                         return AutoVorkiState.TIMEOUT;
                     }
                 } else {
@@ -1312,7 +1310,7 @@ public class AutoVorki extends Plugin {
                         if (!inv.runePouchContains(ItemID.DUST_RUNE)) {
                             if (!inv.runePouchContains(ItemID.AIR_RUNE) && !inv.runePouchContains(ItemID.EARTH_RUNE)) {
                                 utils.sendGameMessage("You do not have either: dust and/or chaos runes in your pouch.");
-                                shutDown();
+                                reset();
                                 return AutoVorkiState.TIMEOUT;
                             }
                         }
@@ -1498,8 +1496,8 @@ public class AutoVorki extends Plugin {
                 qty = 1;
             bank.withdrawItemAmount(id, qty);
         } else {
-            utils.sendGameMessage("Unable to find item: " + id);
-            shutDown();
+            utils.sendGameMessage("Unable to find item: (ID: " + id + ") - " + client.getItemDefinition(id).getName());
+            reset();
         }
     }
 
@@ -1512,8 +1510,8 @@ public class AutoVorki extends Plugin {
         if (item != null) {
             bank.withdrawAllItem(id);
         } else {
-            utils.sendGameMessage("Unable to find item: " + id);
-            shutDown();
+            utils.sendGameMessage("Unable to find item: (" + id + ") - " + client.getItemDefinition(id).getName());
+            reset();
         }
     }
 

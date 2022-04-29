@@ -349,7 +349,7 @@ public interface AutoVorkiConfig extends Config {
         return true;
     }
 
-    @ConfigItem(keyName = "poolID", name = "Pool ID", description = "Game Object ID for pool in PoH", position = 21, section = teleportsSection)
+    @ConfigItem(keyName = "poolID", name = "Pool ID", description = "Game Object ID for pool in PoH", position = 21, section = teleportsSection, hidden = true, unhide = "usePool")
     default int poolID() {
         return 29241;
     }
