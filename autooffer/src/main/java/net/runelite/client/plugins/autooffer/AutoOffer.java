@@ -26,7 +26,7 @@ import java.util.Set;
 @Extension
 @PluginDependency(iUtils.class)
 @PluginDescriptor(
-		name = "CS-DemonicOffering",
+		name = "CS-Offering",
 		description = "Automatically casts sinister/demonic offering",
 		tags = {"chas", "demonic", "sinister", "offering"}
 )
