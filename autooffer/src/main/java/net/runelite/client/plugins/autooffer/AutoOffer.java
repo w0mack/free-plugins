@@ -15,6 +15,7 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.iutils.*;
 import net.runelite.client.plugins.iutils.game.Game;
+import net.runelite.client.plugins.iutils.util.LegacyInventoryAssistant;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
 
@@ -47,7 +48,9 @@ public class AutoOffer extends Plugin
 	@Inject
 	private WalkUtils walk;
 	@Inject
-	private InventoryUtils inventory;
+	private InventoryUtils inv;
+	@Inject
+	private LegacyInventoryAssistant inventoryAssistant;
 	@Inject
 	private ObjectUtils objectUtils;
 	@Inject
@@ -175,11 +178,9 @@ public class AutoOffer extends Plugin
 					}
 					break;
 				case FILL_SOUL_BEARER:
-					item = inventory.getWidgetItem(ItemID.SOUL_BEARER);
+					item = inv.getWidgetItem(ItemID.SOUL_BEARER);
 					if (item != null) {
-						targetMenu = new LegacyMenuEntry("", "", item.getId(), MenuAction.ITEM_FIRST_OPTION, 0, WidgetInfo.INVENTORY.getId(), false);
-						timeout += 1 + calc.getRandomIntBetweenRange(0, 1);
-						utils.doActionMsTime(targetMenu, item.getCanvasBounds(), calc.getRandomIntBetweenRange(25, 200));
+						actionItem(ItemID.SOUL_BEARER, calc.getRandomIntBetweenRange(25, 300), "Fill");
 					}
 					break;
 				default:
@@ -201,33 +202,33 @@ public class AutoOffer extends Plugin
 		int bones = 0;
 		int ashes = 0;
 		int heads = 0;
-		if (inventory.containsItemAmount(ItemID.WRATH_RUNE, 1, true, false)
-				|| inventory.runePouchQuanitity(ItemID.WRATH_RUNE) >= 1) {
+		if (inv.containsItemAmount(ItemID.WRATH_RUNE, 1, true, false)
+				|| inv.runePouchQuanitity(ItemID.WRATH_RUNE) >= 1) {
 			if (config.sinisterOffering()
-					&& (inventory.containsItemAmount(ItemID.BLOOD_RUNE, 1, true, false)
-					|| inventory.runePouchQuanitity(ItemID.BLOOD_RUNE) >= 1)) {
+					&& (inv.containsItemAmount(ItemID.BLOOD_RUNE, 1, true, false)
+					|| inv.runePouchQuanitity(ItemID.BLOOD_RUNE) >= 1)) {
 				for (int id : BONES) {
-					if (inventory.getItemCount(id, false) > 0)
-						bones += inventory.getItemCount(id, false);
+					if (inv.getItemCount(id, false) > 0)
+						bones += inv.getItemCount(id, false);
 				}
 				if (bones >= config.bones())
 					return PluginState.SINISTER_OFFERING;
 			}
 			if (config.demonicOffering()
-					&& (inventory.containsItemAmount(ItemID.SOUL_RUNE, 1, true, false)
-					|| inventory.runePouchQuanitity(ItemID.SOUL_RUNE) >= 1)) {
+					&& (inv.containsItemAmount(ItemID.SOUL_RUNE, 1, true, false)
+					|| inv.runePouchQuanitity(ItemID.SOUL_RUNE) >= 1)) {
 				for (int id : ASHES) {
-					if (inventory.getItemCount(id, false) > 0)
-						ashes += inventory.getItemCount(id, false);
+					if (inv.getItemCount(id, false) > 0)
+						ashes += inv.getItemCount(id, false);
 				}
 				if (ashes >= config.ashes())
 					return PluginState.DEMONIC_OFFERING;
 			}
 		}
-		if (config.soulBearer() && inventory.containsItem(ItemID.SOUL_BEARER)) {
+		if (config.soulBearer() && inv.containsItem(ItemID.SOUL_BEARER)) {
 			for (int id : HEADS) {
-				if (inventory.getItemCount(id, false) > 0)
-					heads += inventory.getItemCount(id, false);
+				if (inv.getItemCount(id, false) > 0)
+					heads += inv.getItemCount(id, false);
 			}
 			if (heads >= config.fillAmount())
 				return PluginState.FILL_SOUL_BEARER;
@@ -276,9 +277,19 @@ public class AutoOffer extends Plugin
 		return false;
 	}
 
+	private boolean actionItem(int id, int delay, String... action) {
+		if (inv.containsItem(id)) {
+			WidgetItem item = inv.getWidgetItem(id);
+			targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), action);
+			utils.doInvokeMsTime(targetMenu, delay);
+			return true;
+		}
+		return false;
+	}
+
 	private boolean invokeItem(int id, MenuAction action) {
-		if (inventory.containsItem(id)) {
-			final WidgetItem item = inventory.getWidgetItem(id);
+		if (inv.containsItem(id)) {
+			final WidgetItem item = inv.getWidgetItem(id);
 			LegacyMenuEntry menu = new LegacyMenuEntry("", "", item.getId(), action, item.getIndex(), WidgetInfo.INVENTORY.getId(), false);
 			utils.doInvokeMsTime(menu, calc.getRandomIntBetweenRange(25, 200));
 			return true;
