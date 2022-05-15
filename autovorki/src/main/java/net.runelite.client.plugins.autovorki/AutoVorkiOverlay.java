@@ -30,7 +30,7 @@ public class AutoVorkiOverlay extends OverlayPanel {
         //setPosition(OverlayPosition.BOTTOM_RIGHT);
         this.plugin = plugin;
         this.config = config;
-        getMenuEntries().add(new OverlayMenuEntry(MenuAction.RUNELITE_OVERLAY_CONFIG, "Configure", "AutoVorki Overlay"));
+        getMenuEntries().add(new OverlayMenuEntry(MenuAction.RUNELITE_OVERLAY_CONFIG, "Configure", "CS-Vorkath Overlay"));
     }
 
     public Dimension render(final Graphics2D graphics) {

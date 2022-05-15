@@ -31,6 +31,7 @@ include(":autooffer")
 include(":autobasalt")
 include(":autotrade")
 include(":autorockcake")
+include(":csstathider")
 
 for (project in rootProject.children) {
     project.apply {

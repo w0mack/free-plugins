@@ -42,168 +42,9 @@ public interface AutoVorkiConfig extends Config {
     }
 
     @ConfigSection(
-            name = "Sleep Delays",
-            description = "",
-            position = 2,
-            keyName = "sleepDelays"
-    )
-    String sleepDelays = "Sleep Delays";
-
-    @Range(
-            min = 0,
-            max = 550
-    )
-    @ConfigItem(
-            keyName = "sleepMin",
-            name = "Sleep Min",
-            description = "",
-            position = 2,
-            section = sleepDelays
-    )
-    default int sleepMin() {
-        return 20;
-    }
-
-    @Range(
-            min = 0,
-            max = 550
-    )
-    @ConfigItem(
-            keyName = "sleepMax",
-            name = "Sleep Max",
-            description = "",
-            position = 3,
-            section = sleepDelays
-    )
-    default int sleepMax() {
-        return 200;
-    }
-
-    @Range(
-            min = 0,
-            max = 550
-    )
-    @ConfigItem(
-            keyName = "sleepTarget",
-            name = "Sleep Target",
-            description = "",
-            position = 4,
-            section = sleepDelays
-    )
-    default int sleepTarget() {
-        return 50;
-    }
-
-    @Range(
-            min = 0,
-            max = 550
-    )
-    @ConfigItem(
-            keyName = "sleepDeviation",
-            name = "Sleep Deviation",
-            description = "",
-            position = 5,
-            section = sleepDelays
-    )
-    default int sleepDeviation() {
-        return 10;
-    }
-
-    @ConfigItem(
-            keyName = "sleepWeightedDistribution",
-            name = "Sleep Weighted Distribution",
-            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
-            position = 6,
-            section = sleepDelays
-    )
-    default boolean sleepWeightedDistribution() {
-        return false;
-    }
-
-    @ConfigSection(
-            name = "Tick Delays",
-            description = "",
-            position = 3,
-            keyName = "tickDelays"
-    )
-    String tickDelays = "Tick Delays";
-
-    @Range(
-            min = 0,
-            max = 10
-    )
-    @ConfigItem(
-            keyName = "tickDelaysMin",
-            name = "Game Tick Min",
-            description = "",
-            position = 8,
-            section = tickDelays
-    )
-    default int tickDelaysMin() {
-        return 1;
-    }
-
-    @Range(
-            min = 0,
-            max = 10
-    )
-    @ConfigItem(
-            keyName = "tickDelaysMax",
-            name = "Game Tick Max",
-            description = "",
-            position = 9,
-            section = tickDelays
-    )
-    default int tickDelaysMax() {
-        return 3;
-    }
-
-    @Range(
-            min = 0,
-            max = 10
-    )
-    @ConfigItem(
-            keyName = "tickDelaysTarget",
-            name = "Game Tick Target",
-            description = "",
-            position = 10,
-            section = tickDelays
-    )
-    default int tickDelaysTarget() {
-        return 2;
-    }
-
-    @Range(
-            min = 0,
-            max = 10
-    )
-    @ConfigItem(
-            keyName = "tickDelaysDeviation",
-            name = "Game Tick Deviation",
-            description = "",
-            position = 11,
-            section = tickDelays
-    )
-    default int tickDelaysDeviation() {
-        return 1;
-    }
-
-    @ConfigItem(
-            keyName = "tickDelaysWeightedDistribution",
-            name = "Game Tick Weighted Distribution",
-            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
-            position = 12,
-            section = tickDelays
-    )
-    default boolean tickDelaysWeightedDistribution() {
-        return false;
-    }
-
-
-    @ConfigSection(
             name = "Weapons",
             description = "",
-            position = 4,
+            position = 2,
             keyName = "weaponsSection"
     )
     String weaponsSection = "Weapons";
@@ -246,7 +87,7 @@ public interface AutoVorkiConfig extends Config {
     @ConfigSection(
             name = "Consumables",
             description = "",
-            position = 5,
+            position = 3,
             keyName = "consumablesSection"
     )
     String consumablesSection = "Consumables";
@@ -336,7 +177,7 @@ public interface AutoVorkiConfig extends Config {
     @ConfigSection(
             name = "Teleports + PoH",
             description = "",
-            position = 6,
+            position = 4,
             keyName = "teleportsSection"
     )
     String teleportsSection = "Teleports";
@@ -365,7 +206,7 @@ public interface AutoVorkiConfig extends Config {
     @ConfigSection(
             name = "Loot",
             description = "",
-            position = 7,
+            position = 5,
             keyName = "lootSection"
     )
     String lootSection = "Loot";
@@ -389,22 +230,191 @@ public interface AutoVorkiConfig extends Config {
         return 25000;
     }
 
-    @ConfigItem(keyName = "includedItems", name = "Included items", description = "Full or partial names of items to loot regardless of value<br>Seperate with a comma", position = 996, section = lootSection)
+    @ConfigSection(
+            name = "Custom Items",
+            description = "",
+            position = 6,
+            keyName = "specificItems",
+            closedByDefault = true
+    )
+    String specificItems = "Custom Items";
+
+    @ConfigItem(keyName = "includedItems", name = "Included items", description = "Full or partial names of items to loot regardless of value<br>Seperate with a comma", position = 996, section = specificItems)
     default String includedItems() {
         return "rune longsword";
     }
 
-    @ConfigItem(keyName = "excludedItems", name = "Excluded items", description = "Full or partial names of items to NOT loot<br>Seperate with a comma", position = 997, section = lootSection)
+    @ConfigItem(keyName = "excludedItems", name = "Excluded items", description = "Full or partial names of items to NOT loot<br>Seperate with a comma", position = 997, section = specificItems)
     default String excludedItems() {
         return "ruby bolt,diamond bolt,emerald bolt,dragonstone bolt";
     }
 
-    @ConfigItem(keyName = "invokes", name = "Use invokes (use with caution)", description = "Use at your own risk :)", position = 998)
+    @ConfigSection(
+            name = "Sleep Delays",
+            description = "",
+            position = 7,
+            keyName = "sleepDelays",
+            closedByDefault = true
+    )
+    String sleepDelays = "Sleep Delays";
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepMin",
+            name = "Sleep Min",
+            description = "",
+            position = 2,
+            section = sleepDelays
+    )
+    default int sleepMin() {
+        return 20;
+    }
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepMax",
+            name = "Sleep Max",
+            description = "",
+            position = 3,
+            section = sleepDelays
+    )
+    default int sleepMax() {
+        return 200;
+    }
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepTarget",
+            name = "Sleep Target",
+            description = "",
+            position = 4,
+            section = sleepDelays
+    )
+    default int sleepTarget() {
+        return 50;
+    }
+
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepDeviation",
+            name = "Sleep Deviation",
+            description = "",
+            position = 5,
+            section = sleepDelays
+    )
+    default int sleepDeviation() {
+        return 10;
+    }
+
+    @ConfigItem(
+            keyName = "sleepWeightedDistribution",
+            name = "Sleep Weighted Distribution",
+            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+            position = 6,
+            section = sleepDelays
+    )
+    default boolean sleepWeightedDistribution() {
+        return false;
+    }
+
+    @ConfigSection(
+            name = "Tick Delays",
+            description = "",
+            position = 8,
+            keyName = "tickDelays",
+            closedByDefault = true
+    )
+    String tickDelays = "Tick Delays";
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysMin",
+            name = "Game Tick Min",
+            description = "",
+            position = 8,
+            section = tickDelays
+    )
+    default int tickDelaysMin() {
+        return 1;
+    }
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysMax",
+            name = "Game Tick Max",
+            description = "",
+            position = 9,
+            section = tickDelays
+    )
+    default int tickDelaysMax() {
+        return 3;
+    }
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysTarget",
+            name = "Game Tick Target",
+            description = "",
+            position = 10,
+            section = tickDelays
+    )
+    default int tickDelaysTarget() {
+        return 2;
+    }
+
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysDeviation",
+            name = "Game Tick Deviation",
+            description = "",
+            position = 11,
+            section = tickDelays
+    )
+    default int tickDelaysDeviation() {
+        return 1;
+    }
+
+    @ConfigItem(
+            keyName = "tickDelaysWeightedDistribution",
+            name = "Game Tick Weighted Distribution",
+            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+            position = 12,
+            section = tickDelays
+    )
+    default boolean tickDelaysWeightedDistribution() {
+        return false;
+    }
+
+    @ConfigItem(keyName = "invokes", name = "Use invokes (use with caution)", description = "Use at your own risk", position = 998)
     default boolean invokes() {
         return false;
     }
 
-    @ConfigItem(keyName = "invokeWalk", name = "Invoke walking", description = "Use at your own risk :)", position = 999)
+    @ConfigItem(keyName = "invokeWalk", name = "Invoke walking (use with caution)", description = "Use at your own risk", position = 999)
     default boolean invokeWalk() {
         return false;
     }

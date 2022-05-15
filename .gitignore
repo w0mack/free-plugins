@@ -29,3 +29,5 @@ plugins - Copy.json
 /config/
 /chasloader/
 /release/chasloader-1.0.0.jar
+/csstathider/*
+/csstathider
