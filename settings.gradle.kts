@@ -32,6 +32,7 @@ include(":autobasalt")
 include(":autotrade")
 include(":autorockcake")
 include(":csstathider")
+include(":csbankseller")
 
 for (project in rootProject.children) {
     project.apply {
