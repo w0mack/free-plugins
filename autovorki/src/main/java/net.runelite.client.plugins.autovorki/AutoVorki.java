@@ -678,7 +678,7 @@ public class AutoVorki extends Plugin {
                                 }
                                 if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt()) {
                                     if (inv.containsItem(config.food().getId())) {
-                                        if (config.eatWoox())
+                                        if (config.invokes())
                                             eatFood();
                                     } else {
                                         teleToPoH();
@@ -991,6 +991,10 @@ public class AutoVorki extends Plugin {
         if (chat.chatState() == Chatbox.ChatState.PLAYER_CHAT) {
             targetMenu = new LegacyMenuEntry("Continue", "", 0, MenuAction.WIDGET_CONTINUE, -1, client.getWidget(217, 5).getId(), false);
             bounds = client.getWidget(217, 5).getBounds();
+        }
+        if (chat.chatState() == Chatbox.ChatState.OPTIONS_CHAT) {
+            targetMenu = new LegacyMenuEntry("", "", 0, MenuAction.WIDGET_CONTINUE, 1, client.getWidget(219, 1).getId(), false);
+            bounds = client.getWidget(219, 1).getBounds();
         }
         if (!config.invokes())
             utils.doActionMsTime(targetMenu, bounds, (int)sleepDelay());

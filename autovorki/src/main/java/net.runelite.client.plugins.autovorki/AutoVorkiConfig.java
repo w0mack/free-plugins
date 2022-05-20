@@ -120,11 +120,6 @@ public interface AutoVorkiConfig extends Config {
         return false;
     }
 
-    @ConfigItem(keyName = "eatWoox", name = "Eat while woox walking", description = "Could cause clashing, turn off if it dies", position = 9, section = consumablesSection)
-    default boolean eatWoox() {
-        return false;
-    }
-
     @ConfigItem(keyName = "prayerID", name = "Prayer restore", description = "The name of your prayer restore", position = 10, section = consumablesSection)
     default Prayer prayer() {
         return Prayer.PRAYER_POTION;
