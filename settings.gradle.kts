@@ -34,6 +34,7 @@ include(":autorockcake")
 include(":csstathider")
 include(":csbankseller")
 include(":cssarachnishelper")
+include(":csardyminer")
 
 for (project in rootProject.children) {
     project.apply {
