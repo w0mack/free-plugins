@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.3.1"
+version = "1.3.2"
 
 project.extra["PluginName"] = "tTrade" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Automatically mules items" // This is the description that is used in the external plugin manager panel

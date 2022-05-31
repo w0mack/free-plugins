@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 .1
-version = "1.4.4"
+version = "1.4.5"
 
 project.extra["PluginName"] = "tOffer" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Automatically casts sinister/demonic offering" // This is the description that is used in the external plugin manager panel
