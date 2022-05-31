@@ -16,7 +16,7 @@ plugins {
     checkstyle
 }
 
-project.extra["GithubUrl"] = "https://github.com/chasonrs/"
+project.extra["GithubUrl"] = "https://github.com/imnottom/"
 
 apply<BootstrapPlugin>()
 
@@ -38,8 +38,8 @@ allprojects {
 subprojects {
     group = "com.openosrs.externals"
 
-    project.extra["PluginProvider"] = "ChasOnRS"
-    project.extra["ProjectSupportUrl"] = "https://discord.gg/chas"
+    project.extra["PluginProvider"] = "Tea"
+    project.extra["ProjectSupportUrl"] = "https://discord.gg/teas"
     project.extra["PluginLicense"] = "3-Clause BSD License"
 
     repositories {

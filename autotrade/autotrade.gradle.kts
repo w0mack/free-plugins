@@ -25,9 +25,9 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.3.0"
+version = "1.3.1"
 
-project.extra["PluginName"] = "AutoTrade" // This is the name that is used in the external plugin manager panel
+project.extra["PluginName"] = "tTrade" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Automatically mules items" // This is the description that is used in the external plugin manager panel
 
 dependencies {
@@ -50,7 +50,7 @@ tasks {
             attributes(mapOf(
                 "Plugin-Version" to project.version,
                 "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
-                "Plugin-Provider" to "Chas",
+                "Plugin-Provider" to "Tea",
                 "Plugin-Dependencies" to
                         arrayOf(
                             nameToId("iUtils")

@@ -28,7 +28,7 @@ import java.util.Set;
 @PluginDescriptor(
 		name = "CS-Offering",
 		description = "Automatically casts sinister/demonic offering",
-		tags = {"chas", "demonic", "sinister", "offering"}
+		tags = {"Tea", "Chas", "demonic", "sinister", "offering"}
 )
 @Slf4j
 public class AutoOffer extends Plugin

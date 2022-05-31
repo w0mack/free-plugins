@@ -25,9 +25,9 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 .1
-version = "1.4.3"
+version = "1.4.4"
 
-project.extra["PluginName"] = "AutoOffer" // This is the name that is used in the external plugin manager panel
+project.extra["PluginName"] = "tOffer" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Automatically casts sinister/demonic offering" // This is the description that is used in the external plugin manager panel
 
 dependencies {
@@ -50,7 +50,7 @@ tasks {
             attributes(mapOf(
                 "Plugin-Version" to project.version,
                 "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
-                "Plugin-Provider" to "Chas",
+                "Plugin-Provider" to "Tea",
                 "Plugin-Dependencies" to
                         arrayOf(
                             nameToId("iUtils")

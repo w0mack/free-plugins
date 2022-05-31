@@ -54,7 +54,7 @@ open class BootstrapTask : DefaultTask() {
                             "version" to it.project.version,
                             "requires" to "^1.0.0",
                             "date" to formatDate(Date()),
-                            "url" to "https://github.com/chasonrs/chasonrs/blob/master/release/${it.project.name}-${it.project.version}.jar?raw=true",
+                            "url" to "https://github.com/imnottom/free-plugins/blob/master/release/${it.project.name}-${it.project.version}.jar?raw=true",
                             "sha512sum" to hash(plugin.readBytes())
                     ))
 

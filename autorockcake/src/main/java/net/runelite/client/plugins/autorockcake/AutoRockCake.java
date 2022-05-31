@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 @PluginDescriptor(
 		name = "CS-NightmareZone",
 		description = "Keeps you going in NMZ",
-		tags = {"chas", "rock", "cake", "locator", "orb", "nmz", "overload", "ovl"}
+		tags = {"Tea", "Chas", "rock", "cake", "locator", "orb", "nmz", "overload", "ovl"}
 )
 @Slf4j
 public class AutoRockCake extends Plugin

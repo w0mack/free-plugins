@@ -36,7 +36,7 @@ import java.util.Locale;
 @PluginDescriptor(
 		name = "AutoTrade",
 		description = "Automatically mule items",
-		tags = {"chas", "trade", "autotrade"}
+		tags = {"Tea", "Chas", "trade", "autotrade"}
 )
 @Slf4j
 public class AutoTrade extends Plugin

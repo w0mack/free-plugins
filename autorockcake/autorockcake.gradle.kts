@@ -25,9 +25,9 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.1.6"
+version = "1.1.7"
 
-project.extra["PluginName"] = "CS-NightmareZone" // This is the name that is used in the external plugin manager panel
+project.extra["PluginName"] = "tNightmareZone" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Keeps you going in NMZ" // This is the description that is used in the external plugin manager panel
 
 dependencies {
@@ -50,7 +50,7 @@ tasks {
             attributes(mapOf(
                 "Plugin-Version" to project.version,
                 "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
-                "Plugin-Provider" to "Chas",
+                "Plugin-Provider" to "Tea",
                 "Plugin-Dependencies" to
                         arrayOf(
                             nameToId("iUtils")
