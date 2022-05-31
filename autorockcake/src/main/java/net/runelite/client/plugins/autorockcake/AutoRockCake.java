@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
 @Extension
 @PluginDependency(iUtils.class)
 @PluginDescriptor(
-		name = "CS-NightmareZone",
+		name = "tNightmareZone",
 		description = "Keeps you going in NMZ",
 		tags = {"Tea", "Chas", "rock", "cake", "locator", "orb", "nmz", "overload", "ovl"}
 )

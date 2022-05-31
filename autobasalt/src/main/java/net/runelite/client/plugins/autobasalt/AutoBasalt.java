@@ -29,7 +29,7 @@ import java.util.List;
 @Extension
 @PluginDependency(iUtils.class)
 @PluginDescriptor(
-		name = "CS-Basalt",
+		name = "tBasalt",
 		description = "Automatically mines basalt and salt",
 		tags = {"Tea", "Chas", "basalt", "salt", "weiss", "mining", "mine", "miner"}
 )
