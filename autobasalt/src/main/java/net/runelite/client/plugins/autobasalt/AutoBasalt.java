@@ -62,6 +62,10 @@ public class AutoBasalt extends Plugin
 	private Chatbox chat;
 	@Inject
 	private LegacyInventoryAssistant inventoryAssistant;
+	@Inject
+	private MenuUtils menu;
+	@Inject
+	public MouseUtils mouse;
 
 	@Inject
 	PluginOverlay overlay;
@@ -278,7 +282,7 @@ public class AutoBasalt extends Plugin
 		client.setSelectedSpellItemId(inventoryAssistant.getWidgetItem(Arrays.asList(id1)).getWidget().getItemId());
 
 		targetMenu = new LegacyMenuEntry("", "", id2, MenuAction.WIDGET_TARGET_ON_WIDGET, inventoryAssistant.getWidgetItem(Arrays.asList(id2)).getIndex(), WidgetInfo.INVENTORY.getId(), false);
-		utils.doActionMsTime(targetMenu, inventoryAssistant.getWidgetItem(Arrays.asList(id2)).getCanvasBounds(), 0);
+		utils.doActionMsTime(targetMenu, inventoryAssistant.getWidgetItem(Arrays.asList(id2)).getCanvasBounds(), calc.getRandomIntBetweenRange(25, 300));
 
 	}
 
@@ -291,12 +295,18 @@ public class AutoBasalt extends Plugin
 		if (npc == null)
 			return;
 
-		client.setSelectedSpellWidget(WidgetInfo.INVENTORY.getId());
+		targetMenu = new LegacyMenuEntry("", "", npc.getIndex(), MenuAction.WIDGET_TARGET, 0, 0, false);
+		menu.setModifiedEntry(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId());
+		mouse.delayMouseClick(npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 300));
+
+
+
+		/*client.setSelectedSpellWidget(WidgetInfo.INVENTORY.getId());
 		client.setSelectedSpellChildIndex(inventoryAssistant.getWidgetItem(Arrays.asList(itemId)).getIndex());
 		client.setSelectedSpellItemId(inventoryAssistant.getWidgetItem(Arrays.asList(itemId)).getWidget().getItemId());
 
 		targetMenu = new LegacyMenuEntry("Use", "", npc.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC, 0, 0, false);
-		utils.doModifiedActionMsTime(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId(), npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 200));
+		utils.doModifiedActionMsTime(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId(), npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 200));*/
 	}
 
 	void actionObject(int id, MenuAction action) {
