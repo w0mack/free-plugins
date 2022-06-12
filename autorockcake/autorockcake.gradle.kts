@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.1.8"
+version = "1.1.9"
 
 project.extra["PluginName"] = "tNightmareZone" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Keeps you going in NMZ" // This is the description that is used in the external plugin manager panel
@@ -36,8 +36,8 @@ dependencies {
 
     compileOnly("com.openosrs:runelite-api:$openosrsVersion+")
     compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
-    compileOnly(group = "com.openosrs.externals", name = "iutils", version = "4.9.9+");
-    //compileOnly(project(":iutils"))
+    compileOnly(group = "com.openosrs.externals", name = "iutils", version = "5.0.3+");
+    //compileOnly(project(":tutils"))
 
     compileOnly(Libraries.guice)
     compileOnly(Libraries.lombok)

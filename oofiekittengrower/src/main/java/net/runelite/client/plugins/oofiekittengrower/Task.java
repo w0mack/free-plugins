@@ -6,12 +6,7 @@ import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.iutils.*;
-import net.runelite.client.plugins.iutils.TimeoutWhile;
 import net.runelite.client.plugins.iutils.TimeoutUntil;
-import net.runelite.client.plugins.iutils.ConditionTimeout;
-import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.plugins.iutils.ui.Chatbox;
 import net.runelite.api.MenuAction;
 

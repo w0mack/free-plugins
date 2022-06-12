@@ -30,7 +30,7 @@ public class AutoVorkiOverlay extends OverlayPanel {
         //setPosition(OverlayPosition.BOTTOM_RIGHT);
         this.plugin = plugin;
         this.config = config;
-        getMenuEntries().add(new OverlayMenuEntry(MenuAction.RUNELITE_OVERLAY_CONFIG, "Configure", "CS-Vorkath Overlay"));
+        getMenuEntries().add(new OverlayMenuEntry(MenuAction.RUNELITE_OVERLAY_CONFIG, "Configure", "tVorkath Overlay"));
     }
 
     public Dimension render(final Graphics2D graphics) {
@@ -39,7 +39,7 @@ public class AutoVorkiOverlay extends OverlayPanel {
         panelComponent.getChildren().clear();
 
         /* Setup */
-        final String title = "AutoVorki";
+        final String title = "tVorkath";
         Duration duration = Duration.between(plugin.botTimer, Instant.now());
         panelComponent.getChildren().add(TitleComponent.builder().text(title).color(Color.YELLOW).build());
         panelComponent.setBackgroundColor(Color.DARK_GRAY);

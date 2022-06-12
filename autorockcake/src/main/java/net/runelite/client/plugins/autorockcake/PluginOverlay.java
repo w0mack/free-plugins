@@ -27,7 +27,7 @@ public class PluginOverlay extends OverlayPanel {
         setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
         this.plugin = plugin;
         this.config = config;
-        getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "CS-NightmareZone"));
+        getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "tNightmareZone"));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PluginOverlay extends OverlayPanel {
         panelComponent.getChildren().clear();
 
         /* Title and width */
-        String title = "AutoRockCake";
+        String title = "tNightmareZone";
         panelComponent.getChildren().add(TitleComponent.builder().text(title).color(Color.YELLOW).build());
         panelComponent.setBackgroundColor(Color.DARK_GRAY);
         panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80,0));
@@ -48,8 +48,8 @@ public class PluginOverlay extends OverlayPanel {
         panelComponent.getChildren().add(LineComponent.builder().left("Runtime: ").right((duration.toHours() > 0 ? (Long.toString(duration.toHours()) + ":") : ("")) + (new SimpleDateFormat("mm:ss").format(new Date(duration.toMillis())))).build());
 
         /* Content */
-        panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.state.toString().toLowerCase().replace("_", " ").replace("timeout", "waiting")).build());
-        panelComponent.getChildren().add(LineComponent.builder().left("Timeout: ").right(Integer.toString(plugin.timeout)).build());
+        panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.lastState.toString().toLowerCase().replace("_", " ").replace("timeout", "waiting")).build());
+        //panelComponent.getChildren().add(LineComponent.builder().left("Timeout: ").right(Integer.toString(plugin.timeout)).build());
 
         /* Render */
         return panelComponent.render(graphics);

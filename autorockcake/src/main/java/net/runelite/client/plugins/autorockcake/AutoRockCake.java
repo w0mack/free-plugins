@@ -4,7 +4,7 @@ import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
-import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -64,7 +64,10 @@ public class AutoRockCake extends Plugin
 	private InventoryUtils inv;
 	@Inject
 	LegacyInventoryAssistant inventoryAssistant;
-
+	@Inject
+	private PrayerUtils pray;
+	@Inject
+	private MouseUtils mouse;
 	ChatMessage message;
 
 	@Inject
@@ -200,8 +203,33 @@ public class AutoRockCake extends Plugin
 					log.info("drinking absorption");
 					useItem(inv.getWidgetItem(absorption), "drink");
 					break;
+				case HANDLE_PRAYER:
+					Widget widget = client.getWidget(10485775);
+					assert widget != null;
+					targetMenu = new LegacyMenuEntry("", "Quick-prayers", 1, MenuAction.CC_OP.getId(), -1, widget.getId(), false);
+					switch (config.prayMethod()) {
+						case CUSTOM:
+							if (pray.isActive(config.prayer().getPrayer()))
+								toggle(config.prayer().getPrayer(), 0);
+							if (!pray.isActive(config.prayer().getPrayer()))
+								toggle(config.prayer().getPrayer(), calc.getRandomIntBetweenRange(200, 400));
+							break;
+						case QUICK_PRAYERS:
+							if (pray.isQuickPrayerActive())
+								utils.doInvokeMsTime(targetMenu, 0);
+							if (!pray.isQuickPrayerActive())
+								utils.doInvokeMsTime(targetMenu, calc.getRandomIntBetweenRange(200, 400));
+							break;
+					}
+					break;
 			}
 		}
+	}
+
+	void toggle(Prayer p, long sleepDelay) {
+		Widget widget = client.getWidget(p.getWidgetInfo());
+		targetMenu = new LegacyMenuEntry("", "", 1, MenuAction.CC_OP.getId(), -1, widget.getId(), false);
+		utils.doInvokeMsTime(targetMenu, sleepDelay);
 	}
 
 	boolean canLowerHP() {
@@ -225,7 +253,8 @@ public class AutoRockCake extends Plugin
 			return PluginState.DRINK_ABSORPTION;
 		if (canLowerHP())
 			return PluginState.LOWER_HP;
-		timeout = calc.getRandomIntBetweenRange(2, 12);
+		if (client.getBoostedSkillLevel(Skill.PRAYER) >= 1 && config.prayMethod() != PluginConfig.PrayType.NONE)
+			return PluginState.HANDLE_PRAYER;
 		return PluginState.TIMEOUT;
 	}
 

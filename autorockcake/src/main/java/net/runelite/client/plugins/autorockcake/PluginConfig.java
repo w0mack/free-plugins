@@ -24,6 +24,8 @@
  */
 package net.runelite.client.plugins.autorockcake;
 
+import lombok.Getter;
+import net.runelite.api.Prayer;
 import net.runelite.client.config.*;
 
 @ConfigGroup("AutoRockCake")
@@ -59,6 +61,35 @@ public interface PluginConfig extends Config
 	@ConfigItem(keyName = "drinkAbs", name = "Drink Absorption", description = "Drink Absorption", position = 6)
 	default boolean drinkAbs() {
 		return true;
+	}
+	@ConfigItem(keyName = "prayMethod", name = "Method", description = "", position = 7)
+	default PrayType prayMethod() { return PrayType.QUICK_PRAYERS; }
+	@ConfigItem(keyName = "prayer", name = "", description = "", position = 8)
+	default OffensivePray prayer() { return OffensivePray.PIETY; }
+
+
+	enum PrayType {
+		NONE,
+		QUICK_PRAYERS,
+		CUSTOM
+	}
+
+	enum OffensivePray {
+		SHARP_EYE(Prayer.SHARP_EYE),
+		HAWK_EYE(Prayer.HAWK_EYE),
+		EAGLE_EYE(Prayer.EAGLE_EYE),
+		RIGOUR(Prayer.RIGOUR),
+		MYSTIC_WILL(Prayer.MYSTIC_WILL),
+		MYSTIC_LORE(Prayer.MYSTIC_LORE),
+		MYSTIC_MIGHT(Prayer.MYSTIC_MIGHT),
+		AUGURY(Prayer.AUGURY),
+		CHIVALRY(Prayer.CHIVALRY),
+		PIETY(Prayer.PIETY);
+		@Getter
+		private final Prayer prayer;
+		OffensivePray(Prayer prayer) {
+			this.prayer = prayer;
+		}
 	}
 
 	@ConfigItem(

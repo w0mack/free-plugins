@@ -298,15 +298,20 @@ public class AutoBasalt extends Plugin
 		targetMenu = new LegacyMenuEntry("", "", npc.getIndex(), MenuAction.WIDGET_TARGET, 0, 0, false);
 		menu.setModifiedEntry(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId());
 		mouse.delayMouseClick(npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 300));
+	}
 
+	void itemOnObject(int itemID, int objectID) {
+		WidgetItem item = inv.getWidgetItem(itemID);
+		if (item == null)
+			return;
 
+		GameObject gameObject = objectUtils.findNearestGameObject(objectID);
+		if (gameObject == null)
+			return;
 
-		/*client.setSelectedSpellWidget(WidgetInfo.INVENTORY.getId());
-		client.setSelectedSpellChildIndex(inventoryAssistant.getWidgetItem(Arrays.asList(itemId)).getIndex());
-		client.setSelectedSpellItemId(inventoryAssistant.getWidgetItem(Arrays.asList(itemId)).getWidget().getItemId());
-
-		targetMenu = new LegacyMenuEntry("Use", "", npc.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC, 0, 0, false);
-		utils.doModifiedActionMsTime(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId(), npc.getConvexHull().getBounds(), calc.getRandomIntBetweenRange(25, 200));*/
+		targetMenu = new LegacyMenuEntry("", "", gameObject.getId(), MenuAction.WIDGET_TARGET, 0, 0, false);
+		menu.setModifiedEntry(targetMenu, item.getId(), item.getIndex(), MenuAction.WIDGET_TARGET_ON_GAME_OBJECT.getId());
+		mouse.delayMouseClick(gameObject.getSceneMinLocation(), calc.getRandomIntBetweenRange(25, 300));
 	}
 
 	void actionObject(int id, MenuAction action) {

@@ -71,6 +71,8 @@ subprojects {
         compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
         compileOnly("com.openosrs.rs:runescape-api:$openosrsVersion+")
 
+        implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "4.9.1")
+
 
         compileOnly(Libraries.guice)
         compileOnly(Libraries.lombok)

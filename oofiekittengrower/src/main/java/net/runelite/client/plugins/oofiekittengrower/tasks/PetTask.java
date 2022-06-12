@@ -10,12 +10,6 @@ import net.runelite.client.plugins.iutils.TimeoutUntil;
 import net.runelite.client.plugins.oofiekittengrower.OofieKittenGrowerPlugin;
 import net.runelite.client.plugins.oofiekittengrower.Task;
 import net.runelite.client.plugins.iutils.*;
-import static net.runelite.api.MenuAction.*;
-
-import java.awt.*;
-import java.util.Arrays;
-
-
 
 
 @Slf4j

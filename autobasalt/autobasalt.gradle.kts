@@ -25,7 +25,7 @@ import ProjectVersions.openosrsVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1.5.5"
+version = "1.5.6"
 
 project.extra["PluginName"] = "tBasalt" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Automatically mines basalt and salt" // This is the description that is used in the external plugin manager panel
@@ -36,8 +36,8 @@ dependencies {
 
     compileOnly("com.openosrs:runelite-api:$openosrsVersion+")
     compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
-    compileOnly(group = "com.openosrs.externals", name = "iutils", version = "4.9.9+");
-    //compileOnly(project(":iutils"))
+    compileOnly(group = "com.openosrs.externals", name = "iutils", version = "5.0.3+");
+    //compileOnly(project(":tutils"))
 
     compileOnly(Libraries.guice)
     compileOnly(Libraries.lombok)

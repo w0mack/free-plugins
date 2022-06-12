@@ -2,18 +2,16 @@ package net.runelite.client.plugins.oofiekittengrower;
 
 import com.google.inject.Injector;
 import com.google.inject.Provides;
-import java.time.Duration;
+
 import java.time.Instant;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.ConfigButtonClicked;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.queries.PlayerQuery;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -22,13 +20,12 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.iutils.*;
 import net.runelite.client.plugins.iutils.scripts.ReflectBreakHandler;
-import net.runelite.client.plugins.iutils.util.LegacyInventoryAssistant;
 import net.runelite.client.plugins.oofiekittengrower.tasks.FeedTask;
 import net.runelite.client.plugins.oofiekittengrower.tasks.MovingTask;
 import net.runelite.client.plugins.oofiekittengrower.tasks.PetTask;
 import net.runelite.client.plugins.oofiekittengrower.tasks.TimeoutTask;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.api.MenuEntry;
+
 import static net.runelite.api.MenuAction.*;
 
 import org.pf4j.Extension;

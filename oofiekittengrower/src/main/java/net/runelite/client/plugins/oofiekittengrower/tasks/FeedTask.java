@@ -4,14 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.Point;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.plugins.iutils.TimeoutUntil;
 import net.runelite.client.plugins.oofiekittengrower.OofieKittenGrowerPlugin;
 import net.runelite.client.plugins.oofiekittengrower.Task;
 import net.runelite.client.plugins.iutils.*;
-import net.runelite.api.MenuAction.*;
-import net.runelite.api.MenuEntry;
 
 import java.awt.*;
 

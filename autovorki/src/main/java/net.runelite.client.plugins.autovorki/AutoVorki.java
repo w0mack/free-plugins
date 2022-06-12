@@ -434,7 +434,7 @@ public class AutoVorki extends Plugin {
 
     @Subscribe
     private void onGameTick(GameTick event) {
-        if (!startVorki ||chinBreakHandler.isBreakActive(this)) {
+        if (!startVorki || chinBreakHandler.isBreakActive(this)) {
             return;
         }
         WorldPoint loc = Objects.requireNonNull(client.getLocalPlayer()).getWorldLocation();
