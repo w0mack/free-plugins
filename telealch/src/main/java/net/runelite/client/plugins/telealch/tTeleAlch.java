@@ -209,10 +209,6 @@ public class tTeleAlch extends Plugin
 	}
 
 	private boolean hasRune(int it) {
-		if (it == ItemID.FIRE_RUNE) {
-			if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || (inv.getItemCount(it, true) >= 5))
-				return true;
-		}
 		if (it == ItemID.AIR_RUNE) {
 			if (equip.isEquipped(ItemID.STAFF_OF_AIR) || (inv.getItemCount(it, true) >= 5))
 				return true;
@@ -225,6 +221,12 @@ public class tTeleAlch extends Plugin
 			if (equip.isEquipped(ItemID.STAFF_OF_WATER) || (inv.getItemCount(it, true) >= 5))
 				return true;
 		}
+		if (it == ItemID.FIRE_RUNE) {
+			if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || (inv.getItemCount(it, true) >= 5))
+				return true;
+		}
+		if (inv.getItemCount(it, true) >= 5)
+			return true;
 		utils.sendGameMessage("Missing item: " + client.getItemDefinition(it).getName());
 		return false;
 	}
@@ -258,13 +260,6 @@ public class tTeleAlch extends Plugin
 		}
 		targetMenu = new LegacyMenuEntry("", "", 1, MenuAction.CC_OP, -1, client.getWidget(config.teleport().getWidget()).getId(), false);
 		utils.doActionMsTime(targetMenu, client.getWidget(config.teleport().getWidget()).getBounds(), calc.getRandomIntBetweenRange(240, 340));
-	}
-
-	@Subscribe
-	private void onAnimationChanged(AnimationChanged event) {
-		if (!startPlugin)
-			return;
-		Actor actor = event.getActor();
 	}
 
 	TeleAlchState getStates() {
