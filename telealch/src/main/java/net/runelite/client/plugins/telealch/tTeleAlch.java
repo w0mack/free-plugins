@@ -209,13 +209,14 @@ public class tTeleAlch extends Plugin
 	}
 
 	private void castAlch(int itemID) {
-		Set<Item> alchs = Set.of(new Item(ItemID.FIRE_RUNE, 5), new Item(ItemID.NATURE_RUNE, 1));
-		for(Item i : alchs) {
-			if (!inv.containsStackAmount(i.getId(), i.getQuantity())) {
-				utils.sendGameMessage("Missing rune: " + client.getItemDefinition(i.getId()).getName());
-				reset();
+		if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || inv.containsStackAmount(ItemID.FIRE_RUNE, 5)) {
+			if (!(inv.containsItem(ItemID.NATURE_RUNE) || equip.isEquipped(ItemID.BRYOPHYTAS_STAFF))) {
+				utils.sendGameMessage("Missing rune: Nature rune");
 				return;
 			}
+		} else {
+			utils.sendGameMessage("Missing rune: Fire rune");
+			return;
 		}
 		WidgetItem alchItem = inv.getWidgetItem(itemID);
 		if (alchItem == null) {
