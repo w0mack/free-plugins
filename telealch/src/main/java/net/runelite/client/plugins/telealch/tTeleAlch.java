@@ -208,14 +208,30 @@ public class tTeleAlch extends Plugin
 		}
 	}
 
+	private boolean hasRune(int it) {
+		if (it == ItemID.FIRE_RUNE) {
+			if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || (inv.getItemCount(it, true) >= 5))
+				return true;
+		}
+		if (it == ItemID.AIR_RUNE) {
+			if (equip.isEquipped(ItemID.STAFF_OF_AIR) || (inv.getItemCount(it, true) >= 5))
+				return true;
+		}
+		if (it == ItemID.EARTH_RUNE) {
+			if (equip.isEquipped(ItemID.STAFF_OF_EARTH) || (inv.getItemCount(it, true) >= 5))
+				return true;
+		}
+		if (it == ItemID.WATER_RUNE) {
+			if (equip.isEquipped(ItemID.STAFF_OF_WATER) || (inv.getItemCount(it, true) >= 5))
+				return true;
+		}
+		utils.sendGameMessage("Missing item: " + client.getItemDefinition(it).getName());
+		return false;
+	}
+
 	private void castAlch(int itemID) {
-		if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || inv.containsStackAmount(ItemID.FIRE_RUNE, 5)) {
-			if (!(inv.containsItem(ItemID.NATURE_RUNE) || equip.isEquipped(ItemID.BRYOPHYTAS_STAFF))) {
-				utils.sendGameMessage("Missing rune: Nature rune");
-				return;
-			}
-		} else {
-			utils.sendGameMessage("Missing rune: Fire rune");
+		if (!hasRune(ItemID.FIRE_RUNE) || hasRune(ItemID.NATURE_RUNE)) {
+			reset();
 			return;
 		}
 		WidgetItem alchItem = inv.getWidgetItem(itemID);
@@ -235,8 +251,7 @@ public class tTeleAlch extends Plugin
 
 	void teleport(TeleAlchConfig.Tele tele) {
 		for(Item i : config.teleport().getRunes()) {
-			if (!inv.containsStackAmount(i.getId(), i.getQuantity())) {
-				utils.sendGameMessage("Missing rune: " + client.getItemDefinition(i.getId()).getName());
+			if (!hasRune(i.getId())) {
 				reset();
 				return;
 			}
