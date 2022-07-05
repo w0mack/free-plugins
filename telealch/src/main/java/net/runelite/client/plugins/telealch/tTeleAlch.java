@@ -210,20 +210,24 @@ public class tTeleAlch extends Plugin
 
 	private boolean hasRune(int it) {
 		if (it == ItemID.AIR_RUNE) {
-			if (equip.isEquipped(ItemID.STAFF_OF_AIR) || (inv.getItemCount(it, true) >= 5))
+			if (equip.isEquipped(ItemID.STAFF_OF_AIR) || (inv.getItemCount(it, true) >= 5)) {
 				return true;
+			}
 		}
 		if (it == ItemID.EARTH_RUNE) {
-			if (equip.isEquipped(ItemID.STAFF_OF_EARTH) || (inv.getItemCount(it, true) >= 5))
+			if (equip.isEquipped(ItemID.STAFF_OF_EARTH) || (inv.getItemCount(it, true) >= 5)) {
 				return true;
+			}
 		}
 		if (it == ItemID.WATER_RUNE) {
-			if (equip.isEquipped(ItemID.STAFF_OF_WATER) || (inv.getItemCount(it, true) >= 5))
+			if (equip.isEquipped(ItemID.STAFF_OF_WATER) || (inv.getItemCount(it, true) >= 5)) {
 				return true;
+			}
 		}
 		if (it == ItemID.FIRE_RUNE) {
-			if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || (inv.getItemCount(it, true) >= 5))
+			if (equip.isEquipped(ItemID.TOME_OF_FIRE) || equip.isEquipped(ItemID.STAFF_OF_FIRE) || (inv.getItemCount(it, true) >= 5)) {
 				return true;
+			}
 		}
 		if (inv.getItemCount(it, true) >= 5)
 			return true;
@@ -232,23 +236,22 @@ public class tTeleAlch extends Plugin
 	}
 
 	private void castAlch(int itemID) {
-		if (!hasRune(ItemID.FIRE_RUNE) || hasRune(ItemID.NATURE_RUNE)) {
-			reset();
-			return;
+		if (hasRune(ItemID.FIRE_RUNE) && hasRune(ItemID.NATURE_RUNE)) {
+			WidgetItem alchItem = inv.getWidgetItem(itemID);
+			if (alchItem == null) {
+				utils.sendGameMessage("Missing item: " + client.getItemDefinition(alchItem.getId()).getName());
+				return;
+			}
+			boolean high = client.getBoostedSkillLevel(Skill.MAGIC) >= 55;
+			log.debug("Alching item: {}", alchItem.getId());
+			targetMenu = new LegacyMenuEntry("Cast", (high ? "High" : "Low") + " Level Alchemy -> Item",
+					0,
+					MenuAction.WIDGET_TARGET_ON_WIDGET.getId(),
+					alchItem.getIndex(), WidgetInfo.INVENTORY.getId(),
+					false);
+			utils.oneClickCastSpell(high ? WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY : WidgetInfo.SPELL_LOW_LEVEL_ALCHEMY, targetMenu, alchItem.getCanvasBounds().getBounds(), calc.getRandomIntBetweenRange(20, 180));
+
 		}
-		WidgetItem alchItem = inv.getWidgetItem(itemID);
-		if (alchItem == null) {
-			utils.sendGameMessage("Missing item: " + client.getItemDefinition(alchItem.getId()).getName());
-			return;
-		}
-		boolean high = client.getBoostedSkillLevel(Skill.MAGIC) >= 55;
-		log.debug("Alching item: {}", alchItem.getId());
-		targetMenu = new LegacyMenuEntry("Cast", (high ? "High" : "Low") + " Level Alchemy -> Item",
-				0,
-				MenuAction.WIDGET_TARGET_ON_WIDGET.getId(),
-				alchItem.getIndex(), WidgetInfo.INVENTORY.getId(),
-				false);
-		utils.oneClickCastSpell(high ? WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY : WidgetInfo.SPELL_LOW_LEVEL_ALCHEMY, targetMenu, alchItem.getCanvasBounds().getBounds(), calc.getRandomIntBetweenRange(20, 180));
 	}
 
 	void teleport(TeleAlchConfig.Tele tele) {
