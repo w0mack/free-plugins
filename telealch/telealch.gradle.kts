@@ -1,3 +1,5 @@
+import ProjectVersions.openosrsVersion
+
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
  * All rights reserved.
@@ -23,31 +25,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-object ProjectVersions {
+version = "1.0.0"
 
-    const val openosrsVersion = "4.31.0"
-    const val apiVersion = "0.0.1"
+project.extra["PluginName"] = "tTeleAlch" // This is the name that is used in the external plugin manager panel
+project.extra["PluginDescription"] = "Tele-alch ur shit bish" // This is the description that is used in the external plugin manager panel
+
+dependencies {
+    annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
+
+    compileOnly("com.openosrs:runelite-api:$openosrsVersion+")
+    compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
+    compileOnly(group = "com.openosrs.externals", name = "iutils", version = "5.0.3+");
+    //compileOnly(project(":iutils"))
+
+    compileOnly(Libraries.guice)
+    compileOnly(Libraries.lombok)
+    compileOnly(Libraries.pf4j)
 }
 
-object Libraries {
-    private object Versions {
-        const val apacheCommonsText = "1.2"
-        const val gson = "2.8.5"
-        const val guice = "4.1.0"
-        const val lombok = "1.18.4"
-        const val okhttp3 = "3.7.0"
-        const val pf4j = "3.6.0"
-        const val findbugs = "3.0.2"
-        const val rxjava = "3.0.10"
+tasks {
+    jar {
+        manifest {
+            attributes(mapOf(
+                "Plugin-Version" to project.version,
+                "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
+                "Plugin-Provider" to "Tea",
+                "Plugin-Dependencies" to
+                        arrayOf(
+                            nameToId("iUtils")
+                        ).joinToString(),
+                "Plugin-Description" to project.extra["PluginDescription"],
+                "Plugin-License" to project.extra["PluginLicense"]
+            ))
+        }
     }
-
-    const val apacheCommonsText = "org.apache.commons:commons-text:${Versions.apacheCommonsText}"
-    const val gson = "com.google.code.gson:gson:${Versions.gson}"
-    const val guice = "com.google.inject:guice:${Versions.guice}:no_aop"
-    const val lombok = "org.projectlombok:lombok:${Versions.lombok}"
-    const val okhttp3 = "com.squareup.okhttp3:okhttp:${Versions.okhttp3}"
-    const val pf4j = "org.pf4j:pf4j:${Versions.pf4j}"
-    const val findbugs = "com.google.code.findbugs:jsr305:${Versions.findbugs}"
-    const val rxjava = "io.reactivex.rxjava3:rxjava:${Versions.rxjava}"
-
 }

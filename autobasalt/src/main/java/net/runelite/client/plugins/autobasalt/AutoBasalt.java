@@ -31,7 +31,7 @@ import java.util.List;
 @PluginDescriptor(
 		name = "tBasalt",
 		description = "Automatically mines basalt and salt",
-		tags = {"Tea", "Chas", "basalt", "salt", "weiss", "mining", "mine", "miner"}
+		tags = {"Tea", "Tea", "basalt", "salt", "weiss", "mining", "mine", "miner"}
 )
 @Slf4j
 public class AutoBasalt extends Plugin

@@ -41,7 +41,7 @@ import java.util.stream.IntStream;
 
 @Extension
 @PluginDependency(iUtils.class)
-@PluginDescriptor(name = "tVorkath", description = "Kills and loots Vorkath, rebanks at Moonclan", tags = {"Tea", "Chas", "autovorki", "vorkath", "auto"})
+@PluginDescriptor(name = "tVorkath", description = "Kills and loots Vorkath, rebanks at Moonclan", tags = {"Tea", "Tea", "autovorki", "vorkath", "auto"})
 @Slf4j
 public class AutoVorki extends Plugin {
     static List<Integer> regions;

@@ -22,7 +22,7 @@ import java.awt.*;
 @PluginDescriptor(
 		name = "AutoContinue",
 		description = "Automatically progress through dialogue",
-		tags = {"Tea", "Chas", "chat", "dialogue", "continue"}
+		tags = {"Tea", "Tea", "chat", "dialogue", "continue"}
 )
 @Slf4j
 public class AutoContinue extends Plugin
