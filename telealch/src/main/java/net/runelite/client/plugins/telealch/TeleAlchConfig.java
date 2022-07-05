@@ -29,9 +29,7 @@ import net.runelite.api.Item;
 import net.runelite.api.ItemID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.*;
-import net.runelite.client.plugins.iutils.walking.Teleport;
 
-import java.util.List;
 import java.util.Set;
 
 @ConfigGroup("TeleAlchConfig")
@@ -65,7 +63,7 @@ public interface TeleAlchConfig extends Config
 			keyName = "alch",
 			name = "Alch ID",
 			description = "",
-			position = 5
+			position = 4
 	)
 	default int alch() { return 860; }
 
@@ -94,6 +92,7 @@ public interface TeleAlchConfig extends Config
 			closedByDefault = true
 	)
 	String sleepDelays = "Sleep Delays";
+
 	@ConfigSection(
 			name = "Tick Delays",
 			description = "",
