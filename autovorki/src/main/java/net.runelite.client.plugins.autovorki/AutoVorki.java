@@ -259,7 +259,7 @@ public class AutoVorki extends Plugin {
             return;
         }
 
-        Widget widget = client.getWidget(10485775);
+        Widget widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
         if (widget != null) {
             prayBounds = widget.getBounds();
         }
@@ -553,7 +553,7 @@ public class AutoVorki extends Plugin {
                     break;
                 case DRINK_POOL:
                     if (client.getVarbitValue(Varbits.QUICK_PRAYER) == 1) {
-                        widget = client.getWidget(10485775);
+                        widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
                         if (widget != null) {
                             prayBounds = widget.getBounds();
                         }
@@ -755,7 +755,7 @@ public class AutoVorki extends Plugin {
                     drinkCombatPotion();
                     break;
                 case ENABLE_PRAYER:
-                    widget = client.getWidget(10485775);
+                    widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
                     if (widget != null) {
                         prayBounds = widget.getBounds();
                     }
@@ -767,7 +767,7 @@ public class AutoVorki extends Plugin {
                         utils.doActionMsTime(targetMenu, widget.getBounds(), sleep);
                     break;
                 case DISABLE_PRAYER:
-                    widget = client.getWidget(10485775);
+                    widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
                     if (widget != null) {
                         prayBounds = widget.getBounds();
                     }
@@ -887,7 +887,7 @@ public class AutoVorki extends Plugin {
             return;
         }
 
-        Widget widget = client.getWidget(10485775);
+        Widget widget = client.getWidget(WidgetInfo.MINIMAP_QUICK_PRAYER_ORB);
 
         if (widget != null)
         {
