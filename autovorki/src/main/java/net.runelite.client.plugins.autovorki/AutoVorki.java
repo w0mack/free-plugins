@@ -311,7 +311,7 @@ public class AutoVorki extends Plugin {
                         }
 
                         targetMenu = new LegacyMenuEntry("Toggle Run", "", 1, 57, -1,
-                                10485783, false);
+                                WidgetInfo.MINIMAP_TOGGLE_RUN_ORB.getId(), false);
                         utils.doInvokeMsTime(targetMenu, sleepDelay());
                     }
                 }
@@ -659,7 +659,7 @@ public class AutoVorki extends Plugin {
                                 }
 
                                 targetMenu = new LegacyMenuEntry("Toggle Run", "", 1, 57, -1,
-                                        10485783, false);
+                                        WidgetInfo.MINIMAP_TOGGLE_RUN_ORB.getId(), false);
                                 utils.doInvokeMsTime(targetMenu, 150);
                             }
                         }
