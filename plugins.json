@@ -74,7 +74,7 @@
         "date": "2022-07-23",
         "sha512sum": "86BBB9DB8B8B1FA7F08DEFBA8BF5773F04CDCF55ACEB19EF7AB0AEDC1F647FDC90023F56E407FA49E61979950F1C7E46ECAFC302D4AAACB5B8EEC01EAA085E36",
         "version": "1.3.3",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/autotrade-1.3.3.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/autotrade-1.3.3.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -90,7 +90,7 @@
         "date": "2022-07-23",
         "sha512sum": "72A793A71A891695F6731C5B38E4BEDD60F3D70D17ADED96B04902DB9B2A009CDD5BA91AF240A7EB7E9A2ED584531A5E300FCC05C1ABB6FBF228F763F3426818",
         "version": "3.5.6",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/autovorki-3.5.6.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/autovorki-3.5.6.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -106,7 +106,7 @@
         "date": "2022-07-23",
         "sha512sum": "ED4DD566767216935E6EAA5A22DF42114D65D34ED1127F475DC9F6C741ACCE06C453AAE3865A755A593756D5B835846437808B2714BFCD8C0E256E6DF02C4B9A",
         "version": "1.0.3",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/csardyminer-1.0.3.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/csardyminer-1.0.3.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -122,7 +122,7 @@
         "date": "2022-07-23",
         "sha512sum": "DDF01CC7EA21D5A4D253445689E45107912A96CEDF2402698DBA68E00F6B960208E0E8DACD691EA8FFD51CDDB63136951F3FC65794DF7233CA550948C02AEC03",
         "version": "1.0.3",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/csbankseller-1.0.3.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/csbankseller-1.0.3.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -138,7 +138,7 @@
         "date": "2022-07-23",
         "sha512sum": "79A48B45A52DAA219198D88A9BDAC3792A791B793F49B10FF20CE3BC0DE9A5817950831E72AB5F489220CD08B4236D6DCA5B03C255A6B8153E9E16598F9C60B0",
         "version": "1.0.7",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/cssarachnishelper-1.0.7.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/cssarachnishelper-1.0.7.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -154,7 +154,7 @@
         "date": "2022-07-23",
         "sha512sum": "86D4961B2A75FF7B19A335F3C831FD5795F728A5FCC07BC15A9AC16928CF00482D3FD77D98E209C4536AAB3BDB5DEFF07AEF2BDC0AC23A6A65B416E7DC5010CF",
         "version": "1.0.3",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/csstathider-1.0.3.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/csstathider-1.0.3.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -170,7 +170,7 @@
         "date": "2022-07-23",
         "sha512sum": "2C94D89D7A31EC4F4D1849035B1A290B095FA9D56BB49EDCFFEFF667D2116189D976E3EDE467CBBFEF5B12FAB4C4360B26CD193DC465CD27A8D1160DC95B4BBA",
         "version": "3.0.0",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/oofiekittengrower-3.0.0.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/oofiekittengrower-3.0.0.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
@@ -186,7 +186,7 @@
         "date": "2022-07-23",
         "sha512sum": "23E5FB5341FE66219D5A90F3763215C7F401B3A395E576A755C5DEBFB04CAFBF44439A28C58A3FE678CB6A6BB5BB84AB2A0559CE0756D7056B8E16D61155F797",
         "version": "1.0.7",
-        "url": "https://github.com/w0macktom/free-plugins/blob/master/release/telealch-1.0.7.jar?raw=true",
+        "url": "https://github.com/w0mack/free-plugins/blob/master/release/telealch-1.0.7.jar?raw=true",
         "requires": "^1.0.0"
       }
     ]
