@@ -44,8 +44,7 @@ public class tBlueDragonsTileOverlay extends Overlay {
         return null;
     }
 
-    private void drawTile(Graphics2D graphics, WorldPoint tile, Color fillColor, Color borderColor)
-    {
+    private void drawTile(Graphics2D graphics, WorldPoint tile, Color fillColor, Color borderColor) {
         if (tile.getPlane() != client.getPlane())
             return;
 

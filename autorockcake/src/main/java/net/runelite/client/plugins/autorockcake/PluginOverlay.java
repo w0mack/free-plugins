@@ -40,7 +40,7 @@ public class PluginOverlay extends OverlayPanel {
         String title = "tNightmareZone";
         panelComponent.getChildren().add(TitleComponent.builder().text(title).color(Color.YELLOW).build());
         panelComponent.setBackgroundColor(Color.DARK_GRAY);
-        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80,0));
+        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80, 0));
         panelComponent.getChildren().add(LineComponent.builder().left("").build());
 
         /* Runtime */

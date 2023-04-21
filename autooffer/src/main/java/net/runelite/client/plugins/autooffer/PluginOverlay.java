@@ -38,7 +38,7 @@ public class PluginOverlay extends OverlayPanel {
         String title = "AutoOffer";
         panelComponent.getChildren().add(TitleComponent.builder().text(title).color(Color.YELLOW).build());
         panelComponent.setBackgroundColor(Color.DARK_GRAY);
-        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80,0));
+        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80, 0));
 
         /* Content */
         panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.state.toString().toLowerCase().replace("_", " ")).build());

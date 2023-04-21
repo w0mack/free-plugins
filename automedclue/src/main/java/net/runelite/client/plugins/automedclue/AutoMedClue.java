@@ -321,7 +321,7 @@ public class AutoMedClue extends Plugin {
                     ItemContainer equipmentContainer = client.getItemContainer(InventoryID.EQUIPMENT);
                     if (equipmentContainer != null) {
                         Item[] items = equipmentContainer.getItems();
-                        for(EquipmentSlot slot : EquipmentSlot.values()) {
+                        for (EquipmentSlot slot : EquipmentSlot.values()) {
                             for (int i : getClueItems(lastClue)) {
                                 if (equip.slot(slot).getId() == i) {
                                     targetMenu = new LegacyMenuEntry("", "", 1, MenuAction.CC_OP, -1, client.getWidget(slot.widgetID, slot.widgetChild).getId(), false);
@@ -505,7 +505,7 @@ public class AutoMedClue extends Plugin {
                         timeout = 3 + tickDelay();
                     }
                     if (emotesToDo == null || emotesToDo.isEmpty())
-                        stage ++;
+                        stage++;
                     break;
                 default:
                     timeout = 1;
@@ -917,7 +917,7 @@ public class AutoMedClue extends Plugin {
                         case 2: {
                             if (hasStashItemsEquipped(clue)) {
                                 log.info("has all items equipped");
-                                stage ++;
+                                stage++;
                             }
                             break;
                         }
@@ -927,13 +927,13 @@ public class AutoMedClue extends Plugin {
                                 targetMenu = inventoryAssistant.getLegacyMenuEntry(item.getId(), "wear", "wield", "equip");
                                 utils.doInvokeMsTime(targetMenu, 0);
                             }
-                            stage ++;
+                            stage++;
                             break;
                         }
-                        case 0:  {
+                        case 0: {
                             actionObject(getStashID(clue), MenuAction.GAME_OBJECT_SECOND_OPTION);
                             timeout = 3 + tickDelay();
-                            stage ++;
+                            stage++;
                             break;
                         }
 
@@ -1104,8 +1104,7 @@ public class AutoMedClue extends Plugin {
                         actionObject(18204, new WorldPoint(2764, 3273, 0), MenuAction.GAME_OBJECT_FIRST_OPTION);
                         timeout = 3 + tickDelay();
                     }
-                } else
-                if (distance(new WorldPoint(2717, 3307, 0)) <= 3) {
+                } else if (distance(new WorldPoint(2717, 3307, 0)) <= 3) {
                     actionNPC(NpcID.HOLGART_7789, MenuAction.NPC_THIRD_OPTION);
                     timeout = 12 + tickDelay();
                 } else if (distance(blrFairyRing) <= 1) {
@@ -1550,7 +1549,7 @@ public class AutoMedClue extends Plugin {
                             }
                         } else if (distance(2741, 3573) <= 0) {
                             actionObject(25682, MenuAction.GAME_OBJECT_FIRST_OPTION);
-                        }  else if (distance(new WorldPoint(2736, 3580, 1)) <= 20) {
+                        } else if (distance(new WorldPoint(2736, 3580, 1)) <= 20) {
                             if (!handleDoor(25718, new WorldPoint(2744, 3577, 1), MenuAction.GAME_OBJECT_FIRST_OPTION)) {
                                 if (!handleDoor(25718, new WorldPoint(2745, 3578, 1), MenuAction.GAME_OBJECT_FIRST_OPTION)) {
                                     actionNPC(NpcID.DONOVAN_THE_FAMILY_HANDYMAN, MenuAction.NPC_FIRST_OPTION);
@@ -1622,7 +1621,7 @@ public class AutoMedClue extends Plugin {
                                 case 2: {
                                     if (hasStashItemsEquipped(clue)) {
                                         log.info("has all items equipped");
-                                        stage ++;
+                                        stage++;
                                     } else {
                                         for (int i : getClueItems(clue)) {
                                             WidgetItem item = inv.getWidgetItem(i);
@@ -1640,13 +1639,13 @@ public class AutoMedClue extends Plugin {
                                         utils.doInvokeMsTime(targetMenu, 0);
                                         break;
                                     }
-                                    stage ++;
+                                    stage++;
                                     break;
                                 }
-                                case 0:  {
+                                case 0: {
                                     actionObject(getStashID(clue), MenuAction.GAME_OBJECT_SECOND_OPTION);
                                     timeout = 3 + tickDelay();
-                                    stage ++;
+                                    stage++;
                                     break;
                                 }
                             }
@@ -2280,10 +2279,10 @@ public class AutoMedClue extends Plugin {
             case 2809: {
                 if (distance(2479, 3158) <= 1) {
                     dig();
-                } else if (distance(ciqFairyRing.getX(), ciqFairyRing.getY() -5) <= 2) {
+                } else if (distance(ciqFairyRing.getX(), ciqFairyRing.getY() - 5) <= 2) {
                     w(2479, 3158, 1);
                 } else if (distance(ciqFairyRing) <= 1) {
-                    walk(new WorldPoint(ciqFairyRing.getX(), ciqFairyRing.getY() -5, 0), 1, sleepDelay());
+                    walk(new WorldPoint(ciqFairyRing.getX(), ciqFairyRing.getY() - 5, 0), 1, sleepDelay());
                 } else if (distance(salveGraveyardFairyRing) <= 1) {
                     if (widgetOpen(162, 37)) {
                         fairyRing("c", "i", "q");
@@ -2317,10 +2316,10 @@ public class AutoMedClue extends Plugin {
             case 3610: {
                 if (distance(2614, 3209) <= 4) {
                     actionObject(354, MenuAction.GAME_OBJECT_FIRST_OPTION);
-                } else if (distance(djpFairyRing.getX(), djpFairyRing.getY() -5) <= 2) {
+                } else if (distance(djpFairyRing.getX(), djpFairyRing.getY() - 5) <= 2) {
                     w(2614, 3209, 1);
                 } else if (distance(djpFairyRing) <= 1) {
-                    walk(new WorldPoint(djpFairyRing.getX(), djpFairyRing.getY() -5, 0), 1, sleepDelay());
+                    walk(new WorldPoint(djpFairyRing.getX(), djpFairyRing.getY() - 5, 0), 1, sleepDelay());
                 } else if (distance(salveGraveyardFairyRing) <= 1) {
                     if (widgetOpen(162, 37)) {
                         fairyRing("d", "j", "p");
@@ -2400,10 +2399,10 @@ public class AutoMedClue extends Plugin {
             case 19774: {
                 if (distance(1476, 3566) <= 1) {
                     dig();
-                } else if (distance(djrFairyRing.getX(), djrFairyRing.getY() -5) <= 2) {
+                } else if (distance(djrFairyRing.getX(), djrFairyRing.getY() - 5) <= 2) {
                     w(1476, 3566, 1);
                 } else if (distance(djrFairyRing) <= 1) {
-                    walk(new WorldPoint(djrFairyRing.getX(), djrFairyRing.getY() -5, 0), 1, sleepDelay());
+                    walk(new WorldPoint(djrFairyRing.getX(), djrFairyRing.getY() - 5, 0), 1, sleepDelay());
                 } else if (distance(salveGraveyardFairyRing) <= 1) {
                     if (widgetOpen(162, 37)) {
                         fairyRing("d", "j", "r");
@@ -2652,7 +2651,7 @@ public class AutoMedClue extends Plugin {
     int distance(int x, int y) {
         return distance(new WorldPoint(x, y, player.getWorldLocation().getPlane()));
     }
-    
+
     int distance(WorldPoint location) {
         return player.getWorldLocation().distanceTo(location);
     }
@@ -2934,7 +2933,7 @@ public class AutoMedClue extends Plugin {
         GroundObject obj = objectUtils.findNearestGroundObject(id);
         if (obj != null) {
             targetMenu = new LegacyMenuEntry("", "", obj.getId(), action, obj.getLocalLocation().getX(), obj.getLocalLocation().getY(), false);
-                utils.doTileObjectActionMsTime(obj, action.getId(), sleepDelay());
+            utils.doTileObjectActionMsTime(obj, action.getId(), sleepDelay());
             return true;
         }
         return false;

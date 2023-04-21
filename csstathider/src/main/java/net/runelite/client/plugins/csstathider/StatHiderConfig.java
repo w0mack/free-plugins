@@ -27,97 +27,116 @@ package net.runelite.client.plugins.csstathider;
 import net.runelite.client.config.*;
 
 @ConfigGroup("CSStatHider")
-public interface StatHiderConfig extends Config
-{
+public interface StatHiderConfig extends Config {
 
-	@ConfigItem(
-			keyName = "setSkills",
-			name = "Set Skills Tab",
-			description = "",
-			position = 0
-	)
-	default boolean setSkills() { return true; }
+    @ConfigItem(
+            keyName = "setSkills",
+            name = "Set Skills Tab",
+            description = "",
+            position = 0
+    )
+    default boolean setSkills() {
+        return true;
+    }
 
-	@ConfigItem(
-			keyName = "level",
-			name = "Skills",
-			description = "",
-			position = 1,
-			hidden = true,
-			unhide = "setSkills"
-	)
-	default int level() { return 99; }
+    @ConfigItem(
+            keyName = "level",
+            name = "Skills",
+            description = "",
+            position = 1,
+            hidden = true,
+            unhide = "setSkills"
+    )
+    default int level() {
+        return 99;
+    }
 
-	@ConfigItem(
-			keyName = "setHP",
-			name = "Set HP",
-			description = "",
-			position = 2
-	)
-	default boolean setHP() { return true; }
+    @ConfigItem(
+            keyName = "setHP",
+            name = "Set HP",
+            description = "",
+            position = 2
+    )
+    default boolean setHP() {
+        return true;
+    }
 
-	@ConfigItem(
-			keyName = "hpLevel",
-			name = "HP",
-			description = "",
-			position = 3,
-			hidden = true,
-			unhide = "setHP"
-	)
-	default int hpLevel() { return 99; }
+    @ConfigItem(
+            keyName = "hpLevel",
+            name = "HP",
+            description = "",
+            position = 3,
+            hidden = true,
+            unhide = "setHP"
+    )
+    default int hpLevel() {
+        return 99;
+    }
 
-	@ConfigItem(
-			keyName = "setPray",
-			name = "Set Prayer",
-			description = "",
-			position = 4
-	)
-	default boolean setPray() { return true; }
+    @ConfigItem(
+            keyName = "setPray",
+            name = "Set Prayer",
+            description = "",
+            position = 4
+    )
+    default boolean setPray() {
+        return true;
+    }
 
-	@ConfigItem(
-			keyName = "prayLevel",
-			name = "Prayer",
-			description = "",
-			position = 5,
-			hidden = true,
-			unhide = "setPray"
-	)
-	default int prayLevel() { return 99; }
+    @ConfigItem(
+            keyName = "prayLevel",
+            name = "Prayer",
+            description = "",
+            position = 5,
+            hidden = true,
+            unhide = "setPray"
+    )
+    default int prayLevel() {
+        return 99;
+    }
 
-	@ConfigItem(
-			keyName = "setRun",
-			name = "Set Run Energy",
-			description = "",
-			position = 6
-	)
-	default boolean setRun() { return true; }
+    @ConfigItem(
+            keyName = "setRun",
+            name = "Set Run Energy",
+            description = "",
+            position = 6
+    )
+    default boolean setRun() {
+        return true;
+    }
 
-	@ConfigItem(
-			keyName = "runLevel",
-			name = "Run Energy",
-			description = "",
-			position = 7,
-			hidden = true,
-			unhide = "setRun"
-	)
-	default int runLevel() { return 100; }
+    @ConfigItem(
+            keyName = "runLevel",
+            name = "Run Energy",
+            description = "",
+            position = 7,
+            hidden = true,
+            unhide = "setRun"
+    )
+    default int runLevel() {
+        return 100;
+    }
 
-	@ConfigItem(
-			keyName = "setSpec",
-			name = "Set Spec Energy",
-			description = "",
-			position = 8
-	)
-	default boolean setSpec() { return true; }
+    @ConfigItem(
+            keyName = "setSpec",
+            name = "Set Spec Energy",
+            description = "",
+            position = 8
+    )
+    default boolean setSpec() {
+        return true;
+    }
 
-	@ConfigItem(
-			keyName = "specLevel",
-			name = "Spec Energy",
-			description = "",
-			position = 9,
-			hidden = true,
-			unhide = "setSpec"
-	)
-	default int specLevel() { return 100; }
+    @ConfigItem(
+            keyName = "specLevel",
+            name = "Spec Energy",
+            description = "",
+            position = 9,
+            hidden = true,
+            unhide = "setSpec"
+    )
+    default int specLevel() {
+        return 100;
+    }
 
 }

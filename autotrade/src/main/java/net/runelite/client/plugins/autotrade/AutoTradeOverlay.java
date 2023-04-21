@@ -35,7 +35,7 @@ public class AutoTradeOverlay extends OverlayPanel {
         String title = "AutoTrade";
         /* Title and width */
         panelComponent.getChildren().add(TitleComponent.builder().text(title).color(Color.cyan).build());
-        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80,0));
+        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth(title) + 80, 0));
 
         /* State */
         panelComponent.getChildren().add(LineComponent.builder().left("State: ").right(plugin.state.toString()).build());

@@ -7,27 +7,22 @@ import net.runelite.client.plugins.oofiekittengrower.Task;
 import net.runelite.client.plugins.oofiekittengrower.OofieKittenGrowerPlugin;
 
 @Slf4j
-public class MovingTask extends Task
-{
+public class MovingTask extends Task {
 
     @Override
-    public boolean validate()
-    {
+    public boolean validate() {
         return playerUtils.isMoving(OofieKittenGrowerPlugin.beforeLoc);
     }
 
     @Override
-    public String getTaskDescription()
-    {
+    public String getTaskDescription() {
         return OofieKittenGrowerPlugin.status;
     }
 
     @Override
-    public void onGameTick(GameTick event)
-    {
+    public void onGameTick(GameTick event) {
         Player player = client.getLocalPlayer();
-        if (player != null)
-        {
+        if (player != null) {
             playerUtils.handleRun(20, 30);
             OofieKittenGrowerPlugin.timeout = tickDelay();
         }

@@ -30,41 +30,44 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
 @ConfigGroup("AutoTradeConfig")
-public interface AutoTradeConfig extends Config
-{
-	@ConfigItem(
-		keyName = "showOverlay",
-		name = "Show UI",
-		description = "Show the UI on screen",
-		position = 0
-	)
-	default boolean showOverlay() {
-		return true;
-	}
+public interface AutoTradeConfig extends Config {
+    @ConfigItem(
+            keyName = "showOverlay",
+            name = "Show UI",
+            description = "Show the UI on screen",
+            position = 0
+    )
+    default boolean showOverlay() {
+        return true;
+    }
 
-	@ConfigItem(
-			keyName = "playerName",
-			name = "Player Name",
-			description = "Player to trade",
-			position = 1
-	)
-	default String playerName() { return "Zezima"; }
+    @ConfigItem(
+            keyName = "playerName",
+            name = "Player Name",
+            description = "Player to trade",
+            position = 1
+    )
+    default String playerName() {
+        return "Zezima";
+    }
 
-	@ConfigItem(
-			keyName = "itemID",
-			name = "Item to trade",
-			description = "ID of the item to trade",
-			position = 2
-	)
-	default int itemID() { return ItemID.NATURE_RUNE; }
+    @ConfigItem(
+            keyName = "itemID",
+            name = "Item to trade",
+            description = "ID of the item to trade",
+            position = 2
+    )
+    default int itemID() {
+        return ItemID.NATURE_RUNE;
+    }
 
-	@ConfigItem(
-			keyName = "debug",
-			name = "Debug Messages",
-			description = "",
-			position = 3
-	)
-	default boolean debug() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "debug",
+            name = "Debug Messages",
+            description = "",
+            position = 3
+    )
+    default boolean debug() {
+        return true;
+    }
 }

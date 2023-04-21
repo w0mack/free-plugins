@@ -4,22 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TaskSet
-{
+public class TaskSet {
     public List<Task> taskList = new ArrayList<>();
 
-    public TaskSet(Task... tasks)
-    {
+    public TaskSet(Task... tasks) {
         taskList.addAll(Arrays.asList(tasks));
     }
 
-    public void addAll(Task... tasks)
-    {
+    public void addAll(Task... tasks) {
         taskList.addAll(Arrays.asList(tasks));
     }
 
-    public void clear()
-    {
+    public void clear() {
         taskList.clear();
     }
 
@@ -29,12 +25,9 @@ public class TaskSet
      *
      * @return The first valid task from the task list or null if no valid task.
      */
-    public Task getValidTask()
-    {
-        for (Task task : this.taskList)
-        {
-            if (task.validate())
-            {
+    public Task getValidTask() {
+        for (Task task : this.taskList) {
+            if (task.validate()) {
                 return task;
             }
         }

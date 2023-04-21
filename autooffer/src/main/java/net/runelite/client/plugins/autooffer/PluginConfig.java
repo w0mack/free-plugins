@@ -27,94 +27,93 @@ package net.runelite.client.plugins.autooffer;
 import net.runelite.client.config.*;
 
 @ConfigGroup("AutoOffer")
-public interface PluginConfig extends Config
-{
+public interface PluginConfig extends Config {
 
-	@ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 0, title = "startPlugin")
-	default Button startPlugin() {
-		return new Button();
-	}
+    @ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 0, title = "startPlugin")
+    default Button startPlugin() {
+        return new Button();
+    }
 
-	@ConfigItem(
-		keyName = "showOverlay",
-		name = "Show UI",
-		description = "Show the UI on screen",
-		position = 1
-	)
-	default boolean showOverlay() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "showOverlay",
+            name = "Show UI",
+            description = "Show the UI on screen",
+            position = 1
+    )
+    default boolean showOverlay() {
+        return true;
+    }
 
-	@ConfigItem(
-		keyName = "demonicOffering",
-		name = "Cast Demonic",
-		description = "Cast Demonic Offering?",
-		position = 2
-	)
-	default boolean demonicOffering() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "demonicOffering",
+            name = "Cast Demonic",
+            description = "Cast Demonic Offering?",
+            position = 2
+    )
+    default boolean demonicOffering() {
+        return true;
+    }
 
-	@Range(min = 1, max = 3)
-	@ConfigItem(
-			keyName = "ashes",
-			name = "Ashes amount",
-			description = "Cast Demonic Offering when you have this many ashes",
-			position = 3
-	)
-	default int ashes() {
-		return 3;
-	}
+    @Range(min = 1, max = 3)
+    @ConfigItem(
+            keyName = "ashes",
+            name = "Ashes amount",
+            description = "Cast Demonic Offering when you have this many ashes",
+            position = 3
+    )
+    default int ashes() {
+        return 3;
+    }
 
-	@ConfigItem(
-		keyName = "sinisterOffering",
-		name = "Cast Sinister",
-		description = "Cast Sinister Offering?",
-		position = 4
-	)
-	default boolean sinisterOffering() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "sinisterOffering",
+            name = "Cast Sinister",
+            description = "Cast Sinister Offering?",
+            position = 4
+    )
+    default boolean sinisterOffering() {
+        return true;
+    }
 
-	@Range(min = 1, max = 3)
-	@ConfigItem(
-			keyName = "bones",
-			name = "Bones amount",
-			description = "Cast Sinister Offering when you have this many bones",
-			position = 5
-	)
-	default int bones() {
-		return 3;
-	}
+    @Range(min = 1, max = 3)
+    @ConfigItem(
+            keyName = "bones",
+            name = "Bones amount",
+            description = "Cast Sinister Offering when you have this many bones",
+            position = 5
+    )
+    default int bones() {
+        return 3;
+    }
 
-	@ConfigItem(
-			keyName = "soulBearer",
-			name = "Fill Soul bearer",
-			description = "",
-			position = 6
-	)
-	default boolean soulBearer() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "soulBearer",
+            name = "Fill Soul bearer",
+            description = "",
+            position = 6
+    )
+    default boolean soulBearer() {
+        return true;
+    }
 
-	@Range(min = 1, max = 28)
-	@ConfigItem(
-			keyName = "ensouled",
-			name = "Ensouled head amount",
-			description = "Fill Soul bearer when your inventory has this many ensouled heads",
-			position = 7
-	)
-	default int fillAmount() {
-		return 2;
-	}
+    @Range(min = 1, max = 28)
+    @ConfigItem(
+            keyName = "ensouled",
+            name = "Ensouled head amount",
+            description = "Fill Soul bearer when your inventory has this many ensouled heads",
+            position = 7
+    )
+    default int fillAmount() {
+        return 2;
+    }
 
-	@ConfigItem(
-		keyName = "debug",
-		name = "Debug Messages",
-		description = "",
-		position = 999
-	)
-	default boolean debug() {
-		return false;
-	}
+    @ConfigItem(
+            keyName = "debug",
+            name = "Debug Messages",
+            description = "",
+            position = 999
+    )
+    default boolean debug() {
+        return false;
+    }
 }

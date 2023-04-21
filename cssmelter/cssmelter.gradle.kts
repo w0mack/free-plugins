@@ -28,7 +28,8 @@ import ProjectVersions.openosrsVersion
 version = "1.0.0"
 
 project.extra["PluginName"] = "CS-Smelter" // This is the name that is used in the external plugin manager panel
-project.extra["PluginDescription"] = "Smelt gold and molten glass" // This is the description that is used in the external plugin manager panel
+project.extra["PluginDescription"] =
+    "Smelt gold and molten glass" // This is the description that is used in the external plugin manager panel
 
 dependencies {
     annotationProcessor(Libraries.lombok)
@@ -47,17 +48,19 @@ dependencies {
 tasks {
     jar {
         manifest {
-            attributes(mapOf(
-                "Plugin-Version" to project.version,
-                "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
-                "Plugin-Provider" to "Tea",
-                "Plugin-Dependencies" to
-                        arrayOf(
-                            nameToId("tUtils")
-                        ).joinToString(),
-                "Plugin-Description" to project.extra["PluginDescription"],
-                "Plugin-License" to project.extra["PluginLicense"]
-            ))
+            attributes(
+                mapOf(
+                    "Plugin-Version" to project.version,
+                    "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
+                    "Plugin-Provider" to "Tea",
+                    "Plugin-Dependencies" to
+                            arrayOf(
+                                nameToId("tUtils")
+                            ).joinToString(),
+                    "Plugin-Description" to project.extra["PluginDescription"],
+                    "Plugin-License" to project.extra["PluginLicense"]
+                )
+            )
         }
     }
 }

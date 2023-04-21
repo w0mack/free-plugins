@@ -8,14 +8,13 @@ import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Range;
 
 @ConfigGroup("OofieKittenGrower")
-public interface OofieKittenGrowerConfig extends Config
-{
+public interface OofieKittenGrowerConfig extends Config {
 
     @ConfigSection(
-        keyName = "instructionsTitle",
-        name = "Instructions",
-        description = "",
-        position = 0
+            keyName = "instructionsTitle",
+            name = "Instructions",
+            description = "",
+            position = 0
     )
     String instructionsTitle = "instructionsTitle";
 
@@ -26,8 +25,7 @@ public interface OofieKittenGrowerConfig extends Config
             position = 1,
             title = "instructionsTitle"
     )
-    default String instruction()
-    {
+    default String instruction() {
         return "Updated by Gerwin#7413\nOriginally by Oofie\nDefault food is Karambwanji.";
     }
 
@@ -37,27 +35,27 @@ public interface OofieKittenGrowerConfig extends Config
             description = "What shall you feed'eth the kitten?",
             position = 2
     )
-    default int catFood() { return 3150;}
+    default int catFood() {
+        return 3150;
+    }
 
     @ConfigItem(
-        keyName = "enableUI",
-        name = "Enable UI",
-        description = "Enable to turn on in game UI",
-        position = 95
+            keyName = "enableUI",
+            name = "Enable UI",
+            description = "Enable to turn on in game UI",
+            position = 95
     )
-    default boolean enableUI()
-    {
+    default boolean enableUI() {
         return true;
     }
 
     @ConfigItem(
-        keyName = "startButton",
-        name = "Start/Stop",
-        description = "Test button that changes variable value",
-        position = 100
+            keyName = "startButton",
+            name = "Start/Stop",
+            description = "Test button that changes variable value",
+            position = 100
     )
-    default Button startButton()
-    {
+    default Button startButton() {
         return new Button();
     }
 

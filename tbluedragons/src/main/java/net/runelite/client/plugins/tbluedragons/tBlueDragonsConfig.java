@@ -67,11 +67,11 @@ public interface tBlueDragonsConfig extends Config {
     )
     String combat = "Combat";
 
-	/*
+    /*
 
-	Start of config
+    Start of config
 
-	 */
+     */
     @ConfigSection(
             name = "Prayers",
             description = "",

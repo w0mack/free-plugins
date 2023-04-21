@@ -27,200 +27,201 @@ package net.runelite.client.plugins.autochompykiller;
 import net.runelite.client.config.*;
 
 @ConfigGroup("AutoChompyKiller")
-public interface ChompyConfig extends Config
-{
+public interface ChompyConfig extends Config {
 
-	@ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 1, title = "startPlugin")
-	default Button startPlugin() {
-		return new Button();
-	}
+    @ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 1, title = "startPlugin")
+    default Button startPlugin() {
+        return new Button();
+    }
 
-	@ConfigItem(
-		keyName = "showOverlay",
-		name = "Show UI",
-		description = "Show the UI on screen",
-		position = 2
-	)
-	default boolean showOverlay() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "showOverlay",
+            name = "Show UI",
+            description = "Show the UI on screen",
+            position = 2
+    )
+    default boolean showOverlay() {
+        return true;
+    }
 
-	@ConfigSection(
-			name = "Sleep Delays",
-			description = "",
-			position = 3,
-			keyName = "sleepDelays"
-	)
-	String sleepDelays = "Sleep Delays";
+    @ConfigSection(
+            name = "Sleep Delays",
+            description = "",
+            position = 3,
+            keyName = "sleepDelays"
+    )
+    String sleepDelays = "Sleep Delays";
 
-	@Range(
-			min = 0,
-			max = 550
-	)
-	@ConfigItem(
-			keyName = "sleepMin",
-			name = "Sleep Min",
-			description = "",
-			position = 2,
-			section = sleepDelays
-	)
-	default int sleepMin() {
-		return 20;
-	}
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepMin",
+            name = "Sleep Min",
+            description = "",
+            position = 2,
+            section = sleepDelays
+    )
+    default int sleepMin() {
+        return 20;
+    }
 
-	@Range(
-			min = 0,
-			max = 550
-	)
-	@ConfigItem(
-			keyName = "sleepMax",
-			name = "Sleep Max",
-			description = "",
-			position = 3,
-			section = sleepDelays
-	)
-	default int sleepMax() {
-		return 200;
-	}
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepMax",
+            name = "Sleep Max",
+            description = "",
+            position = 3,
+            section = sleepDelays
+    )
+    default int sleepMax() {
+        return 200;
+    }
 
-	@Range(
-			min = 0,
-			max = 550
-	)
-	@ConfigItem(
-			keyName = "sleepTarget",
-			name = "Sleep Target",
-			description = "",
-			position = 4,
-			section = sleepDelays
-	)
-	default int sleepTarget() {
-		return 50;
-	}
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepTarget",
+            name = "Sleep Target",
+            description = "",
+            position = 4,
+            section = sleepDelays
+    )
+    default int sleepTarget() {
+        return 50;
+    }
 
-	@Range(
-			min = 0,
-			max = 550
-	)
-	@ConfigItem(
-			keyName = "sleepDeviation",
-			name = "Sleep Deviation",
-			description = "",
-			position = 5,
-			section = sleepDelays
-	)
-	default int sleepDeviation() {
-		return 10;
-	}
+    @Range(
+            min = 0,
+            max = 550
+    )
+    @ConfigItem(
+            keyName = "sleepDeviation",
+            name = "Sleep Deviation",
+            description = "",
+            position = 5,
+            section = sleepDelays
+    )
+    default int sleepDeviation() {
+        return 10;
+    }
 
-	@ConfigItem(
-			keyName = "sleepWeightedDistribution",
-			name = "Sleep Weighted Distribution",
-			description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
-			position = 6,
-			section = sleepDelays
-	)
-	default boolean sleepWeightedDistribution() {
-		return false;
-	}
+    @ConfigItem(
+            keyName = "sleepWeightedDistribution",
+            name = "Sleep Weighted Distribution",
+            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+            position = 6,
+            section = sleepDelays
+    )
+    default boolean sleepWeightedDistribution() {
+        return false;
+    }
 
-	@ConfigSection(
-			name = "Tick Delays",
-			description = "",
-			position = 4,
-			keyName = "tickDelays"
-	)
-	String tickDelays = "Tick Delays";
+    @ConfigSection(
+            name = "Tick Delays",
+            description = "",
+            position = 4,
+            keyName = "tickDelays"
+    )
+    String tickDelays = "Tick Delays";
 
-	@Range(
-			min = 0,
-			max = 10
-	)
-	@ConfigItem(
-			keyName = "tickDelaysMin",
-			name = "Game Tick Min",
-			description = "",
-			position = 8,
-			section = tickDelays
-	)
-	default int tickDelaysMin() {
-		return 1;
-	}
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysMin",
+            name = "Game Tick Min",
+            description = "",
+            position = 8,
+            section = tickDelays
+    )
+    default int tickDelaysMin() {
+        return 1;
+    }
 
-	@Range(
-			min = 0,
-			max = 10
-	)
-	@ConfigItem(
-			keyName = "tickDelaysMax",
-			name = "Game Tick Max",
-			description = "",
-			position = 9,
-			section = tickDelays
-	)
-	default int tickDelaysMax() {
-		return 3;
-	}
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysMax",
+            name = "Game Tick Max",
+            description = "",
+            position = 9,
+            section = tickDelays
+    )
+    default int tickDelaysMax() {
+        return 3;
+    }
 
-	@Range(
-			min = 0,
-			max = 10
-	)
-	@ConfigItem(
-			keyName = "tickDelaysTarget",
-			name = "Game Tick Target",
-			description = "",
-			position = 10,
-			section = tickDelays
-	)
-	default int tickDelaysTarget() {
-		return 2;
-	}
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysTarget",
+            name = "Game Tick Target",
+            description = "",
+            position = 10,
+            section = tickDelays
+    )
+    default int tickDelaysTarget() {
+        return 2;
+    }
 
-	@Range(
-			min = 0,
-			max = 10
-	)
-	@ConfigItem(
-			keyName = "tickDelaysDeviation",
-			name = "Game Tick Deviation",
-			description = "",
-			position = 11,
-			section = tickDelays
-	)
-	default int tickDelaysDeviation() {
-		return 1;
-	}
+    @Range(
+            min = 0,
+            max = 10
+    )
+    @ConfigItem(
+            keyName = "tickDelaysDeviation",
+            name = "Game Tick Deviation",
+            description = "",
+            position = 11,
+            section = tickDelays
+    )
+    default int tickDelaysDeviation() {
+        return 1;
+    }
 
-	@ConfigItem(
-			keyName = "tickDelaysWeightedDistribution",
-			name = "Game Tick Weighted Distribution",
-			description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
-			position = 12,
-			section = tickDelays
-	)
-	default boolean tickDelaysWeightedDistribution() {
-		return false;
-	}
+    @ConfigItem(
+            keyName = "tickDelaysWeightedDistribution",
+            name = "Game Tick Weighted Distribution",
+            description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+            position = 12,
+            section = tickDelays
+    )
+    default boolean tickDelaysWeightedDistribution() {
+        return false;
+    }
 
-	@Range(min = 1, max = 4000)
-	@ConfigItem(keyName = "stopAfter", name = "Stop after X kills", description = "Stops killing da birds after killing this many", position = 13)
-	default int stopAfter() { return 1000; }
+    @Range(min = 1, max = 4000)
+    @ConfigItem(keyName = "stopAfter", name = "Stop after X kills", description = "Stops killing da birds after killing this many", position = 13)
+    default int stopAfter() {
+        return 1000;
+    }
 
-	/* END OF MAIN CONFIG */
+    /* END OF MAIN CONFIG */
 
-	@ConfigItem(keyName = "invokes", name = "Use invokes (use with caution)", description = "Potentially detected; use with caution", position = 998)
-	default boolean invokes() {
-		return false;
-	}
+    @ConfigItem(keyName = "invokes", name = "Use invokes (use with caution)", description = "Potentially detected; use with caution", position = 998)
+    default boolean invokes() {
+        return false;
+    }
 
-	@ConfigItem(
-		keyName = "debug",
-		name = "Debug Messages",
-		description = "",
-		position = 999
-	)
-	default boolean debug() {
-		return false;
-	}
+    @ConfigItem(
+            keyName = "debug",
+            name = "Debug Messages",
+            description = "",
+            position = 999
+    )
+    default boolean debug() {
+        return false;
+    }
 }

@@ -28,7 +28,8 @@ import ProjectVersions.openosrsVersion
 version = "3.5.6"
 
 project.extra["PluginName"] = "tVorkath" // This is the name that is used in the external plugin manager panel
-project.extra["PluginDescription"] = "Kills and loots Vorkath, and rebanks at Moonclan" // This is the description that is used in the external plugin manager panel
+project.extra["PluginDescription"] =
+    "Kills and loots Vorkath, and rebanks at Moonclan" // This is the description that is used in the external plugin manager panel
 
 dependencies {
     annotationProcessor(Libraries.lombok)
@@ -47,17 +48,19 @@ dependencies {
 tasks {
     jar {
         manifest {
-            attributes(mapOf(
+            attributes(
+                mapOf(
                     "Plugin-Version" to project.version,
                     "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
                     "Plugin-Provider" to "Tea",
                     "Plugin-Dependencies" to
-                        arrayOf(
-                            nameToId("iUtils")
-                        ).joinToString(),
+                            arrayOf(
+                                nameToId("iUtils")
+                            ).joinToString(),
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
-            ))
+                )
+            )
         }
     }
 }

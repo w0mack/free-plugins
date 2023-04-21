@@ -178,7 +178,9 @@ public interface AutoVorkiConfig extends Config {
     String teleportsSection = "Teleports";
 
     @ConfigItem(keyName = "houseTele", name = "PoH", description = "The name of your house teleport", position = 19, section = teleportsSection)
-    default HouseTele houseTele() { return HouseTele.CONSTRUCTION_CAPE_T; }
+    default HouseTele houseTele() {
+        return HouseTele.CONSTRUCTION_CAPE_T;
+    }
 
     @ConfigItem(keyName = "usePool", name = "Use PoH pool", description = "Restore PRAYER and HP with rejuv pool in PoH", position = 20, section = teleportsSection)
     default boolean usePool() {
@@ -196,7 +198,9 @@ public interface AutoVorkiConfig extends Config {
     }
 
     @ConfigItem(keyName = "rellekkaTele", name = "Rellekka", description = "The method of travelling to Rellekka after banking", position = 23, section = teleportsSection)
-    default RellekkaTele rellekkaTele() { return RellekkaTele.TALK_TO_BANKER; }
+    default RellekkaTele rellekkaTele() {
+        return RellekkaTele.TALK_TO_BANKER;
+    }
 
     @ConfigSection(
             name = "Loot",
@@ -210,6 +214,7 @@ public interface AutoVorkiConfig extends Config {
     default boolean lootBones() {
         return true;
     }
+
     @ConfigItem(keyName = "lootHides", name = "Loot Un-noted Blue dragonhide", description = "", position = 993, section = lootSection)
     default boolean lootHides() {
         return false;
@@ -430,8 +435,10 @@ public interface AutoVorkiConfig extends Config {
         RUNE_CROSSBOW(ItemID.RUNE_CROSSBOW, 7),
         BLOWPIPE(ItemID.TOXIC_BLOWPIPE, 5);
 
-        @Getter private final int itemId, range;
-        Mainhand (int itemId, int range) {
+        @Getter
+        private final int itemId, range;
+
+        Mainhand(int itemId, int range) {
             this.itemId = itemId;
             this.range = range;
         }
@@ -449,7 +456,9 @@ public interface AutoVorkiConfig extends Config {
         TWISTED_BUCKLER(ItemID.TWISTED_BUCKLER),
         NONE(-1);
 
-        @Getter private final int itemId;
+        @Getter
+        private final int itemId;
+
         Offhand(int itemId) {
             this.itemId = itemId;
         }
@@ -460,8 +469,12 @@ public interface AutoVorkiConfig extends Config {
         FREMENNIK_BOOTS_4(1),
         RETURN_ORB(29712);
 
-        @Getter private final int option;
-        RellekkaTele(int option) { this.option = option; }
+        @Getter
+        private final int option;
+
+        RellekkaTele(int option) {
+            this.option = option;
+        }
     }
 
     enum Spec {
@@ -471,7 +484,9 @@ public interface AutoVorkiConfig extends Config {
         DRAGON_CLAWS(ItemID.DRAGON_CLAWS, 50),
         BLOWPIPE(ItemID.TOXIC_BLOWPIPE, 50);
 
-        @Getter private final int itemId, specAmt;
+        @Getter
+        private final int itemId, specAmt;
+
         Spec(int itemId, int specAmt) {
             this.itemId = itemId;
             this.specAmt = specAmt;

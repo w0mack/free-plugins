@@ -27,21 +27,20 @@ package net.runelite.client.plugins.csardyminer;
 import net.runelite.client.config.*;
 
 @ConfigGroup("CSArdyMiner")
-public interface ArdyMinerConfig extends Config
-{
+public interface ArdyMinerConfig extends Config {
 
-	@ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 1, title = "startPlugin")
-	default Button startPlugin() {
-		return new Button();
-	}
+    @ConfigItem(keyName = "startPlugin", name = "Start/Stop", description = "", position = 1, title = "startPlugin")
+    default Button startPlugin() {
+        return new Button();
+    }
 
-	@ConfigItem(
-		keyName = "showOverlay",
-		name = "Show UI",
-		description = "Show the UI on screen",
-		position = 2
-	)
-	default boolean showOverlay() {
-		return true;
-	}
+    @ConfigItem(
+            keyName = "showOverlay",
+            name = "Show UI",
+            description = "Show the UI on screen",
+            position = 2
+    )
+    default boolean showOverlay() {
+        return true;
+    }
 }

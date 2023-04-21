@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 
 import java.time.Instant;
 import javax.inject.Inject;
+
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
@@ -34,10 +35,10 @@ import org.pf4j.Extension;
 @Extension
 @PluginDependency(iUtils.class)
 @PluginDescriptor(
-    name = "Oofie's Kitten Grower",
-    enabledByDefault = false,
-    description = "Grows Kitty to Kat :)",
-    tags = {"kitten", "cat", "grower", "kat", "oofie"}
+        name = "Oofie's Kitten Grower",
+        enabledByDefault = false,
+        description = "Grows Kitty to Kat :)",
+        tags = {"kitten", "cat", "grower", "kat", "oofie"}
 )
 @Slf4j
 public class OofieKittenGrowerPlugin extends Plugin {
@@ -115,8 +116,7 @@ public class OofieKittenGrowerPlugin extends Plugin {
         chinBreakHandler.unregisterPlugin(this);
     }
 
-    public long sleepDelay()
-    {
+    public long sleepDelay() {
         OofieKittenGrowerPlugin.sleepLength = calc.randomDelay(config.sleepWeightedDistribution(), config.sleepMin(), config.sleepMax(), config.sleepDeviation(), config.sleepTarget());
         return OofieKittenGrowerPlugin.sleepLength;
     }
@@ -182,7 +182,7 @@ public class OofieKittenGrowerPlugin extends Plugin {
             utils.doActionMsTime(targetMenu, new Point(0, 0), sleepDelay());
         }
         if (configButtonClicked.getKey().equals("testPick")) {
-            targetMenu = new LegacyMenuEntry("Pick-up", "<col=ffff00>Kitten",kitten.getIndex(), MenuAction.NPC_FIRST_OPTION.getId(), 0, 0, false);
+            targetMenu = new LegacyMenuEntry("Pick-up", "<col=ffff00>Kitten", kitten.getIndex(), MenuAction.NPC_FIRST_OPTION.getId(), 0, 0, false);
             utils.doActionMsTime(targetMenu, new Point(0, 0), sleepDelay());
         }
 
@@ -213,7 +213,7 @@ public class OofieKittenGrowerPlugin extends Plugin {
         }
         player = client.getLocalPlayer();
         if (client != null && player != null && client.getGameState() == GameState.LOGGED_IN) {
-           if (chinBreakHandler.shouldBreak(this)) {
+            if (chinBreakHandler.shouldBreak(this)) {
                 status = "Taking a break";
                 chinBreakHandler.startBreak(this);
                 timeout = 5;

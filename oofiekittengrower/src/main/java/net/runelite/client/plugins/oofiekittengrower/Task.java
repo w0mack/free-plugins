@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.oofiekittengrower;
 
 import javax.inject.Inject;
+
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
@@ -14,8 +15,7 @@ import static net.runelite.api.MenuAction.*;
 
 
 @Slf4j
-public abstract class Task
-{
+public abstract class Task {
 
     @Inject
     public Client client;
@@ -51,14 +51,12 @@ public abstract class Task
     @Inject
     private Chatbox chat;
 
-    public void pssPssPss()
-    {
+    public void pssPssPss() {
         NPC kitten = npc.findNearestNpc("Kitten");
         Widget whistle = client.getWidget(387, 8);
         Widget warning = client.getWidget(217, 3);
 
-        if (warning != null)
-        {
+        if (warning != null) {
             continuePlayerDialog(sleepDelay());
             OofieKittenGrowerPlugin.timeout = 1;
         } else {
@@ -74,25 +72,21 @@ public abstract class Task
 
     public abstract boolean validate();
 
-    public long sleepDelay()
-    {
+    public long sleepDelay() {
         OofieKittenGrowerPlugin.sleepLength = calc.randomDelay(config.sleepWeightedDistribution(), config.sleepMin(), config.sleepMax(), config.sleepDeviation(), config.sleepTarget());
         return OofieKittenGrowerPlugin.sleepLength;
     }
 
-    public int tickDelay()
-    {
+    public int tickDelay() {
         OofieKittenGrowerPlugin.tickLength = (int) calc.randomDelay(config.tickDelayWeightedDistribution(), config.tickDelayMin(), config.tickDelayMax(), config.tickDelaysDeviation(), config.tickDelayTarget());
         return OofieKittenGrowerPlugin.tickLength;
     }
 
-    public String getTaskDescription()
-    {
+    public String getTaskDescription() {
         return this.getClass().getSimpleName();
     }
 
-    public void onGameTick(GameTick event)
-    {
+    public void onGameTick(GameTick event) {
         return;
     }
 
@@ -103,5 +97,6 @@ public abstract class Task
             utils.doInvokeMsTime(targetMenu, (int) sleepDelay());
         }
     }
+
     LegacyMenuEntry targetMenu;
 }

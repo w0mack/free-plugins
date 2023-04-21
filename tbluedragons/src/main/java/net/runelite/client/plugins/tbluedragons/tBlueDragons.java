@@ -435,13 +435,13 @@ public class tBlueDragons extends Plugin {
                         teleport();
                     }
                     break;
-				case LOOT_SCALES:
-					if (inv.getEmptySlots() >= 1) {
-						lootScales();
-					} else {
-						teleport();
-					}
-					break;
+                case LOOT_SCALES:
+                    if (inv.getEmptySlots() >= 1) {
+                        lootScales();
+                    } else {
+                        teleport();
+                    }
+                    break;
                 case MOVING:
                     if (!bank.isOpen() && !playerUtils.isRunEnabled()) {
                         playerUtils.handleRun(15, 30);
@@ -536,26 +536,26 @@ public class tBlueDragons extends Plugin {
     }
 
     boolean isLootableItem(TileItem item) {
-		if (config.mode().toString().equalsIgnoreCase("kill_dragons")) {
-			String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
-			int value = utils.getItemPrice(item.getId(), true) * item.getQuantity();
-			String[] included = config.includedItems().toLowerCase().split("\\s*,\\s*");
-			List<String> include = new ArrayList<>();
-			include.addAll(List.of(included));
-			String[] excluded = config.includedItems().toLowerCase().split("\\s*,\\s*");
-			List<String> exclude = new ArrayList<>();
-			exclude.addAll(List.of(included));
-			if (include.stream().anyMatch(name.toLowerCase()::contains))
-				return true;
-			if (exclude.stream().anyMatch(name.toLowerCase()::contains))
-				return false;
-			if (name.equalsIgnoreCase("dragon bones") && config.lootBones())
-				return true;
-			if (name.equalsIgnoreCase("blue dragonhide") && config.lootHides())
-				return true;
-			return value >= config.lootValue();
-		} else
-			return item.getId() == ItemID.BLUE_DRAGON_SCALE;
+        if (config.mode().toString().equalsIgnoreCase("kill_dragons")) {
+            String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
+            int value = utils.getItemPrice(item.getId(), true) * item.getQuantity();
+            String[] included = config.includedItems().toLowerCase().split("\\s*,\\s*");
+            List<String> include = new ArrayList<>();
+            include.addAll(List.of(included));
+            String[] excluded = config.includedItems().toLowerCase().split("\\s*,\\s*");
+            List<String> exclude = new ArrayList<>();
+            exclude.addAll(List.of(included));
+            if (include.stream().anyMatch(name.toLowerCase()::contains))
+                return true;
+            if (exclude.stream().anyMatch(name.toLowerCase()::contains))
+                return false;
+            if (name.equalsIgnoreCase("dragon bones") && config.lootBones())
+                return true;
+            if (name.equalsIgnoreCase("blue dragonhide") && config.lootHides())
+                return true;
+            return value >= config.lootValue();
+        } else
+            return item.getId() == ItemID.BLUE_DRAGON_SCALE;
     }
 
     @Subscribe
@@ -680,39 +680,39 @@ public class tBlueDragons extends Plugin {
         return tBlueDragonsState.TIMEOUT;
     }
 
-	tBlueDragonsState getScaleStates() {
-		if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.panicTele())
-			return tBlueDragonsState.TELEPORT_OUT;
-		if (config.useAntifire() && needsAntifire()) {
-			if (hasAnyAntifirePots())
-				return tBlueDragonsState.DRINK_ANTIFIRE;
-			else
-				return tBlueDragonsState.TELEPORT_OUT;
-		}
-		if (config.usePrayPot() && client.getBoostedSkillLevel(Skill.PRAYER) <= config.restoreAt()) {
-			if (hasAnyPrayPots())
-				return tBlueDragonsState.DRINK_PRAYER_POTS;
-			else
-				return tBlueDragonsState.TELEPORT_OUT;
-		}
-		if (config.useCombatPot() && needsRepot()) {
-			if (hasAnyCombatPots())
-				return tBlueDragonsState.DRINK_COMBAT_POT;
-			else
-				return tBlueDragonsState.TELEPORT_OUT;
-		}
-		if (config.useFood() && client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt()) {
-			if (hasAnyFood())
-				return tBlueDragonsState.EAT_FOOD;
-			else
-				return tBlueDragonsState.TELEPORT_OUT;
-		}
-		if (inv.isFull())
-			return tBlueDragonsState.TELEPORT_OUT;
-		if (!loot.isEmpty())
-			return tBlueDragonsState.LOOT_SCALES;
-		return tBlueDragonsState.TIMEOUT;
-	}
+    tBlueDragonsState getScaleStates() {
+        if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.panicTele())
+            return tBlueDragonsState.TELEPORT_OUT;
+        if (config.useAntifire() && needsAntifire()) {
+            if (hasAnyAntifirePots())
+                return tBlueDragonsState.DRINK_ANTIFIRE;
+            else
+                return tBlueDragonsState.TELEPORT_OUT;
+        }
+        if (config.usePrayPot() && client.getBoostedSkillLevel(Skill.PRAYER) <= config.restoreAt()) {
+            if (hasAnyPrayPots())
+                return tBlueDragonsState.DRINK_PRAYER_POTS;
+            else
+                return tBlueDragonsState.TELEPORT_OUT;
+        }
+        if (config.useCombatPot() && needsRepot()) {
+            if (hasAnyCombatPots())
+                return tBlueDragonsState.DRINK_COMBAT_POT;
+            else
+                return tBlueDragonsState.TELEPORT_OUT;
+        }
+        if (config.useFood() && client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.eatAt()) {
+            if (hasAnyFood())
+                return tBlueDragonsState.EAT_FOOD;
+            else
+                return tBlueDragonsState.TELEPORT_OUT;
+        }
+        if (inv.isFull())
+            return tBlueDragonsState.TELEPORT_OUT;
+        if (!loot.isEmpty())
+            return tBlueDragonsState.LOOT_SCALES;
+        return tBlueDragonsState.TIMEOUT;
+    }
 
     tBlueDragonsState getCombatStates() {
         if (client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.panicTele())
@@ -807,8 +807,7 @@ public class tBlueDragons extends Plugin {
         }
     }
 
-    boolean isStaminaBoosted()
-    {
+    boolean isStaminaBoosted() {
         return client.getVarbitValue(Varbits.RUN_SLOWED_DEPLETION_ACTIVE) == 1;
     }
 
@@ -838,8 +837,8 @@ public class tBlueDragons extends Plugin {
                 return true;
             if (client.getBoostedSkillLevel(Skill.STRENGTH) <= config.boostStr())
                 return true;
-			return config.combatPot() == tBlueDragonsConfig.CombatPot.SUPER_ATT_STR_DEF
-					&& client.getBoostedSkillLevel(Skill.DEFENCE) <= config.boostDef();
+            return config.combatPot() == tBlueDragonsConfig.CombatPot.SUPER_ATT_STR_DEF
+                    && client.getBoostedSkillLevel(Skill.DEFENCE) <= config.boostDef();
         }
         return false;
     }
@@ -884,17 +883,17 @@ public class tBlueDragons extends Plugin {
         }
         if (config.bankLoc() == tBlueDragonsConfig.Banking.FALADOR_TELETAB)
             return inv.getItemCount(ItemID.FALADOR_TELEPORT, false) != 0;
-		return !config.useBonecrusher() || inv.containsItem(ItemID.BONECRUSHER);
-	}
+        return !config.useBonecrusher() || inv.containsItem(ItemID.BONECRUSHER);
+    }
 
-	void lootScales() {
-		iGroundItem item = game.groundItems().withId(ItemID.BLUE_DRAGON_SCALE).nearestPath();
+    void lootScales() {
+        iGroundItem item = game.groundItems().withId(ItemID.BLUE_DRAGON_SCALE).nearestPath();
         if (item != null) {
             this.clientThread.invoke(() ->
                     this.client.invokeMenuAction("", "", item.id(), MenuAction.GROUND_ITEM_THIRD_OPTION.getId(), item.tileItem().getTile().getSceneLocation().getX(), item.tileItem().getTile().getSceneLocation().getY())
             );
         }
-	}
+    }
 
     void lootItem(List<TileItem> itemList) {
         TileItem lootItem = this.getNearestTileItem(itemList);
@@ -1007,16 +1006,16 @@ public class tBlueDragons extends Plugin {
     }
 
     boolean hasPrayPots() {
-		return inv.getItemCount(config.prayPot().getPrayerPot().get(0), false) == config.prayAmount();
-	}
+        return inv.getItemCount(config.prayPot().getPrayerPot().get(0), false) == config.prayAmount();
+    }
 
     boolean hasAntifirePots() {
-		return inv.getItemCount(config.antifirePot().getAntifirePot().get(0), false) == config.antifireAmount();
-	}
+        return inv.getItemCount(config.antifirePot().getAntifirePot().get(0), false) == config.antifireAmount();
+    }
 
     boolean hasFood() {
-		return inv.getItemCount(config.food().getFood().get(0), false) >= config.foodAmount();
-	}
+        return inv.getItemCount(config.food().getFood().get(0), false) >= config.foodAmount();
+    }
 
     boolean distance(WorldPoint loc, int dist) {
         return player.getWorldLocation().distanceTo(loc) <= dist;

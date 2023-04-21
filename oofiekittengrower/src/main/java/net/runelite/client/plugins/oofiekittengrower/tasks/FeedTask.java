@@ -13,24 +13,23 @@ import net.runelite.client.plugins.iutils.*;
 import java.awt.*;
 
 
-
 @Slf4j
 public class FeedTask extends Task {
     Rectangle clickBounds;
 
 
     @Override
-    public boolean validate()
-    {
+    public boolean validate() {
         return OofieKittenGrowerPlugin.needToFeed; //if this boolean defined in CatGrowerPlugin is true
     }
 
     @Override
-    public String getTaskDescription() { return "Feeding Kitten: " + OofieKittenGrowerPlugin.timeout; }
+    public String getTaskDescription() {
+        return "Feeding Kitten: " + OofieKittenGrowerPlugin.timeout;
+    }
 
     @Override
-    public void onGameTick(GameTick event)
-    {
+    public void onGameTick(GameTick event) {
         OofieKittenGrowerPlugin.timeout--;
 
         NPC kitten = npc.findNearestNpc("Kitten"); //Using NPC String name to avoid making list of all the Kittens
@@ -38,8 +37,7 @@ public class FeedTask extends Task {
 
         if (kitten != null) //make sure kitten exists
         {
-            if (client.getLocalPlayer().getWorldLocation().distanceTo(kitten.getWorldLocation()) > 2)
-            {
+            if (client.getLocalPlayer().getWorldLocation().distanceTo(kitten.getWorldLocation()) > 2) {
                 pssPssPss();
                 return;
             } else {
@@ -53,8 +51,8 @@ public class FeedTask extends Task {
                         menu.setModifiedEntry(targetMenu, catfood.getId(), catfood.getIndex(), MenuAction.WIDGET_TARGET_ON_NPC.getId());
                         mouse.delayMouseClick(kitten.getConvexHull().getBounds(), sleepDelay());
                         OofieKittenGrowerPlugin.conditionTimeout = new TimeoutUntil(
-                                ()-> playerUtils.isAnimating(),
-                                        2);
+                                () -> playerUtils.isAnimating(),
+                                2);
                         OofieKittenGrowerPlugin.needToFeed = false;
                     }
                 }
@@ -62,7 +60,7 @@ public class FeedTask extends Task {
                 else if (!inventory.containsItem(config.catFood())) //If we don't have any food, pick up cat and shutdown
                 {
                     targetMenu = new LegacyMenuEntry("Pick-up", "<col=ffff00>Kitten", kitten.getIndex(), MenuAction.NPC_FIRST_OPTION.getId(), 0, 0, false);
-                    utils.doActionMsTime(targetMenu, new Point(0, 0),  sleepDelay());
+                    utils.doActionMsTime(targetMenu, new Point(0, 0), sleepDelay());
                     OofieKittenGrowerPlugin.timeout = 1 + tickDelay();
                     OofieKittenGrowerPlugin.startBot = false;
                     log.info("No Food in Inventory.");

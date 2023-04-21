@@ -33,20 +33,16 @@ public class PetTask extends Task {
         Widget dialog = client.getWidget(219, 1);
         NPC kitten = npc.findNearestNpc("Kitten");
 
-        if (kitten != null)
-        {
-            if (client.getLocalPlayer().getWorldLocation().distanceTo(kitten.getWorldLocation()) > 2)
-            {
-               pssPssPss();
+        if (kitten != null) {
+            if (client.getLocalPlayer().getWorldLocation().distanceTo(kitten.getWorldLocation()) > 2) {
+                pssPssPss();
                 return;
             } else {
-                if (kitten.getInteracting() == client.getLocalPlayer() && client.getLocalPlayer().getWorldLocation().distanceTo(kitten.getWorldLocation()) < 2)
-                {
-                    if (dialog == null)
-                    {
+                if (kitten.getInteracting() == client.getLocalPlayer() && client.getLocalPlayer().getWorldLocation().distanceTo(kitten.getWorldLocation()) < 2) {
+                    if (dialog == null) {
                         clickKitty();
                         OofieKittenGrowerPlugin.conditionTimeout = new TimeoutUntil(
-                                ()-> dialog != null,
+                                () -> dialog != null,
                                 2);
                         return;
                     }
@@ -63,8 +59,7 @@ public class PetTask extends Task {
         }
     }
 
-    private void clickKitty()
-    {
+    private void clickKitty() {
         NPC kitten = npc.findNearestNpc("Kitten");
 
         targetMenu = new LegacyMenuEntry("", "", kitten.getIndex(), 13, 0, 0, false);
@@ -77,7 +72,7 @@ public class PetTask extends Task {
         utils.doActionMsTime(targetMenu, new Point(0, 0), sleepDelay());
         log.info("Selected stroke pet");
         OofieKittenGrowerPlugin.conditionTimeout = new TimeoutUntil(
-                ()-> playerUtils.isAnimating(),
+                () -> playerUtils.isAnimating(),
                 4);
     }
 
