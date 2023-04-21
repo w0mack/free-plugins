@@ -16,7 +16,7 @@ plugins {
     checkstyle
 }
 
-project.extra["GithubUrl"] = "https://github.com/imnottom/"
+project.extra["GithubUrl"] = "https://github.com/w0mack/"
 
 apply<BootstrapPlugin>()
 
